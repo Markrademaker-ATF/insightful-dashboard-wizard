@@ -117,7 +117,7 @@ export const ChannelJourneyComparison: React.FC<ChannelJourneyComparisonProps> =
                             title={`${percentage}% contribution at ${journeyStages[i]?.label}`}
                           >
                             <span className="text-xs font-medium text-white">
-                              {percentage > 0 ? `${percentage}%` : "—"}
+                              {percentage > 0 ? `${percentage}%` : "0%"}
                             </span>
                           </div>
                         </div>
