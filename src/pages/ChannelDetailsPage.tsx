@@ -577,12 +577,18 @@ const AttributionChart: React.FC<{ data: any[] }> = ({ data }) => {
     <div className="w-full h-full flex">
       <div className="flex-1">
         <div className="h-full flex items-center justify-center">
-          <div className="w-full max-w-md">
+          <div className="w-full max-w-2xl mx-auto">
             <div className="relative pt-1">
               {data.map((item, index) => (
                 <div key={index} className="mb-6">
                   <div className="flex justify-between mb-1">
-                    <span className="font-medium text-sm">{item.channel}</span>
+                    <div className="flex items-center gap-2">
+                      <div
+                        className="w-3 h-3 rounded-full"
+                        style={{ backgroundColor: item.color }}
+                      ></div>
+                      <span className="font-medium text-sm">{item.channel}</span>
+                    </div>
                     <span className="font-medium text-sm">{item.contribution}%</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2.5">
@@ -598,49 +604,6 @@ const AttributionChart: React.FC<{ data: any[] }> = ({ data }) => {
               ))}
             </div>
           </div>
-        </div>
-      </div>
-      <div className="w-80 flex flex-col justify-center">
-        <div className="aspect-square relative rounded-full overflow-hidden border border-border">
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-sm font-medium">
-              Attribution<br/>Breakdown
-            </span>
-          </div>
-          {data.map((item, index) => {
-            // Calculate the size of this segment
-            const previousTotal = data
-              .slice(0, index)
-              .reduce((sum, i) => sum + i.contribution, 0);
-            const angle = (item.contribution / 100) * 360;
-            const startAngle = (previousTotal / 100) * 360;
-            
-            return (
-              <div
-                key={index}
-                className="absolute inset-0"
-                style={{
-                  background: `conic-gradient(
-                    ${item.color} ${startAngle}deg,
-                    ${item.color} ${startAngle + angle}deg,
-                    transparent ${startAngle + angle}deg,
-                    transparent 360deg
-                  )`
-                }}
-              ></div>
-            );
-          })}
-        </div>
-        <div className="mt-4 space-y-2">
-          {data.map((item, index) => (
-            <div key={index} className="flex items-center gap-2">
-              <div
-                className="w-3 h-3 rounded-full"
-                style={{ backgroundColor: item.color }}
-              ></div>
-              <span className="text-xs">{item.channel}</span>
-            </div>
-          ))}
         </div>
       </div>
     </div>
