@@ -52,6 +52,10 @@ export const MetricScatterPlot = ({ data, loading }: MetricScatterPlotProps) => 
     clicks: "Clicks",
   };
 
+  // Generate a dynamic title based on selected metrics
+  const dynamicTitle = `${metricLabels[xMetric as keyof typeof metricLabels]} vs ${metricLabels[yMetric as keyof typeof metricLabels]}`;
+  const dynamicDescription = `Analysis with ${metricLabels[zMetric as keyof typeof metricLabels]} as bubble size`;
+
   // Format values for display
   const formatValue = (value: number, metric: string): string => {
     switch (metric) {
@@ -118,20 +122,26 @@ export const MetricScatterPlot = ({ data, loading }: MetricScatterPlotProps) => 
     }
   };
 
+  const handleReset = () => {
+    setXMetric("cost");
+    setYMetric("revenue");
+    setZMetric("roas");
+  };
+
   return (
     <Card>
       <CardHeader className="pb-2">
         <div className="flex flex-col lg:flex-row justify-between lg:items-center gap-4">
           <div>
-            <CardTitle className="text-md">Scatter Plot Analysis</CardTitle>
+            <CardTitle className="text-md">{dynamicTitle}</CardTitle>
             <CardDescription>
-              Compare metrics to identify patterns and outliers
+              {dynamicDescription}
             </CardDescription>
           </div>
           <div className="flex flex-wrap gap-2">
             <div className="grid grid-cols-3 gap-2 w-full lg:w-auto">
               <div>
-                <Select defaultValue={xMetric} onValueChange={setXMetric}>
+                <Select defaultValue={xMetric} value={xMetric} onValueChange={setXMetric}>
                   <SelectTrigger className="w-[100px] h-8">
                     <SelectValue placeholder="X Axis" />
                   </SelectTrigger>
@@ -145,7 +155,7 @@ export const MetricScatterPlot = ({ data, loading }: MetricScatterPlotProps) => 
                 </Select>
               </div>
               <div>
-                <Select defaultValue={yMetric} onValueChange={setYMetric}>
+                <Select defaultValue={yMetric} value={yMetric} onValueChange={setYMetric}>
                   <SelectTrigger className="w-[100px] h-8">
                     <SelectValue placeholder="Y Axis" />
                   </SelectTrigger>
@@ -159,7 +169,7 @@ export const MetricScatterPlot = ({ data, loading }: MetricScatterPlotProps) => 
                 </Select>
               </div>
               <div>
-                <Select defaultValue={zMetric} onValueChange={setZMetric}>
+                <Select defaultValue={zMetric} value={zMetric} onValueChange={setZMetric}>
                   <SelectTrigger className="w-[100px] h-8">
                     <SelectValue placeholder="Size" />
                   </SelectTrigger>
@@ -174,7 +184,7 @@ export const MetricScatterPlot = ({ data, loading }: MetricScatterPlotProps) => 
               </div>
             </div>
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" className="h-8">
+              <Button variant="outline" size="sm" className="h-8" onClick={handleReset}>
                 <RefreshCw className="h-3 w-3 mr-1" />
                 Reset
               </Button>
