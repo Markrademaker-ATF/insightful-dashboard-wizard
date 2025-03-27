@@ -1,9 +1,19 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { MainLayout } from "./components/layout/MainLayout";
 import Index from "./pages/Index";
+import DataPage from "./pages/DataPage";
+import ChannelsPage from "./pages/ChannelsPage";
+import MetricsPage from "./pages/MetricsPage";
+import ChannelDetailsPage from "./pages/ChannelDetailsPage";
+import IncrementalPage from "./pages/IncrementalPage";
+import BudgetPage from "./pages/BudgetPage";
+import GuidePage from "./pages/GuidePage";
+import SettingsPage from "./pages/SettingsPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -15,8 +25,17 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route element={<MainLayout />}>
+            <Route path="/" element={<Index />} />
+            <Route path="/data" element={<DataPage />} />
+            <Route path="/channels" element={<ChannelsPage />} />
+            <Route path="/metrics" element={<MetricsPage />} />
+            <Route path="/channel-details" element={<ChannelDetailsPage />} />
+            <Route path="/incremental" element={<IncrementalPage />} />
+            <Route path="/budget" element={<BudgetPage />} />
+            <Route path="/guide" element={<GuidePage />} />
+            <Route path="/settings" element={<SettingsPage />} />
+          </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
