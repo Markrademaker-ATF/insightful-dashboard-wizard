@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
@@ -10,7 +11,7 @@ import {
   PieChart, 
   Settings, 
   HelpCircle,
-  Home,
+  LayoutDashboard,
   ChevronDown,
   ChevronRight,
   FileBarChart,
@@ -28,12 +29,12 @@ type NavItem = {
 const navItems: NavItem[] = [
   {
     title: "Overview",
-    icon: Home, // Updated icon
+    icon: LayoutDashboard,
     children: [
       {
-        title: "Home", // Updated title
+        title: "Analytics Overview",
         href: "/",
-        icon: Home,
+        icon: LayoutDashboard,
       },
       {
         title: "Analytics Methodologies",
