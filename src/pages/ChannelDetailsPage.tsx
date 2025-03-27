@@ -1,9 +1,9 @@
+
 import React, { useState, useEffect } from "react";
 import { useSearchParams, useLocation } from "react-router-dom";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { PerformanceChart } from "@/components/dashboard/PerformanceChart";
 import { MetricCard } from "@/components/dashboard/MetricCard";
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -17,8 +17,10 @@ import {
   channelNames,
 } from "@/data/mockData";
 import { CampaignBreakdownTab } from "@/components/campaigns/CampaignBreakdownTab";
-import { Cpu, Database, BarChart4, Info } from "lucide-react";
+import { Cpu, Database, BarChart4, Info, Filter } from "lucide-react";
 import { ChannelJourneyComparison } from "@/components/campaigns/ChannelJourneyComparison";
+import { KeyMetricsGrid } from "@/components/dashboard/KeyMetricsGrid";
+import { ChannelImpressionsCostChart } from "@/components/channels/ChannelImpressionsCostChart";
 
 const ChannelDetailsPage = () => {
   const [searchParams] = useSearchParams();
@@ -32,10 +34,8 @@ const ChannelDetailsPage = () => {
   const [attributionData, setAttributionData] = useState<any[]>([]);
   const [channelContribution, setChannelContribution] = useState<any[]>([]);
   const [selectedCampaign, setSelectedCampaign] = useState("all");
-  const [activeTab, setActiveTab] = useState("attribution");
+  const [activeTab, setActiveTab] = useState("overview");
   const [campaignData, setCampaignData] = useState<any | null>(null);
-  
-  // Generate journey analysis data
   const [journeyData, setJourneyData] = useState<any | null>(null);
 
   // Mock campaigns for the filter
@@ -329,10 +329,6 @@ const ChannelDetailsPage = () => {
     if (campaignId !== "all" && activeTab !== "campaign-breakdown") {
       setActiveTab("campaign-breakdown");
     }
-    // If switching back to all campaigns, go to attribution tab
-    else if (campaignId === "all") {
-      setActiveTab("attribution");
-    }
   };
 
   return (
@@ -355,28 +351,90 @@ const ChannelDetailsPage = () => {
         </Tabs>
       </PageHeader>
 
+      {/* Campaign Overview Section */}
+      <Card className="mb-6">
+        <CardHeader className="pb-3">
+          <CardTitle>Campaign Overview</CardTitle>
+          <CardDescription>Key performance metrics across all marketing campaigns</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {loading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <Skeleton className="h-28 w-full" />
+              <Skeleton className="h-28 w-full" />
+              <Skeleton className="h-28 w-full" />
+              <Skeleton className="h-28 w-full" />
+            </div>
+          ) : (
+            <KeyMetricsGrid
+              totalRevenue={totalRevenue}
+              totalCost={totalRevenue * 0.4}
+              totalRoas={2.5}
+              totalConversions={totalConversions}
+              revenueChange={5.2}
+              costChange={3.1}
+              roasChange={2.1}
+              conversionChange={4.3}
+              loading={loading}
+            />
+          )}
+          
+          {!loading && (
+            <div className="mt-6">
+              <ChannelImpressionsCostChart 
+                channelId={channelId}
+                data={performanceData}
+                color={channelColor}
+              />
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
       {/* Campaign Selector */}
-      <div className="flex items-center justify-end mb-6">
-        <Select
-          value={selectedCampaign}
-          onValueChange={handleCampaignChange}
-        >
-          <SelectTrigger className="w-[220px]">
-            <SelectValue placeholder="Select campaign" />
-          </SelectTrigger>
-          <SelectContent>
-            {campaigns.map((campaign) => (
-              <SelectItem key={campaign.id} value={campaign.id}>
-                {campaign.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+      <div className="mb-6">
+        <Card>
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Filter className="h-5 w-5 text-primary" />
+                <CardTitle>Campaign Filter</CardTitle>
+              </div>
+              <FilterExportControls 
+                filterOptions={{ 
+                  metrics: true,
+                  channels: false
+                }}
+              />
+            </div>
+            <CardDescription>Select a specific campaign to view detailed analytics</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Select
+              value={selectedCampaign}
+              onValueChange={handleCampaignChange}
+            >
+              <SelectTrigger className="w-full md:w-[320px]">
+                <SelectValue placeholder="Select campaign" />
+              </SelectTrigger>
+              <SelectContent>
+                {campaigns.map((campaign) => (
+                  <SelectItem key={campaign.id} value={campaign.id}>
+                    {campaign.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Main Tabs for different analysis views */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList>
+        <TabsList className="mb-2">
+          <TabsTrigger value="overview" className="flex items-center gap-1">
+            <LineChart className="h-4 w-4" /> Overview
+          </TabsTrigger>
           <TabsTrigger value="attribution" className="flex items-center gap-1">
             <Brain className="h-4 w-4" /> Data-Driven Attribution
           </TabsTrigger>
@@ -386,6 +444,47 @@ const ChannelDetailsPage = () => {
             </TabsTrigger>
           )}
         </TabsList>
+
+        {/* Overview Tab */}
+        <TabsContent value="overview" className="space-y-6">
+          {/* Attribution over time */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Campaign Performance Over Time</CardTitle>
+              <CardDescription>
+                Visualize attributed revenue and conversions across the selected time period
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <PerformanceChart 
+                data={attributionData} 
+                lines={[
+                  {
+                    dataKey: "value",
+                    color: "#4361ee",
+                    label: "Attributed Revenue",
+                  },
+                  {
+                    dataKey: "conversions",
+                    color: "#f72585",
+                    label: "Conversions",
+                    yAxisId: "right"
+                  },
+                ]}
+                loading={loading}
+                height={350}
+              />
+            </CardContent>
+          </Card>
+          
+          {/* Journey Analysis Section */}
+          {journeyData && (
+            <ChannelJourneyComparison 
+              data={journeyData || { channels: [] }} 
+              loading={loading} 
+            />
+          )}
+        </TabsContent>
 
         {/* Data-Driven Attribution Tab */}
         <TabsContent value="attribution" className="space-y-6">
@@ -522,12 +621,6 @@ const ChannelDetailsPage = () => {
               </div>
             </CardContent>
           </Card>
-
-          {/* Journey Analysis Section - New! */}
-          <ChannelJourneyComparison 
-            data={journeyData || { channels: [] }} 
-            loading={loading} 
-          />
 
           {/* Attribution over time */}
           <Card>
