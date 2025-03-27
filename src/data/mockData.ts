@@ -82,11 +82,18 @@ export function generatePerformanceData(days = 30) {
   return data;
 }
 
-export function generateChannelBreakdown() {
+export function generateChannelData(timeframe: string) {
   const channels = Object.keys(channelColors);
   
   return channels.map(channel => {
-    const revenue = 10000 + Math.random() * 90000;
+    // Add timeframe-based variance
+    const timeframeMultiplier = 
+      timeframe === 'Q4' ? 1.3 :
+      timeframe === 'Q3' ? 1.1 :
+      timeframe === 'Q2' ? 0.9 :
+      0.8;
+    
+    const revenue = (10000 + Math.random() * 90000) * timeframeMultiplier;
     const cost = revenue * (0.3 + Math.random() * 0.3);
     const roas = revenue / cost;
     
@@ -100,6 +107,10 @@ export function generateChannelBreakdown() {
       cpa: Math.round(100 + Math.random() * 200),
     };
   });
+}
+
+export function generateChannelTrendsData() {
+  return generatePerformanceData(30);
 }
 
 export function generateBudgetAllocation() {
