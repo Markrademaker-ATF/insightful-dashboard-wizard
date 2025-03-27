@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,7 +22,7 @@ const MetricsPage = () => {
   const [performanceData, setPerformanceData] = useState<any[]>([]);
   const [compareMetrics, setCompareMetrics] = useState("revenue-cost");
   const [timeframe, setTimeframe] = useState("30d");
-  const [edaTab, setEdaTab] = useState("correlation");
+  const [edaTab, setEdaTab] = useState("distribution");
 
   useEffect(() => {
     // Simulate data loading
@@ -91,7 +90,7 @@ const MetricsPage = () => {
         </div>
 
         <Tabs
-          defaultValue="correlation"
+          defaultValue="distribution"
           value={edaTab}
           onValueChange={setEdaTab}
         >
