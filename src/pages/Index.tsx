@@ -7,7 +7,7 @@ const Index = () => {
   return (
     <>
       <Helmet>
-        <title>Analytics Dashboard - Marketing ROI Platform</title>
+        <title>Analytics Dashboard - Artefact</title>
       </Helmet>
       <AnalyticsOverview />
     </>
