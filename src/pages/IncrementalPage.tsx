@@ -19,7 +19,7 @@ import {
 // Import the components
 import { KeyMetricsSection } from "@/components/dashboard/KeyMetricsSection";
 import { WaterfallSection } from "@/components/dashboard/WaterfallSection";
-import { TimeSeriesSection } from "@/components/dashboard/TimeSeriesSection";
+import { PerformanceBreakdownSection } from "@/components/dashboard/PerformanceBreakdownSection";
 import { MediaTypeAnalysisSection } from "@/components/dashboard/MediaTypeAnalysisSection";
 import { KeyContributorsSection } from "@/components/dashboard/KeyContributorsSection";
 import { MediaTypesExplanationCard } from "@/components/dashboard/MediaTypesExplanationCard";
@@ -95,8 +95,8 @@ const IncrementalPage = () => {
       {/* Waterfall Chart */}
       <WaterfallSection data={waterfallData} loading={loading} />
 
-      {/* Enhanced Time Series Chart */}
-      <TimeSeriesSection data={timeSeriesData} loading={loading} />
+      {/* Performance Breakdown Section - replacing TimeSeriesSection */}
+      <PerformanceBreakdownSection data={timeSeriesData} loading={loading} />
 
       {/* Media Type Analysis */}
       <MediaTypeAnalysisSection

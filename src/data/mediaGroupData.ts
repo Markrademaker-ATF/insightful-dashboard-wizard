@@ -1,4 +1,3 @@
-
 import { mediaGroupColors } from "@/components/dashboard/MediaGroupBreakdownChart";
 
 // Sample data for incremental analysis by media group
@@ -197,37 +196,49 @@ export const generateWaterfallData = () => {
   ];
 };
 
-// Helper function to generate channel-specific data for the selected media type
+// Enhanced channel data for the selected media type
 export const getChannelDataByMediaType = (mediaType: string) => {
   switch (mediaType) {
     case "paid":
       return [
-        { name: "Search", value: 7000, color: "#4361ee" },
-        { name: "Social", value: 5000, color: "#3a0ca3" },
-        { name: "Display", value: 3000, color: "#7209b7" },
-        { name: "Video", value: 2000, color: "#f72585" }
+        { id: "search", name: "Search", value: 7000, color: "#4361ee" },
+        { id: "social", name: "Social", value: 5000, color: "#3a0ca3" },
+        { id: "display", name: "Display", value: 3000, color: "#7209b7" },
+        { id: "video", name: "Video", value: 2000, color: "#f72585" }
       ];
     case "organic":
       return [
-        { name: "SEO", value: 3500, color: "#06d6a0" },
-        { name: "Direct", value: 1800, color: "#1b9aaa" },
-        { name: "Referral", value: 1000, color: "#2ec4b6" }
+        { id: "seo", name: "SEO", value: 3500, color: "#06d6a0" },
+        { id: "direct", name: "Direct", value: 1800, color: "#1b9aaa" },
+        { id: "referral", name: "Referral", value: 1000, color: "#2ec4b6" }
       ];
     case "nonPaid":
       return [
-        { name: "Affiliate", value: 1500, color: "#ffd166" },
-        { name: "Email", value: 1200, color: "#f4a261" },
-        { name: "PR", value: 1100, color: "#e76f51" }
+        { id: "affiliate", name: "Affiliate", value: 1500, color: "#ffd166" },
+        { id: "email", name: "Email", value: 1200, color: "#f4a261" },
+        { id: "pr", name: "PR", value: 1100, color: "#e76f51" }
       ];
     case "baseline":
       return [
-        { name: "Brand", value: 4000, color: "#ef476f" },
-        { name: "Seasonal", value: 2500, color: "#bc4b51" },
-        { name: "Market", value: 2000, color: "#8a1c33" }
+        { id: "brand", name: "Brand", value: 4000, color: "#ef476f" },
+        { id: "seasonal", name: "Seasonal", value: 2500, color: "#bc4b51" },
+        { id: "market", name: "Market", value: 2000, color: "#8a1c33" }
       ];
     default:
       return [];
   }
+};
+
+// Channel data for detailed breakdown
+export const getChannelDetailsByType = (mediaType: string) => {
+  const baseChannels = getChannelDataByMediaType(mediaType);
+  return baseChannels.map(channel => ({
+    ...channel,
+    cost: channel.value * (0.3 + Math.random() * 0.3),
+    roas: +(channel.value / (channel.value * (0.3 + Math.random() * 0.3))).toFixed(2),
+    conversion: +(Math.random() * 5).toFixed(2),
+    cpa: Math.round(100 + Math.random() * 200),
+  }));
 };
 
 // Generate marginal returns data for each channel
