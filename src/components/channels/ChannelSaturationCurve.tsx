@@ -1,6 +1,7 @@
 
 import React from "react";
 import { MarginalReturnsChart } from "@/components/dashboard/MarginalReturnsChart";
+import { channelSaturationData } from "@/data/mockData";
 
 interface ChannelSaturationCurveProps {
   channelId: string;
@@ -29,6 +30,15 @@ export function ChannelSaturationCurve({
     // How quickly returns diminish
     const saturationRate = isSaturatedChannel ? 0.9 + seedRandom(2) : 0.4 + seedRandom(1.5);
     
+    // Get saturation data for this channel type
+    let channelType = "search";
+    if (["facebook", "tiktok", "organicSocial"].includes(channelId)) channelType = "social";
+    if (["display", "google"].includes(channelId)) channelType = "display";
+    if (["youtube"].includes(channelId)) channelType = "video";
+    
+    const currentSpend = channelSaturationData[channelType as keyof typeof channelSaturationData]?.currentSpend || 30000;
+    const maxSaturation = channelSaturationData[channelType as keyof typeof channelSaturationData]?.maxSaturation || 60000;
+    
     const data = [];
     // Generate data points across various spend levels
     for (let spend = 5000; spend <= 100000; spend += 5000) {
@@ -44,7 +54,9 @@ export function ChannelSaturationCurve({
       data.push({
         spend,
         returns: parseFloat(returns.toFixed(2)),
-        marginal: parseFloat(marginal.toFixed(2))
+        marginal: parseFloat(marginal.toFixed(2)),
+        isCurrentSpend: spend === currentSpend,
+        isMaxSaturation: spend === maxSaturation
       });
     }
     
@@ -64,9 +76,39 @@ export function ChannelSaturationCurve({
     return saturationData[saturationData.length - 1].spend;
   })();
 
+  // Custom render for the dot component to highlight current spending and max saturation
+  const CustomDot = (props: any) => {
+    const { cx, cy, payload } = props;
+    
+    // Only render dots for special points
+    const isCurrentSpend = payload.isCurrentSpend;
+    const isMaxSaturation = payload.isMaxSaturation;
+    
+    if (!isCurrentSpend && !isMaxSaturation) return null;
+
+    return (
+      <g>
+        <circle 
+          cx={cx} 
+          cy={cy} 
+          r={6} 
+          fill={isCurrentSpend ? "#ffffff" : "#000000"} 
+          stroke={color}
+          strokeWidth={2}
+        />
+        {isCurrentSpend && (
+          <circle cx={cx} cy={cy} r={3} fill={color} />
+        )}
+      </g>
+    );
+  };
+
   return (
     <div className="space-y-4">
-      <MarginalReturnsChart data={saturationData} />
+      <MarginalReturnsChart 
+        data={saturationData} 
+        customDot={CustomDot}
+      />
       
       <div className="bg-muted/30 p-4 rounded-lg">
         <h4 className="text-sm font-medium mb-2">Analysis</h4>
@@ -84,6 +126,10 @@ export function ChannelSaturationCurve({
           {saturationData[0].marginal <= 1 && (
             " This channel is already approaching its efficiency limit and may not benefit from additional spending."
           )}
+        </p>
+        <p className="text-sm text-muted-foreground mt-2">
+          <strong>Current spend:</strong> ${saturationData.find(d => d.isCurrentSpend)?.spend.toLocaleString()} | 
+          <strong> Maximum saturation:</strong> ${saturationData.find(d => d.isMaxSaturation)?.spend.toLocaleString()}
         </p>
       </div>
     </div>

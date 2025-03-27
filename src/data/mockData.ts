@@ -1,3 +1,4 @@
+
 import { faker } from "@faker-js/faker";
 
 // Define the channel names
@@ -28,6 +29,30 @@ export const channelColors = {
   organicSocial: "#277da1",
 };
 
+// Define saturation points and current spending for channel types
+export const channelSaturationData = {
+  search: {
+    currentSpend: 45000,
+    maxSaturation: 85000,
+    color: "#4361ee"
+  },
+  social: {
+    currentSpend: 35000,
+    maxSaturation: 70000,
+    color: "#8B5CF6" // Vivid Purple
+  },
+  display: {
+    currentSpend: 30000,
+    maxSaturation: 60000,
+    color: "#D946EF" // Magenta Pink
+  },
+  video: {
+    currentSpend: 25000,
+    maxSaturation: 55000,
+    color: "#0EA5E9" // Ocean Blue
+  }
+};
+
 // Function to generate random incremental data for each channel
 export const generateIncrementalData = () => {
   const channels = Object.keys(channelNames);
@@ -52,7 +77,7 @@ export const generatePerformanceData = (days: number) => {
       totalRevenue: faker.number.int({ min: 10000, max: 50000 }),
     };
     channels.forEach((channel) => {
-      day[channel] = faker.number.float({ min: 0.1, max: 1, precision: 0.01 });
+      day[channel] = faker.number.float({ min: 0.1, max: 1, fractionDigits: 2 });
     });
     data.push(day);
   }

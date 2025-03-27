@@ -10,6 +10,7 @@ import { ChannelBreakdownDisplay } from "@/components/dashboard/ChannelBreakdown
 import { ChannelInsights } from "@/components/dashboard/ChannelInsights";
 import { MarginalReturnsChart } from "@/components/dashboard/MarginalReturnsChart";
 import { mediaGroupColors } from "@/components/dashboard/MediaGroupBreakdownChart";
+import { channelSaturationData } from "@/data/mockData";
 
 interface MediaTypeAnalysisSectionProps {
   mediaGroupData: any[];
@@ -91,9 +92,9 @@ export function MediaTypeAnalysisSection({
             <MediaSaturationChart
               data={saturationData}
               curves={[
-                { dataKey: "search", color: "#4361ee", label: "Search" },
-                { dataKey: "social", color: "#3a0ca3", label: "Social" },
-                { dataKey: "display", color: "#7209b7", label: "Display" }
+                { dataKey: "search", color: channelSaturationData.search.color, label: "Search" },
+                { dataKey: "social", color: channelSaturationData.social.color, label: "Social" },
+                { dataKey: "display", color: channelSaturationData.display.color, label: "Display" }
               ]}
               loading={loading}
               height={400}
@@ -102,6 +103,7 @@ export function MediaTypeAnalysisSection({
               <p className="flex items-center gap-2">
                 <Info className="h-4 w-4 text-primary" /> 
                 Saturation curves show how incremental revenue changes as media spend increases, highlighting diminishing returns.
+                <span className="font-medium ml-1">Current spending points are marked with white centers, and maximum saturation points with black dots.</span>
               </p>
             </div>
           </TabsContent>

@@ -9,10 +9,12 @@ import {
   Tooltip, 
   Legend, 
   ResponsiveContainer,
-  ReferenceLine
+  ReferenceLine,
+  Scatter
 } from "recharts";
 import { cn } from "@/lib/utils";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { channelSaturationData } from "@/data/mockData";
 
 type MediaSaturationChartProps = {
   data: any[];
@@ -51,6 +53,35 @@ export function MediaSaturationChart({
     return acc;
   }, {} as Record<string, any>);
 
+  // Create a custom formatted data point for the tooltip
+  const CustomDot = (props: any) => {
+    const { cx, cy, dataKey, payload } = props;
+    
+    // Only render dots for special points
+    const isCurrentSpend = payload.spend === channelSaturationData[dataKey]?.currentSpend;
+    const isMaxSaturation = payload.spend === channelSaturationData[dataKey]?.maxSaturation;
+    
+    if (!isCurrentSpend && !isMaxSaturation) return null;
+
+    const dotColor = channelSaturationData[dataKey]?.color || props.stroke;
+    
+    return (
+      <g>
+        <circle 
+          cx={cx} 
+          cy={cy} 
+          r={isCurrentSpend ? 6 : 6} 
+          fill={isCurrentSpend ? "#ffffff" : "#000000"} 
+          stroke={dotColor}
+          strokeWidth={2}
+        />
+        {isCurrentSpend && (
+          <circle cx={cx} cy={cy} r={3} fill={dotColor} />
+        )}
+      </g>
+    );
+  };
+
   return (
     <ChartContainer className={cn("w-full", className)} style={{ height }} config={chartConfig}>
       <LineChart
@@ -78,6 +109,43 @@ export function MediaSaturationChart({
           tickFormatter={(value) => `$${value.toLocaleString()}`}
           label={{ value: "Incremental Revenue", angle: -90, position: "insideLeft" }}
         />
+        
+        {/* Add reference lines for current spend for each curve */}
+        {curves.map((curve) => {
+          const currentSpend = channelSaturationData[curve.dataKey]?.currentSpend;
+          const maxSaturation = channelSaturationData[curve.dataKey]?.maxSaturation;
+          return (
+            <React.Fragment key={curve.dataKey}>
+              {currentSpend && (
+                <ReferenceLine 
+                  x={currentSpend} 
+                  stroke={curve.color} 
+                  strokeDasharray="3 3"
+                  label={{ 
+                    value: `Current ${curve.label}`, 
+                    position: 'insideTopRight',
+                    fill: curve.color,
+                    fontSize: 10
+                  }} 
+                />
+              )}
+              {maxSaturation && (
+                <ReferenceLine 
+                  x={maxSaturation} 
+                  stroke={curve.color} 
+                  strokeDasharray="3 3"
+                  label={{ 
+                    value: `Max ${curve.label}`, 
+                    position: 'insideTopRight',
+                    fill: curve.color,
+                    fontSize: 10
+                  }} 
+                />
+              )}
+            </React.Fragment>
+          );
+        })}
+        
         <ChartTooltip
           content={
             <ChartTooltipContent 
@@ -100,7 +168,7 @@ export function MediaSaturationChart({
             name={curve.label}
             stroke={curve.color}
             strokeWidth={2}
-            dot={{ r: 3 }}
+            dot={<CustomDot />}
             activeDot={{ r: 5 }}
             animationDuration={1000 + index * 250}
             animationBegin={index * 100}

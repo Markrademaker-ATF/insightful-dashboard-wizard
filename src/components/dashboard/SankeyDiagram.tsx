@@ -49,7 +49,6 @@ export function SankeyDiagram({
         <Sankey
           data={data}
           node={{
-            nodeWidth: 10,
             nodePadding: 50,
           }}
           link={{
