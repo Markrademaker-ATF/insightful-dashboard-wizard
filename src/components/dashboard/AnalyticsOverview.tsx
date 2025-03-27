@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
@@ -13,6 +13,7 @@ import { ROISummaryCard } from "@/components/dashboard/ROISummaryCard";
 import { PerformanceSection } from "@/components/dashboard/PerformanceSection";
 import { AnalyticsSection } from "@/components/dashboard/AnalyticsSection";
 import { TimeSeriesSection } from "@/components/dashboard/TimeSeriesSection";
+import { SectionNav } from "@/components/dashboard/SectionNav";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, BarChart, LineChart, PieChart, Activity, Zap, LightbulbIcon, Target } from "lucide-react";
@@ -24,6 +25,65 @@ export function AnalyticsOverview() {
   const [channelData, setChannelData] = useState<any[]>([]);
   const [budgetData, setBudgetData] = useState<any[]>([]);
   const [timeframe, setTimeframe] = useState("30d");
+  const [activeSection, setActiveSection] = useState("roi-summary");
+
+  // Refs for scrolling to sections
+  const roiSummaryRef = useRef<HTMLDivElement>(null);
+  const revenueTrendsRef = useRef<HTMLDivElement>(null);
+  const channelPerformanceRef = useRef<HTMLDivElement>(null);
+  const channelAnalysisRef = useRef<HTMLDivElement>(null);
+  const campaignAnalysisRef = useRef<HTMLDivElement>(null);
+  const budgetAllocationRef = useRef<HTMLDivElement>(null);
+  const continueAnalysisRef = useRef<HTMLDivElement>(null);
+
+  // Section definitions
+  const sections = [
+    { id: "roi-summary", title: "ROI Summary", ref: roiSummaryRef },
+    { id: "revenue-trends", title: "Revenue Trends", ref: revenueTrendsRef },
+    { id: "channel-performance", title: "Channel Performance", ref: channelPerformanceRef },
+    { id: "channel-analysis", title: "Channel Analysis", ref: channelAnalysisRef },
+    { id: "campaign-analysis", title: "Campaign Analysis", ref: campaignAnalysisRef },
+    { id: "budget-allocation", title: "Budget Allocation", ref: budgetAllocationRef },
+    { id: "continue-analysis", title: "Continue Analysis", ref: continueAnalysisRef }
+  ];
+
+  // Handle section change
+  const handleSectionChange = (sectionId: string) => {
+    setActiveSection(sectionId);
+    const section = sections.find(s => s.id === sectionId);
+    if (section && section.ref.current) {
+      section.ref.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  // Intersection Observer for active section tracking during scroll
+  useEffect(() => {
+    const observers: IntersectionObserver[] = [];
+    const observerOptions = {
+      root: null,
+      rootMargin: '-100px 0px -50% 0px',
+      threshold: 0
+    };
+
+    sections.forEach(section => {
+      if (section.ref.current) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              setActiveSection(section.id);
+            }
+          });
+        }, observerOptions);
+
+        observer.observe(section.ref.current);
+        observers.push(observer);
+      }
+    });
+
+    return () => {
+      observers.forEach(observer => observer.disconnect());
+    };
+  }, [loading]); // Re-run when loading changes to ensure refs are attached
 
   useEffect(() => {
     // Simulate data loading
@@ -186,6 +246,13 @@ export function AnalyticsOverview() {
         </Tabs>
       </PageHeader>
       
+      {/* Section Navigation */}
+      <SectionNav 
+        sections={sections.map(s => ({ id: s.id, title: s.title }))}
+        activeSection={activeSection}
+        onSectionChange={handleSectionChange}
+      />
+      
       {/* Introduction Card */}
       <Card className="mb-8 border-l-4 border-l-blue-500 animate-fade-in">
         <CardContent className="pt-6">
@@ -205,7 +272,7 @@ export function AnalyticsOverview() {
       </Card>
 
       {/* Part 1: Return on Investment - The Big Picture */}
-      <div className="mb-10">
+      <div className="mb-10" ref={roiSummaryRef}>
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold flex items-center gap-2">
             <span className="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-white text-sm">1</span>
@@ -227,7 +294,7 @@ export function AnalyticsOverview() {
       </div>
       
       {/* Part 2: Revenue Trends Over Time */}
-      <div className="mb-10">
+      <div className="mb-10" ref={revenueTrendsRef}>
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold flex items-center gap-2">
             <span className="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-white text-sm">2</span>
@@ -248,7 +315,7 @@ export function AnalyticsOverview() {
       </div>
       
       {/* Part 3: Channel Performance */}
-      <div className="mb-10">
+      <div className="mb-10" ref={channelPerformanceRef}>
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold flex items-center gap-2">
             <span className="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-white text-sm">3</span>
@@ -265,7 +332,7 @@ export function AnalyticsOverview() {
       </div>
       
       {/* Part 4: Channel Analysis */}
-      <div className="mb-10">
+      <div className="mb-10" ref={channelAnalysisRef}>
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold flex items-center gap-2">
             <span className="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-white text-sm">4</span>
@@ -283,7 +350,7 @@ export function AnalyticsOverview() {
       </div>
       
       {/* Part 5: Campaign Analysis */}
-      <div className="mb-10">
+      <div className="mb-10" ref={campaignAnalysisRef}>
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold flex items-center gap-2">
             <span className="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-white text-sm">5</span>
@@ -342,7 +409,7 @@ export function AnalyticsOverview() {
       </div>
       
       {/* Part 6: Budget Allocation */}
-      <div className="mb-10">
+      <div className="mb-10" ref={budgetAllocationRef}>
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold flex items-center gap-2">
             <span className="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-white text-sm">6</span>
@@ -403,7 +470,7 @@ export function AnalyticsOverview() {
       </div>
       
       {/* Part 7: Continue Your Analysis */}
-      <div className="mb-10">
+      <div className="mb-10" ref={continueAnalysisRef}>
         <div className="mb-4">
           <h2 className="text-xl font-semibold flex items-center gap-2">
             <span className="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-white text-sm">7</span>
