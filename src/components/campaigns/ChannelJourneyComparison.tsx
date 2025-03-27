@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -119,7 +118,7 @@ export const ChannelJourneyComparison: React.FC<ChannelJourneyComparisonProps> =
                               className={`h-8 w-8 rounded-md flex items-center justify-center ${channelColor} ${getColorIntensity(displayPercentage)}`}
                               title={`${displayPercentage}% contribution at ${journeyStages[i]?.label}`}
                             >
-                              <span className="text-xs font-medium text-white">
+                              <span className="text-xs font-medium text-gray-900">
                                 {`${displayPercentage}%`}
                               </span>
                             </div>
