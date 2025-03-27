@@ -5,7 +5,8 @@ import {
   generatePerformanceData, 
   generateChannelData, 
   generateBudgetAllocation, 
-  channelColors 
+  channelColors,
+  generateBudgetRecommendations
 } from "@/data/mockData";
 
 import { ROISummaryCard } from "@/components/dashboard/ROISummaryCard";
@@ -281,7 +282,7 @@ export function AnalyticsOverview() {
         />
       </div>
       
-      {/* New Part 5: Campaign Analysis */}
+      {/* Part 5: Campaign Analysis */}
       <div className="mb-10">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold flex items-center gap-2">
@@ -340,11 +341,72 @@ export function AnalyticsOverview() {
         </div>
       </div>
       
-      {/* Part 6: Next Steps (previously part 5) */}
+      {/* Part 6: Budget Allocation */}
+      <div className="mb-10">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold flex items-center gap-2">
+            <span className="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-white text-sm">6</span>
+            Budget Allocation
+          </h2>
+          <Button variant="ghost" size="sm" asChild>
+            <Link to="/budget" className="flex items-center gap-1">
+              Optimize Budget <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {generateBudgetRecommendations().map((recommendation) => (
+            <Card key={recommendation.id} className="hover:shadow-md transition-shadow">
+              <CardContent className="p-6">
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <h3 className="font-semibold text-base">{recommendation.name}</h3>
+                    <p className="text-sm text-muted-foreground">Channel Budget</p>
+                  </div>
+                  <div 
+                    className="p-2 rounded-full"
+                    style={{ backgroundColor: recommendation.color + "1A" }}
+                  >
+                    <PieChart 
+                      className="h-5 w-5" 
+                      style={{ color: recommendation.color }} 
+                    />
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Current Budget</p>
+                    <p className="text-lg font-semibold">${recommendation.currentBudget.toLocaleString()}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Recommended Budget</p>
+                    <p className="text-lg font-semibold">${recommendation.recommendedBudget.toLocaleString()}</p>
+                  </div>
+                  <div className="col-span-2">
+                    <div 
+                      className={`text-xs px-2 py-1 rounded ${
+                        recommendation.change > 0 
+                          ? "bg-green-100 text-green-800" 
+                          : "bg-red-100 text-red-800"
+                      }`}
+                    >
+                      {recommendation.change > 0 ? "+" : ""}{recommendation.change}% Change
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+      
+      {/* Part 7: Continue Your Analysis */}
       <div className="mb-10">
         <div className="mb-4">
           <h2 className="text-xl font-semibold flex items-center gap-2">
-            <span className="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-white text-sm">6</span>
+            <span className="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-white text-sm">7</span>
             Continue Your Analysis
           </h2>
           <p className="text-muted-foreground mt-1">Choose where to explore next based on your goals</p>
