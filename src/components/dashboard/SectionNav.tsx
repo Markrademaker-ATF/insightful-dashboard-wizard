@@ -20,12 +20,14 @@ export function SectionNav({ sections, activeSection, onSectionChange }: Section
       <div className="flex items-center min-w-max">
         {sections.map((section, index) => (
           <React.Fragment key={section.id}>
-            {/* Connecting line */}
+            {/* Connecting line before buttons (except first) */}
             {index > 0 && (
               <div 
                 className={cn(
-                  "h-0.5 w-6 mx-1 transition-colors duration-300", 
-                  sections.findIndex(s => s.id === activeSection) >= index
+                  "h-0.5 w-6 mx-1", 
+                  activeSection === section.id || 
+                  activeSection === sections[index-1].id ||
+                  sections.findIndex(s => s.id === activeSection) > index
                     ? "bg-primary" 
                     : "bg-muted"
                 )}
@@ -38,7 +40,7 @@ export function SectionNav({ sections, activeSection, onSectionChange }: Section
               size="sm"
               className={cn(
                 "flex items-center gap-2 rounded-full transition-all",
-                sections.findIndex(s => s.id === activeSection) >= index
+                sections.findIndex(s => s.id === activeSection) > index && !activeSection.includes(section.id)
                   ? "border-primary text-primary hover:bg-primary/10"
                   : ""
               )}
@@ -48,7 +50,7 @@ export function SectionNav({ sections, activeSection, onSectionChange }: Section
                 "flex items-center justify-center w-6 h-6 rounded-full text-xs font-medium",
                 activeSection === section.id 
                   ? "bg-white text-primary" 
-                  : sections.findIndex(s => s.id === activeSection) >= index
+                  : sections.findIndex(s => s.id === activeSection) > index
                     ? "bg-primary/10 text-primary"
                     : "bg-muted text-muted-foreground"
               )}>
