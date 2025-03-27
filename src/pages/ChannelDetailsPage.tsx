@@ -6,7 +6,7 @@ import { MetricCard } from "@/components/dashboard/MetricCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Brain, LineChart, Target, Users, DollarSign, BarChart3 } from "lucide-react";
+import { Brain, LineChart, Target, Users, DollarSign, BarChart3, Filter } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FilterExportControls } from "@/components/channels/FilterExportControls";
 import {
@@ -16,7 +16,7 @@ import {
   channelNames,
 } from "@/data/mockData";
 import { CampaignBreakdownTab } from "@/components/campaigns/CampaignBreakdownTab";
-import { Cpu, Database, BarChart4, Info, Filter } from "lucide-react";
+import { Cpu, Database, BarChart4, Info } from "lucide-react";
 import { ChannelJourneyComparison } from "@/components/campaigns/ChannelJourneyComparison";
 import { KeyMetricsGrid } from "@/components/dashboard/KeyMetricsGrid";
 
@@ -513,52 +513,14 @@ const ChannelDetailsPage = () => {
         </CardContent>
       </Card>
 
-      {/* Campaign Selector */}
-      <div className="mb-6">
-        <Card>
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Filter className="h-5 w-5 text-primary" />
-                <CardTitle>Campaign Filter</CardTitle>
-              </div>
-              <FilterExportControls 
-                filterOptions={{ 
-                  metrics: true,
-                  channels: false
-                }}
-              />
-            </div>
-            <CardDescription>Select a specific campaign to view detailed analytics</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Select
-              value={selectedCampaign}
-              onValueChange={handleCampaignChange}
-            >
-              <SelectTrigger className="w-full md:w-[320px]">
-                <SelectValue placeholder="Select campaign" />
-              </SelectTrigger>
-              <SelectContent>
-                {campaigns.map((campaign) => (
-                  <SelectItem key={campaign.id} value={campaign.id}>
-                    {campaign.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </CardContent>
-        </Card>
-      </div>
-
       {/* Main Tabs for different analysis views */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList className="mb-2">
           <TabsTrigger value="overview" className="flex items-center gap-1">
             <LineChart className="h-4 w-4" /> Overview
           </TabsTrigger>
-          <TabsTrigger value="attribution" className="flex items-center gap-1">
-            <Brain className="h-4 w-4" /> Data-Driven Attribution
+          <TabsTrigger value="campaign-filters" className="flex items-center gap-1">
+            <Filter className="h-4 w-4" /> Campaign Filters
           </TabsTrigger>
           {selectedCampaign !== "all" && (
             <TabsTrigger value="campaign-breakdown" className="flex items-center gap-1">
@@ -567,8 +529,55 @@ const ChannelDetailsPage = () => {
           )}
         </TabsList>
 
-        {/* Overview Tab */}
+        {/* Overview Tab - Now contains Journey Analysis */}
         <TabsContent value="overview" className="space-y-6">
+          {/* Journey Analysis Section */}
+          {journeyData && (
+            <ChannelJourneyComparison 
+              data={journeyData || { channels: [] }} 
+              loading={loading} 
+            />
+          )}
+        </TabsContent>
+
+        {/* Campaign Filters Tab - Contains filter and performance charts */}
+        <TabsContent value="campaign-filters" className="space-y-6">
+          {/* Campaign Selector */}
+          <Card>
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Filter className="h-5 w-5 text-primary" />
+                  <CardTitle>Campaign Filter</CardTitle>
+                </div>
+                <FilterExportControls 
+                  filterOptions={{ 
+                    metrics: true,
+                    channels: false
+                  }}
+                />
+              </div>
+              <CardDescription>Select a specific campaign to view detailed analytics</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Select
+                value={selectedCampaign}
+                onValueChange={handleCampaignChange}
+              >
+                <SelectTrigger className="w-full md:w-[320px]">
+                  <SelectValue placeholder="Select campaign" />
+                </SelectTrigger>
+                <SelectContent>
+                  {campaigns.map((campaign) => (
+                    <SelectItem key={campaign.id} value={campaign.id}>
+                      {campaign.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </CardContent>
+          </Card>
+
           {/* Attribution over time */}
           <Card>
             <CardHeader>
@@ -592,42 +601,6 @@ const ChannelDetailsPage = () => {
                     color: "#f72585",
                     label: "Conversions",
                     yAxisId: "right"
-                  },
-                ]}
-                loading={loading}
-                height={350}
-              />
-            </CardContent>
-          </Card>
-          
-          {/* Journey Analysis Section */}
-          {journeyData && (
-            <ChannelJourneyComparison 
-              data={journeyData || { channels: [] }} 
-              loading={loading} 
-            />
-          )}
-        </TabsContent>
-
-        {/* Data-Driven Attribution Tab */}
-        <TabsContent value="attribution" className="space-y-6">
-          {/* Attribution over time */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Attribution Performance Over Time</CardTitle>
-              <CardDescription>
-                Visualize attributed revenue and conversions across the selected time period
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <PerformanceChart 
-                data={attributionData} 
-                lines={[
-                  {
-                    dataKey: "value",
-                    color: "#4361ee",
-                    label: "Attributed Revenue",
-                    yAxisId: "left"
                   },
                 ]}
                 loading={loading}
