@@ -123,7 +123,7 @@ export function TimeSeriesSection({ data, loading }: TimeSeriesSectionProps) {
         </div>
       </CardHeader>
       <CardContent>
-        <Tabs value={chartView} onValueChange={setChartView} defaultValue="combined" className="mb-4">
+        <Tabs value={chartView} onValueChange={setChartView} className="mb-4">
           <TabsList className="grid w-full max-w-md grid-cols-3">
             <TabsTrigger value="combined">Combined View</TabsTrigger>
             <TabsTrigger value="separated">Separated View</TabsTrigger>
