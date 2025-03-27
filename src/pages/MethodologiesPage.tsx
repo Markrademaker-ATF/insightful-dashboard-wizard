@@ -1,10 +1,14 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Helmet } from "react-helmet";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { ChevronRight, BarChart, TrendingUp, Layers } from "lucide-react";
+import MethodologySelector from "@/components/methodologies/MethodologySelector";
+import MethodologyDetails from "@/components/methodologies/MethodologyDetails";
 
 const MethodologiesPage = () => {
+  const [activeMethodology, setActiveMethodology] = useState<string>("");
+  
   return (
     <>
       <Helmet>
@@ -133,6 +137,14 @@ const MethodologiesPage = () => {
           </div>
         </CardContent>
       </Card>
+      
+      {/* Methodology Selector and Details */}
+      <MethodologySelector 
+        activeMethodology={activeMethodology} 
+        setActiveMethodology={setActiveMethodology} 
+      />
+      
+      {activeMethodology && <MethodologyDetails methodology={activeMethodology} />}
     </>
   );
 };
