@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -115,10 +116,10 @@ export const ChannelJourneyComparison: React.FC<ChannelJourneyComparisonProps> =
                         return (
                           <div key={stage} className="flex justify-center p-1">
                             <div 
-                              className={`h-8 w-8 rounded-md flex items-center justify-center ${channelColor} ${getColorIntensity(displayPercentage)}`}
+                              className={`h-8 w-8 rounded-md flex items-center justify-center bg-blue-500 ${getColorIntensity(displayPercentage)}`}
                               title={`${displayPercentage}% contribution at ${journeyStages[i]?.label}`}
                             >
-                              <span className="text-xs font-medium text-gray-900">
+                              <span className="text-xs font-medium text-white">
                                 {`${displayPercentage}%`}
                               </span>
                             </div>
@@ -146,7 +147,7 @@ export const ChannelJourneyComparison: React.FC<ChannelJourneyComparisonProps> =
                 <div className="flex items-center space-x-2">
                   {[10, 20, 30, 40, 50].map((value, i) => (
                     <div key={i} className="flex items-center gap-1">
-                      <div className={`w-4 h-4 bg-primary ${getColorIntensity(value)} rounded-sm`}></div>
+                      <div className={`w-4 h-4 bg-blue-500 ${getColorIntensity(value)} rounded-sm`}></div>
                       <span className="text-xs text-muted-foreground">
                         {`${value}%`}
                         {value === 50 ? "+" : ""}
