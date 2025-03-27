@@ -9,7 +9,6 @@ import { ChannelPerformanceTable } from "@/components/channels/ChannelPerformanc
 import { ChannelBreakdownChart } from "@/components/channels/ChannelBreakdownChart";
 import { ChannelTrendsChart } from "@/components/channels/ChannelTrendsChart";
 import { ChannelComparisonChart } from "@/components/channels/ChannelComparisonChart";
-import { ChannelMetricsCards } from "@/components/channels/ChannelMetricsCards";
 import { ChannelMetricsOverview } from "@/components/channels/ChannelMetricsOverview";
 import { generateChannelData, generateChannelTrendsData, channelColors, channelNames } from "@/data/mockData";
 import { FilterExportControls } from "@/components/channels/FilterExportControls";
@@ -86,7 +85,7 @@ export default function ChannelsPage() {
       {/* Add Channel Metrics Overview before the Channel Metrics Cards */}
       <ChannelMetricsOverview data={channelData} loading={loading} />
 
-      <ChannelMetricsCards data={channelData} loading={loading} />
+      {/* Removed the ChannelMetricsCards component */}
 
       {/* Channel Filter Section */}
       <Card className="mb-4">
