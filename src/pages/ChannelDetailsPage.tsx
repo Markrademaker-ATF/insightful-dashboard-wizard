@@ -541,8 +541,8 @@ const ChannelDetailsPage = () => {
                 </div>
                 <FilterExportControls 
                   filterOptions={{ 
-                    metrics: true,
-                    channels: false
+                    channels: false,
+                    metrics: true
                   }}
                 />
               </div>
@@ -625,8 +625,6 @@ const ChannelDetailsPage = () => {
   );
 };
 
-export default ChannelDetailsPage;
-
 // Helper component for the attribution chart
 const AttributionChart: React.FC<{ data: any[] }> = ({ data }) => {
   return (
@@ -665,3 +663,5 @@ const AttributionChart: React.FC<{ data: any[] }> = ({ data }) => {
     </div>
   );
 };
+
+export default ChannelDetailsPage;
