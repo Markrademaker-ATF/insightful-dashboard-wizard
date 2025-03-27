@@ -4,10 +4,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Skeleton } from "@/components/ui/skeleton";
 import { ArrowRight, MapPin, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { channelColors, channelNames } from "@/data/mockData";
 
 interface ChannelJourneyComparisonProps {
   data: {
     channels: Array<{
+      id: string;
       name: string;
       colorClass: string;
       conversions: number;
@@ -80,7 +82,7 @@ export const ChannelJourneyComparison: React.FC<ChannelJourneyComparisonProps> =
           <div className="min-w-[750px]">
             {/* Header */}
             <div className="grid grid-cols-12 mb-6">
-              <div className="col-span-3 px-2 font-medium text-sm">Conversion</div>
+              <div className="col-span-3 px-2 font-medium text-sm">Channel</div>
               <div className="col-span-6 grid grid-cols-4 gap-1 px-2">
                 {journeyStages.map((stage) => (
                   <div key={stage.id} className="text-center font-medium text-sm">
@@ -93,41 +95,48 @@ export const ChannelJourneyComparison: React.FC<ChannelJourneyComparisonProps> =
 
             {/* Channel rows */}
             <div className="space-y-3">
-              {data.channels.map((channel, index) => (
-                <div key={index} className="grid grid-cols-12 items-center">
-                  {/* Channel name */}
-                  <div className={`col-span-3 p-2 rounded-l-md ${channel.colorClass} bg-opacity-20 font-medium`}>
-                    {channel.name}
+              {data.channels.map((channel, index) => {
+                // Get channel color from the standardized colors
+                const channelColor = channel.id in channelColors
+                  ? `bg-[${channelColors[channel.id as keyof typeof channelColors]}]`
+                  : channel.colorClass;
+                
+                return (
+                  <div key={index} className="grid grid-cols-12 items-center">
+                    {/* Channel name */}
+                    <div className={`col-span-3 p-2 rounded-l-md ${channelColor} bg-opacity-20 font-medium`}>
+                      {channelNames[channel.id as keyof typeof channelNames] || channel.name}
+                    </div>
+                    
+                    {/* Journey stages */}
+                    <div className="col-span-6 grid grid-cols-4 gap-1 p-1">
+                      {Object.entries(channel.journeyContribution).map(([stage, percentage], i) => (
+                        <div key={stage} className="flex justify-center p-1">
+                          {percentage > 0 ? (
+                            <div 
+                              className={`h-8 w-8 rounded-md flex items-center justify-center ${channelColor} ${getColorIntensity(percentage)}`}
+                              title={`${percentage}% contribution at ${journeyStages[i]?.label}`}
+                            >
+                              <span className="text-xs font-medium text-white">
+                                {percentage > 0 ? `${percentage}%` : ""}
+                              </span>
+                            </div>
+                          ) : (
+                            <div className="h-8 w-8 flex items-center justify-center text-muted-foreground">
+                              —
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                    
+                    {/* Conversions */}
+                    <div className="col-span-3 p-2 rounded-r-md bg-gray-100 text-right font-medium">
+                      {channel.conversions.toLocaleString()}
+                    </div>
                   </div>
-                  
-                  {/* Journey stages */}
-                  <div className="col-span-6 grid grid-cols-4 gap-1 p-1">
-                    {Object.entries(channel.journeyContribution).map(([stage, percentage], i) => (
-                      <div key={stage} className="flex justify-center p-1">
-                        {percentage > 0 ? (
-                          <div 
-                            className={`h-8 w-8 rounded-md flex items-center justify-center ${channel.colorClass} ${getColorIntensity(percentage)}`}
-                            title={`${percentage}% contribution at ${journeyStages[i]?.label}`}
-                          >
-                            <span className="text-xs font-medium text-white">
-                              {percentage > 0 ? `${percentage}%` : ""}
-                            </span>
-                          </div>
-                        ) : (
-                          <div className="h-8 w-8 flex items-center justify-center text-muted-foreground">
-                            —
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                  
-                  {/* Conversions */}
-                  <div className="col-span-3 p-2 rounded-r-md bg-gray-100 text-right font-medium">
-                    {channel.conversions.toLocaleString()}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* Legend */}
@@ -159,3 +168,4 @@ export const ChannelJourneyComparison: React.FC<ChannelJourneyComparisonProps> =
     </Card>
   );
 };
+

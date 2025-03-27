@@ -182,7 +182,8 @@ const ChannelDetailsPage = () => {
       // Generate journey analysis data
       const journeyChannels = [
         {
-          name: "Paid Search",
+          id: "search",
+          name: channelNames.search,
           colorClass: "bg-blue-600",
           conversions: 171850,
           journeyContribution: {
@@ -193,7 +194,8 @@ const ChannelDetailsPage = () => {
           }
         },
         {
-          name: "Social Media",
+          id: "social",
+          name: channelNames.social,
           colorClass: "bg-gray-500",
           conversions: 56205,
           journeyContribution: {
@@ -204,7 +206,8 @@ const ChannelDetailsPage = () => {
           }
         },
         {
-          name: "Video",
+          id: "video",
+          name: channelNames.video,
           colorClass: "bg-purple-300",
           conversions: 13824,
           journeyContribution: {
@@ -215,7 +218,8 @@ const ChannelDetailsPage = () => {
           }
         },
         {
-          name: "Display",
+          id: "display",
+          name: channelNames.display,
           colorClass: "bg-red-300",
           conversions: 2847,
           journeyContribution: {
@@ -226,7 +230,8 @@ const ChannelDetailsPage = () => {
           }
         },
         {
-          name: "Amazon Search",
+          id: "affiliate",
+          name: channelNames.affiliate,
           colorClass: "bg-blue-400",
           conversions: 1234,
           journeyContribution: {
@@ -237,7 +242,8 @@ const ChannelDetailsPage = () => {
           }
         },
         {
-          name: "Audience: Env conscious",
+          id: "email",
+          name: channelNames.email,
           colorClass: "bg-teal-300",
           conversions: 1435,
           journeyContribution: {
@@ -248,7 +254,8 @@ const ChannelDetailsPage = () => {
           }
         },
         {
-          name: "Campaign: #HelloVoisins",
+          id: "direct",
+          name: channelNames.direct,
           colorClass: "bg-blue-300",
           conversions: 23,
           journeyContribution: {
@@ -259,7 +266,8 @@ const ChannelDetailsPage = () => {
           }
         },
         {
-          name: "Creative: Well at Home",
+          id: "referral",
+          name: channelNames.referral,
           colorClass: "bg-green-300",
           conversions: 9,
           journeyContribution: {
