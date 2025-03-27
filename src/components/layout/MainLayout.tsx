@@ -41,7 +41,7 @@ export function MainLayout() {
       <div className={cn(
         "flex-1 transition-all duration-300 ease-smooth bg-gray-50",
         collapsed ? "ml-16" : "ml-64",
-        "p-8"
+        "p-6"
       )}>
         <div className="max-w-7xl w-full mx-auto">
           <Outlet />

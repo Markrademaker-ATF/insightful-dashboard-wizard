@@ -1,102 +1,87 @@
 
 import React from "react";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
-import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ABTest } from "@/hooks/useMockABTestData";
+import { ChartContainer } from "@/components/ui/chart";
 
 interface ABTestComparisonChartProps {
-  test: any;
+  test: ABTest;
   loading?: boolean;
 }
 
 export function ABTestComparisonChart({ test, loading = false }: ABTestComparisonChartProps) {
   if (loading) {
-    return (
-      <div className="w-full">
-        <Skeleton className="h-[350px] w-full" />
-      </div>
-    );
+    return <Skeleton className="h-[350px] w-full" />;
   }
 
-  // Extract variant data
-  const variantA = test.variants.find((v: any) => v.name === "Control");
-  const variantB = test.variants.find((v: any) => v.name === "Variant");
-
-  // Prepare chart data for display
+  // Prepare chart data using actual test variants
   const chartData = [
     {
-      name: "Conversion Rate",
-      Control: variantA?.conversionRate || 0,
-      Variant: variantB?.conversionRate || 0,
-      controlValue: variantA?.conversionRate || 0,
-      variantValue: variantB?.conversionRate || 0,
+      name: "Conversion Rate (%)",
+      [test.variants[0].name]: test.variants[0].conversionRate,
+      [test.variants[1]?.name || "Variant"]: test.variants[1]?.conversionRate || 0,
+      controlValue: test.variants[0].conversionRate,
+      variantValue: test.variants[1]?.conversionRate || 0,
     },
     {
-      name: "Average Order Value",
-      Control: variantA?.averageOrderValue || 0,
-      Variant: variantB?.averageOrderValue || 0,
-      controlValue: variantA?.averageOrderValue || 0,
-      variantValue: variantB?.averageOrderValue || 0,
-    },
-    {
-      name: "Revenue per Visitor",
-      Control: variantA?.revenuePerVisitor || 0,
-      Variant: variantB?.revenuePerVisitor || 0,
-      controlValue: variantA?.revenuePerVisitor || 0,
-      variantValue: variantB?.revenuePerVisitor || 0,
+      name: "Revenue per Visitor ($)",
+      [test.variants[0].name]: (test.variants[0].revenue / test.variants[0].visitors).toFixed(2),
+      [test.variants[1]?.name || "Variant"]: test.variants[1] 
+        ? (test.variants[1].revenue / test.variants[1].visitors).toFixed(2) 
+        : 0,
+      controlValue: (test.variants[0].revenue / test.variants[0].visitors).toFixed(2),
+      variantValue: test.variants[1] 
+        ? (test.variants[1].revenue / test.variants[1].visitors).toFixed(2) 
+        : 0,
     }
   ];
 
-  // Calculate percentage differences for tooltips
-  const percentageDiffs = {
-    "Conversion Rate": calculatePercentDiff(variantA?.conversionRate, variantB?.conversionRate),
-    "Average Order Value": calculatePercentDiff(variantA?.averageOrderValue, variantB?.averageOrderValue),
-    "Revenue per Visitor": calculatePercentDiff(variantA?.revenuePerVisitor, variantB?.revenuePerVisitor),
-  };
+  // Get control and variant names for dynamic display
+  const controlName = test.variants.find(v => v.isControl)?.name || test.variants[0].name;
+  const variantName = test.variants.find(v => !v.isControl)?.name || test.variants[1]?.name || "Variant";
 
-  // Format values for tooltip
-  const formatValue = (value: number, metricName: string) => {
-    if (metricName === "Conversion Rate") {
-      return `${(value * 100).toFixed(2)}%`;
-    }
-    if (metricName === "Average Order Value") {
-      return `$${value.toFixed(2)}`;
-    }
-    if (metricName === "Revenue per Visitor") {
-      return `$${value.toFixed(2)}`;
-    }
-    return value.toString();
+  // Calculate percentage improvements for tooltips
+  const calculateImprovement = (controlValue: number, variantValue: number) => {
+    if (controlValue === 0) return 0;
+    return ((variantValue - controlValue) / controlValue) * 100;
   };
 
   // Custom tooltip component
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
-      const controlValue = payload[0].value;
-      const variantValue = payload[1].value;
-      const diff = percentageDiffs[label as keyof typeof percentageDiffs];
+      const controlValue = parseFloat(payload[0].value);
+      const variantValue = parseFloat(payload[1].value);
+      const improvement = calculateImprovement(controlValue, variantValue);
       
       return (
         <div className="bg-background p-3 border rounded shadow-lg">
           <p className="font-semibold">{label}</p>
-          <p className="text-sm">Control: {formatValue(controlValue, label)}</p>
-          <p className="text-sm">Variant: {formatValue(variantValue, label)}</p>
-          <p className="text-sm font-medium mt-1" style={{ color: diff >= 0 ? "#10b981" : "#ef4444" }}>
-            {diff >= 0 ? "+" : ""}{diff.toFixed(2)}%
-          </p>
+          <p className="text-sm">{controlName}: {payload[0].value}{label.includes("%") ? "%" : ""}</p>
+          <p className="text-sm">{variantName}: {payload[1].value}{label.includes("%") ? "%" : ""}</p>
+          <div className="mt-1">
+            <p className={`text-sm font-medium ${improvement >= 0 ? "text-green-500" : "text-red-500"}`}>
+              {improvement > 0 ? "+" : ""}{improvement.toFixed(2)}% vs Control
+            </p>
+          </div>
         </div>
       );
     }
     return null;
   };
 
-  // Function to determine bar fill color
-  const getBarFill = (data: any) => {
-    const isControl = data.dataKey === "Control";
-    return isControl ? "#94a3b8" : "#4361ee";
-  };
-
   return (
-    <ResponsiveContainer width="100%" height={350}>
+    <ChartContainer 
+      config={{
+        [controlName]: { 
+          color: "#94a3b8" 
+        },
+        [variantName]: { 
+          color: "#8b5cf6" 
+        },
+      }}
+      className="w-full h-[350px]"
+    >
       <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
         <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.1)" />
         <XAxis 
@@ -113,23 +98,18 @@ export function ABTestComparisonChart({ test, loading = false }: ABTestCompariso
         <Tooltip content={<CustomTooltip />} />
         <Legend />
         <Bar 
-          dataKey="Control" 
-          name="Control" 
+          dataKey={controlName}
+          name={controlName}
           fill="#94a3b8" 
           radius={[4, 4, 0, 0]} 
         />
         <Bar 
-          dataKey="Variant" 
-          name="Variant" 
-          fill="#4361ee" 
+          dataKey={variantName}
+          name={variantName}
+          fill="#8b5cf6" 
           radius={[4, 4, 0, 0]} 
         />
       </BarChart>
-    </ResponsiveContainer>
+    </ChartContainer>
   );
-}
-
-function calculatePercentDiff(valueA: number = 0, valueB: number = 0): number {
-  if (valueA === 0) return valueB > 0 ? 100 : 0;
-  return ((valueB - valueA) / valueA) * 100;
 }
