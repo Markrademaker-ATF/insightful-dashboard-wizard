@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,6 +10,7 @@ import { ChannelBreakdownChart } from "@/components/channels/ChannelBreakdownCha
 import { ChannelTrendsChart } from "@/components/channels/ChannelTrendsChart";
 import { ChannelComparisonChart } from "@/components/channels/ChannelComparisonChart";
 import { ChannelMetricsCards } from "@/components/channels/ChannelMetricsCards";
+import { ChannelMetricsOverview } from "@/components/channels/ChannelMetricsOverview";
 import { generateChannelData, generateChannelTrendsData, channelColors, channelNames } from "@/data/mockData";
 import { FilterExportControls } from "@/components/channels/FilterExportControls";
 import { ChannelDetailView } from "@/components/channels/ChannelDetailView";
@@ -82,6 +82,9 @@ export default function ChannelsPage() {
           </div>
         </PageHeader>
       </div>
+
+      {/* Add Channel Metrics Overview before the Channel Metrics Cards */}
+      <ChannelMetricsOverview data={channelData} loading={loading} />
 
       <ChannelMetricsCards data={channelData} loading={loading} />
 
