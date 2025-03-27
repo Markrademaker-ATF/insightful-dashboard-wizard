@@ -14,7 +14,8 @@ import {
   LayoutDashboard,
   ChevronDown,
   ChevronRight,
-  FileBarChart
+  FileBarChart,
+  Lightbulb
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -34,6 +35,11 @@ const navItems: NavItem[] = [
         title: "Analytics Overview",
         href: "/",
         icon: LayoutDashboard,
+      },
+      {
+        title: "Analytics Methodologies",
+        href: "/methodologies",
+        icon: Lightbulb,
       },
       {
         title: "Data Overview",

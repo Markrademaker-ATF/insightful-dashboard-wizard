@@ -15,6 +15,7 @@ import BudgetPage from "./pages/BudgetPage";
 import ABTestingPage from "./pages/ABTestingPage";
 import GuidePage from "./pages/GuidePage";
 import SettingsPage from "./pages/SettingsPage";
+import MethodologiesPage from "./pages/MethodologiesPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -28,6 +29,7 @@ const App = () => (
         <Routes>
           <Route element={<MainLayout />}>
             <Route path="/" element={<Index />} />
+            <Route path="/methodologies" element={<MethodologiesPage />} />
             <Route path="/data" element={<DataPage />} />
             <Route path="/metrics" element={<MetricsPage />} />
             <Route path="/channels" element={<ChannelsPage />} />
