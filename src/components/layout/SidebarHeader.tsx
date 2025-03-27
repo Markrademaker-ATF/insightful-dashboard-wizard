@@ -16,7 +16,7 @@ export function SidebarHeader({ collapsed, setCollapsed }: SidebarHeaderProps) {
           <img 
             src="/lovable-uploads/c91593ad-aa3a-4f49-b9f4-86d049161286.png" 
             alt="Artefact Logo" 
-            className="h-8" 
+            className="h-10" 
           />
         </div>
       )}
@@ -25,7 +25,7 @@ export function SidebarHeader({ collapsed, setCollapsed }: SidebarHeaderProps) {
           <img 
             src="/lovable-uploads/c91593ad-aa3a-4f49-b9f4-86d049161286.png" 
             alt="Artefact Logo" 
-            className="h-6" 
+            className="h-8" 
           />
         </div>
       )}
