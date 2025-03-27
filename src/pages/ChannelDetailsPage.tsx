@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useSearchParams, useLocation } from "react-router-dom";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -519,11 +518,13 @@ const ChannelDetailsPage = () => {
             </CardContent>
           </Card>
 
-          {/* Overview Section - Journey Analysis */}
+          {/* Customer Journey Driver Analysis */}
           <Card className="mb-6">
             <CardContent className="p-0">
               {loading ? (
-                <Skeleton className="h-[500px] w-full" />
+                <div className="p-6">
+                  <Skeleton className="h-[500px] w-full" />
+                </div>
               ) : (
                 <ChannelJourneyComparison 
                   data={journeyData || { channels: [] }} 
