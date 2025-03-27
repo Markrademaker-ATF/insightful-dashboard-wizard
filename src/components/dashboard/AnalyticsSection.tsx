@@ -3,7 +3,7 @@ import React from "react";
 import { ChannelBreakdownChart } from "@/components/dashboard/ChannelBreakdownChart";
 import { BudgetAllocationChart } from "@/components/dashboard/BudgetAllocationChart";
 import { Button } from "@/components/ui/button";
-import { Radio, PieChart } from "lucide-react";
+import { Radio, PieChart, BarChart } from "lucide-react";
 
 type AnalyticsSectionProps = {
   channelData: any[];
@@ -29,7 +29,7 @@ export function AnalyticsSection({
           </div>
           <Button variant="ghost" size="sm" asChild>
             <a href="/channels">
-              <Radio className="h-4 w-4 mr-1" /> All channels
+              <BarChart className="h-4 w-4 mr-1" /> Channel analysis
             </a>
           </Button>
         </div>
