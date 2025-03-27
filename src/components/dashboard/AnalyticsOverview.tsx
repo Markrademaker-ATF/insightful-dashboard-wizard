@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -15,7 +14,7 @@ import { AnalyticsSection } from "@/components/dashboard/AnalyticsSection";
 import { TimeSeriesSection } from "@/components/dashboard/TimeSeriesSection";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, BarChart, LineChart, PieChart, Activity, Zap, LightbulbIcon } from "lucide-react";
+import { ArrowRight, BarChart, LineChart, PieChart, Activity, Zap, LightbulbIcon, Target } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export function AnalyticsOverview() {
@@ -129,6 +128,40 @@ export function AnalyticsOverview() {
       icon: LineChart,
       path: "/ab-testing",
       color: "bg-amber-100 text-amber-700"
+    }
+  ];
+
+  // Generate mock campaign data for the new section
+  const topCampaigns = [
+    {
+      id: "camp-1",
+      name: "Summer Sale Promotion",
+      revenue: 32450,
+      cost: 8500,
+      impressions: 1240000,
+      clicks: 65000,
+      conversions: 2150,
+      roas: 3.82
+    },
+    {
+      id: "camp-2",
+      name: "New Customer Acquisition",
+      revenue: 28900,
+      cost: 12000,
+      impressions: 980000,
+      clicks: 48000,
+      conversions: 1850,
+      roas: 2.41
+    },
+    {
+      id: "camp-3",
+      name: "Brand Awareness Campaign",
+      revenue: 18200,
+      cost: 6800,
+      impressions: 1560000,
+      clicks: 42000,
+      conversions: 920,
+      roas: 2.68
     }
   ];
 
@@ -248,11 +281,70 @@ export function AnalyticsOverview() {
         />
       </div>
       
-      {/* Part 5: Next Steps */}
+      {/* New Part 5: Campaign Analysis */}
+      <div className="mb-10">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold flex items-center gap-2">
+            <span className="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-white text-sm">5</span>
+            Campaign Analysis
+          </h2>
+          <Button variant="ghost" size="sm" asChild>
+            <Link to="/channel-details" className="flex items-center gap-1">
+              View all campaigns <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
+        
+        {/* Campaign performance cards */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {topCampaigns.map((campaign) => (
+            <Card key={campaign.id} className="hover:shadow-md transition-shadow">
+              <CardContent className="p-6">
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <h3 className="font-semibold text-base">{campaign.name}</h3>
+                    <p className="text-sm text-muted-foreground">Campaign ID: {campaign.id}</p>
+                  </div>
+                  <div className="p-2 rounded-full bg-blue-100">
+                    <Target className="h-5 w-5 text-blue-700" />
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4 mb-4">
+                  <div>
+                    <p className="text-sm text-muted-foreground">Revenue</p>
+                    <p className="text-lg font-semibold">${campaign.revenue.toLocaleString()}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">ROAS</p>
+                    <p className="text-lg font-semibold">{campaign.roas.toFixed(2)}x</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Impressions</p>
+                    <p className="text-lg font-semibold">{(campaign.impressions / 1000).toFixed(0)}K</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-muted-foreground">Conversions</p>
+                    <p className="text-lg font-semibold">{campaign.conversions.toLocaleString()}</p>
+                  </div>
+                </div>
+                
+                <Button variant="outline" className="w-full" asChild>
+                  <Link to={`/channel-details?campaign=${campaign.id}`}>
+                    View campaign details
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+      
+      {/* Part 6: Next Steps (previously part 5) */}
       <div className="mb-10">
         <div className="mb-4">
           <h2 className="text-xl font-semibold flex items-center gap-2">
-            <span className="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-white text-sm">5</span>
+            <span className="flex items-center justify-center w-7 h-7 rounded-full bg-primary text-white text-sm">6</span>
             Continue Your Analysis
           </h2>
           <p className="text-muted-foreground mt-1">Choose where to explore next based on your goals</p>
