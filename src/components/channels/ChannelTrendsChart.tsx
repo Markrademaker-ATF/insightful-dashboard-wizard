@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import {
   LineChart,
   Line,
@@ -12,6 +12,7 @@ import {
 } from "recharts";
 import { Skeleton } from "@/components/ui/skeleton";
 import { channelColors } from "@/data/mockData";
+import { FilterExportControls } from "./FilterExportControls";
 
 type ChannelTrendsChartProps = {
   data: any[];
@@ -19,6 +20,8 @@ type ChannelTrendsChartProps = {
 };
 
 export function ChannelTrendsChart({ data, loading }: ChannelTrendsChartProps) {
+  const [selectedChannels, setSelectedChannels] = useState<string[]>([]);
+
   if (loading) {
     return <Skeleton className="w-full h-[400px]" />;
   }
@@ -28,8 +31,17 @@ export function ChannelTrendsChart({ data, loading }: ChannelTrendsChartProps) {
     (key) => key !== "name" && key !== "date" && key !== "totalRevenue"
   );
 
+  // Filter channels if any are selected
+  const displayChannels = selectedChannels.length > 0 
+    ? channels.filter(channel => selectedChannels.includes(channel))
+    : channels;
+
   return (
-    <div className="w-full">
+    <div className="w-full space-y-4">
+      <div className="flex justify-end">
+        <FilterExportControls filterOptions={{ channels: true, metrics: false }} />
+      </div>
+      
       <ResponsiveContainer width="100%" height={400}>
         <LineChart
           data={data}
@@ -64,7 +76,7 @@ export function ChannelTrendsChart({ data, loading }: ChannelTrendsChartProps) {
             }}
           />
           <Legend />
-          {channels.map((channel, index) => (
+          {displayChannels.map((channel, index) => (
             <Line
               key={channel}
               type="monotone"

@@ -13,6 +13,7 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { channelColors } from "@/data/mockData";
+import { FilterExportControls } from "./FilterExportControls";
 
 type ChannelComparisonChartProps = {
   data: any[];
@@ -21,6 +22,7 @@ type ChannelComparisonChartProps = {
 
 export function ChannelComparisonChart({ data, loading }: ChannelComparisonChartProps) {
   const [metric, setMetric] = useState("roas");
+  const [filteredData, setFilteredData] = useState(data);
 
   if (loading) {
     return <Skeleton className="w-full h-[400px]" />;
@@ -49,7 +51,7 @@ export function ChannelComparisonChart({ data, loading }: ChannelComparisonChart
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-end">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
         <Select value={metric} onValueChange={setMetric}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Select metric" />
@@ -62,6 +64,11 @@ export function ChannelComparisonChart({ data, loading }: ChannelComparisonChart
             ))}
           </SelectContent>
         </Select>
+        
+        <FilterExportControls 
+          filterOptions={{ channels: true, metrics: false }}
+          className="flex justify-end"
+        />
       </div>
 
       <ResponsiveContainer width="100%" height={400}>

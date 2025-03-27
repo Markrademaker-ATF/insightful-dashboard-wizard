@@ -1,16 +1,18 @@
+
 import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Download, Filter, BarChart, PieChart, LineChart as LineChartIcon } from "lucide-react";
+import { BarChart, PieChart, LineChart as LineChartIcon } from "lucide-react";
 import { ChannelPerformanceTable } from "@/components/channels/ChannelPerformanceTable";
 import { ChannelBreakdownChart } from "@/components/channels/ChannelBreakdownChart";
 import { ChannelTrendsChart } from "@/components/channels/ChannelTrendsChart";
 import { ChannelComparisonChart } from "@/components/channels/ChannelComparisonChart";
 import { ChannelMetricsCards } from "@/components/channels/ChannelMetricsCards";
 import { generateChannelData, generateChannelTrendsData } from "@/data/mockData";
+import { FilterExportControls } from "@/components/channels/FilterExportControls";
 
 export default function ChannelsPage() {
   const [activeTab, setActiveTab] = useState("performance");
@@ -44,17 +46,19 @@ export default function ChannelsPage() {
     <div className="space-y-6 pb-8">
       <div className="flex flex-col">
         <PageHeader title="Channels" description="Analyze campaign performance by channel">
-          <Select onValueChange={handleTimeframeChange} defaultValue="Q4">
-            <SelectTrigger className="w-[140px]">
-              <SelectValue placeholder="Timeframe" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Q1">Q1 2023</SelectItem>
-              <SelectItem value="Q2">Q2 2023</SelectItem>
-              <SelectItem value="Q3">Q3 2023</SelectItem>
-              <SelectItem value="Q4">Q4 2023</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="flex items-center gap-2">
+            <Select onValueChange={handleTimeframeChange} defaultValue="Q4">
+              <SelectTrigger className="w-[140px]">
+                <SelectValue placeholder="Timeframe" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Q1">Q1 2023</SelectItem>
+                <SelectItem value="Q2">Q2 2023</SelectItem>
+                <SelectItem value="Q3">Q3 2023</SelectItem>
+                <SelectItem value="Q4">Q4 2023</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </PageHeader>
       </div>
 
@@ -68,15 +72,8 @@ export default function ChannelsPage() {
               Compare performance metrics across channels
             </CardDescription>
           </div>
-          <div className="ml-auto flex items-center gap-2">
-            <Button variant="outline" size="sm" className="ml-auto h-8 lg:flex">
-              <Filter className="mr-2 h-4 w-4" />
-              Filter
-            </Button>
-            <Button variant="outline" size="sm" className="ml-auto h-8 lg:flex">
-              <Download className="mr-2 h-4 w-4" />
-              Export
-            </Button>
+          <div className="ml-auto">
+            <FilterExportControls />
           </div>
         </CardHeader>
         <CardContent>
