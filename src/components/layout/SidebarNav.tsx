@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
@@ -59,6 +58,11 @@ const navItems: NavItem[] = [
         title: "Campaign Analysis",
         href: "/channel-details",
         icon: BarChart3,
+      },
+      {
+        title: "Multi-Touch Attribution",
+        href: "/attribution",
+        icon: GitCompare,
       },
       {
         title: "Metric Comparison",
