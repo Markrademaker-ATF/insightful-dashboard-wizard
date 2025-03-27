@@ -19,10 +19,20 @@ import {
   Layers, 
   ArrowUp, 
   BarChart4, 
-  LineChart, 
+  LineChart as LineChartIcon, 
   PieChart, 
   DollarSign 
 } from "lucide-react";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ReferenceLine
+} from "recharts";
 import {
   generateIncrementalData,
   channelColors,
@@ -150,7 +160,6 @@ const IncrementalPage = () => {
           icon={<DollarSign className="h-4 w-4" />}
           loading={loading}
           className="md:col-span-1"
-          color={mediaGroupColors.paid}
         />
         <MetricCard
           title="Organic Media"
@@ -158,7 +167,6 @@ const IncrementalPage = () => {
           description={`${organicPct}% of total`}
           loading={loading}
           className="md:col-span-1"
-          color={mediaGroupColors.organic}
         />
         <MetricCard
           title="Non-Paid Media"
@@ -166,7 +174,6 @@ const IncrementalPage = () => {
           description={`${nonPaidPct}% of total`}
           loading={loading}
           className="md:col-span-1"
-          color={mediaGroupColors.nonPaid}
         />
         <MetricCard
           title="Baseline"
@@ -174,7 +181,6 @@ const IncrementalPage = () => {
           description={`${baselinePct}% of total`}
           loading={loading}
           className="md:col-span-1"
-          color={mediaGroupColors.baseline}
         />
       </div>
 
@@ -267,7 +273,7 @@ const IncrementalPage = () => {
                 <BarChart4 className="h-4 w-4" /> Breakdown
               </TabsTrigger>
               <TabsTrigger value="saturation" className="flex items-center gap-1">
-                <LineChart className="h-4 w-4" /> Saturation
+                <LineChartIcon className="h-4 w-4" /> Saturation
               </TabsTrigger>
               <TabsTrigger value="marginal" className="flex items-center gap-1">
                 <TrendingUp className="h-4 w-4" /> Returns
@@ -324,57 +330,52 @@ const IncrementalPage = () => {
 
           {/* Marginal Returns Chart */}
           <TabsContent value="marginal" className="mt-0">
-            <ChartContainer 
-              className="w-full" 
-              style={{ height: 400 }} 
-              config={{
-                returns: { label: "Returns", color: "#4361ee" },
-                marginal: { label: "Marginal Returns", color: "#ef476f" }
-              }}
-            >
-              <LineChart
-                data={marginalReturnsData}
-                margin={{ top: 20, right: 30, left: 20, bottom: 10 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.05)" />
-                <XAxis
-                  dataKey="spend"
-                  tick={{ fontSize: 12 }}
-                  tickLine={false}
-                  tickFormatter={(value) => `$${value/1000}k`}
-                  label={{ value: "Media Spend", position: "insideBottom", offset: -5 }}
-                />
-                <YAxis
-                  tick={{ fontSize: 12 }}
-                  tickLine={false}
-                  axisLine={false}
-                  domain={[0, 'auto']}
-                  label={{ value: "Return on Ad Spend", angle: -90, position: "insideLeft" }}
-                />
-                <Tooltip />
-                <Legend />
-                <Line
-                  type="monotone"
-                  dataKey="returns"
-                  stroke="#4361ee"
-                  name="ROAS"
-                  strokeWidth={2}
-                  dot={{ r: 3 }}
-                  activeDot={{ r: 5 }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="marginal"
-                  stroke="#ef476f"
-                  name="Marginal ROAS"
-                  strokeWidth={2}
-                  strokeDasharray="5 5"
-                  dot={{ r: 3 }}
-                  activeDot={{ r: 5 }}
-                />
-                <ReferenceLine y={1} stroke="rgba(0,0,0,0.3)" strokeDasharray="3 3" />
-              </LineChart>
-            </ChartContainer>
+            <div className="w-full" style={{ height: 400 }}>
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart
+                  data={marginalReturnsData}
+                  margin={{ top: 20, right: 30, left: 20, bottom: 10 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.05)" />
+                  <XAxis
+                    dataKey="spend"
+                    tick={{ fontSize: 12 }}
+                    tickLine={false}
+                    tickFormatter={(value) => `$${value/1000}k`}
+                    label={{ value: "Media Spend", position: "insideBottom", offset: -5 }}
+                  />
+                  <YAxis
+                    tick={{ fontSize: 12 }}
+                    tickLine={false}
+                    axisLine={false}
+                    domain={[0, 'auto']}
+                    label={{ value: "Return on Ad Spend", angle: -90, position: "insideLeft" }}
+                  />
+                  <Tooltip />
+                  <Legend />
+                  <Line
+                    type="monotone"
+                    dataKey="returns"
+                    stroke="#4361ee"
+                    name="ROAS"
+                    strokeWidth={2}
+                    dot={{ r: 3 }}
+                    activeDot={{ r: 5 }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="marginal"
+                    stroke="#ef476f"
+                    name="Marginal ROAS"
+                    strokeWidth={2}
+                    strokeDasharray="5 5"
+                    dot={{ r: 3 }}
+                    activeDot={{ r: 5 }}
+                  />
+                  <ReferenceLine y={1} stroke="rgba(0,0,0,0.3)" strokeDasharray="3 3" />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
             <div className="mt-4 text-sm text-muted-foreground">
               <p className="flex items-center gap-2">
                 <Info className="h-4 w-4 text-primary" /> 

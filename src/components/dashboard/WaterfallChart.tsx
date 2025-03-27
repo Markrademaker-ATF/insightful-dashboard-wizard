@@ -9,10 +9,10 @@ import {
   Tooltip, 
   Legend, 
   ResponsiveContainer,
-  ReferenceLine
+  ReferenceLine,
+  Cell
 } from "recharts";
 import { cn } from "@/lib/utils";
-import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 
 type WaterfallChartProps = {
   data: {
@@ -113,7 +113,7 @@ export function WaterfallChart({
               </defs>
             ))}
             {chartData.map((entry, index) => (
-              <cell 
+              <Cell 
                 key={`cell-${index}`} 
                 fill={entry.isTotal ? `url(#colorUv${index})` : entry.fill} 
                 style={{ "--fill-color": entry.fill } as React.CSSProperties} 
