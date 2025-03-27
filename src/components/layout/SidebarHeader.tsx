@@ -2,7 +2,7 @@
 import React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Triangle } from "lucide-react";
+import { Hexagon } from "lucide-react";
 
 type SidebarHeaderProps = {
   collapsed: boolean;
@@ -14,15 +14,15 @@ export function SidebarHeader({ collapsed, setCollapsed }: SidebarHeaderProps) {
     <div className={`flex items-center ${collapsed ? "justify-center" : "justify-between"} py-4 px-4`}>
       {!collapsed && (
         <div className="flex items-center gap-2">
-          <div className="bg-primary rounded-md w-8 h-8 flex items-center justify-center">
-            <Triangle className="h-5 w-5 text-primary-foreground" strokeWidth={2.5} />
+          <div className="bg-[#9b87f5] rounded-md w-8 h-8 flex items-center justify-center">
+            <Hexagon className="h-5 w-5 text-white" strokeWidth={2.5} />
           </div>
-          <span className="font-semibold text-lg">MarketAnalytics</span>
+          <span className="font-semibold text-lg text-[#9b87f5]">Artefact</span>
         </div>
       )}
       {collapsed && (
         <div className="flex items-center justify-center w-full">
-          <Triangle className="h-6 w-6 text-primary" strokeWidth={2.5} />
+          <Hexagon className="h-6 w-6 text-[#9b87f5]" strokeWidth={2.5} />
         </div>
       )}
       <Button

@@ -32,7 +32,7 @@ export function MainLayout() {
         
         <div className="p-4">
           <div className="text-xs text-muted-foreground">
-            {!collapsed && "© 2023 MarketAnalytics"}
+            {!collapsed && "© 2023 Artefact"}
           </div>
         </div>
       </div>
