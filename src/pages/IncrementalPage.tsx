@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { ChannelBreakdownChart } from "@/components/dashboard/ChannelBreakdownChart";
@@ -31,7 +30,8 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  ReferenceLine
+  ReferenceLine,
+  ResponsiveContainer
 } from "recharts";
 import {
   generateIncrementalData,
