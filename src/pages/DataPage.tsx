@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, Download, Filter, SlidersHorizontal, X } from "lucide-react";
+import { Loader2, Download, Filter, SlidersHorizontal, X, Database, BarChart3, LineChart, TrendingUp } from "lucide-react";
 import {
   generatePerformanceData,
   channelColors,
@@ -20,6 +20,7 @@ import {
 } from "@/data/mockData";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 
 const DataPage = () => {
   const [loading, setLoading] = useState(true);
@@ -68,9 +69,32 @@ const DataPage = () => {
 
   const aggregatedData = aggregateData(performanceData);
 
+  // Calculate summary metrics
+  const getSummaryMetrics = () => {
+    if (!aggregatedData.length) return null;
+    
+    const summary = {
+      totalRevenue: aggregatedData.reduce((sum, day) => sum + day.revenue, 0),
+      totalCost: aggregatedData.reduce((sum, day) => sum + day.cost, 0),
+      totalClicks: aggregatedData.reduce((sum, day) => sum + day.clicks, 0),
+      totalImpressions: aggregatedData.reduce((sum, day) => sum + day.impressions, 0),
+      totalConversions: aggregatedData.reduce((sum, day) => sum + day.conversions, 0),
+      avgCTR: aggregatedData.reduce((sum, day) => sum + parseFloat(day.ctr), 0) / aggregatedData.length,
+    };
+
+    return {
+      ...summary,
+      roas: summary.totalRevenue / summary.totalCost,
+      cpa: summary.totalCost / summary.totalConversions,
+      cpc: summary.totalCost / summary.totalClicks
+    };
+  };
+
+  const summaryMetrics = getSummaryMetrics();
+
   // Format value based on metric type
   const formatValue = (value: any, metricType: string) => {
-    if (metricType === 'revenue' || metricType === 'cost') {
+    if (metricType === 'revenue' || metricType === 'cost' || metricType === 'cpa' || metricType === 'cpc') {
       return `$${value?.toLocaleString() || "0"}`;
     }
     if (metricType === 'ctr') {
@@ -88,6 +112,9 @@ const DataPage = () => {
       impressions: "Impressions",
       conversions: "Conversions",
       ctr: "Click-Through Rate",
+      roas: "ROAS",
+      cpa: "Cost per Acquisition",
+      cpc: "Cost per Click"
     };
     return displayNames[metricKey] || metricKey;
   };
@@ -101,6 +128,9 @@ const DataPage = () => {
       impressions: "#8b5cf6",
       conversions: "#f59e0b",
       ctr: "#ec4899",
+      roas: "#06b6d4",
+      cpa: "#f43f5e",
+      cpc: "#d946ef"
     };
     return colors[metricKey] || "#64748b";
   };
@@ -166,7 +196,7 @@ const DataPage = () => {
     <div className="animate-fade-in">
       <PageHeader
         title="Data Overview"
-        description="Explore and analyze your raw marketing data across all channels"
+        description="Explore and analyze your raw marketing data across all channels and timeframes. Use the tools below to customize your view and identify performance trends."
       >
         <div className="flex flex-wrap gap-2">
           <Button size="sm" variant="outline" className="gap-1">
@@ -180,7 +210,57 @@ const DataPage = () => {
         </div>
       </PageHeader>
 
+      {/* Summary Metrics Cards */}
+      {!loading && summaryMetrics && (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          <Card>
+            <CardContent className="p-4 flex flex-col items-center justify-center">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-100 mb-3">
+                <LineChart className="h-5 w-5 text-blue-600" />
+              </div>
+              <p className="text-sm text-muted-foreground mb-1">Total Revenue</p>
+              <h3 className="text-xl font-bold">${summaryMetrics.totalRevenue.toLocaleString()}</h3>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4 flex flex-col items-center justify-center">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-red-100 mb-3">
+                <Database className="h-5 w-5 text-red-600" />
+              </div>
+              <p className="text-sm text-muted-foreground mb-1">Total Spend</p>
+              <h3 className="text-xl font-bold">${summaryMetrics.totalCost.toLocaleString()}</h3>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4 flex flex-col items-center justify-center">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-green-100 mb-3">
+                <BarChart3 className="h-5 w-5 text-green-600" />
+              </div>
+              <p className="text-sm text-muted-foreground mb-1">ROAS</p>
+              <h3 className="text-xl font-bold">{summaryMetrics.roas.toFixed(2)}x</h3>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-4 flex flex-col items-center justify-center">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-purple-100 mb-3">
+                <TrendingUp className="h-5 w-5 text-purple-600" />
+              </div>
+              <p className="text-sm text-muted-foreground mb-1">Conversions</p>
+              <h3 className="text-xl font-bold">{summaryMetrics.totalConversions.toLocaleString()}</h3>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
       <div className="dashboard-card">
+        <div className="mb-6">
+          <h2 className="text-xl font-semibold">Data Analytics</h2>
+          <p className="text-muted-foreground">
+            This section provides a detailed view of your marketing performance data. Use the chart or table view to analyze trends and patterns over time. 
+            Select different metrics and timeframes to customize your analysis.
+          </p>
+        </div>
+
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <div className="flex flex-col gap-2 w-full sm:w-auto">
             <div className="flex gap-2 items-center">
