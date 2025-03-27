@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { PerformanceChart } from "@/components/dashboard/PerformanceChart";
@@ -12,7 +11,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, Download, Filter, SlidersHorizontal, X, Database, BarChart3, LineChart, TrendingUp } from "lucide-react";
+import { Loader2, Download, Filter, SlidersHorizontal, X, Database, BarChart3, LineChart, TrendingUp, Calendar } from "lucide-react";
 import {
   generatePerformanceData,
   channelColors,
@@ -91,6 +90,20 @@ const DataPage = () => {
   };
 
   const summaryMetrics = getSummaryMetrics();
+
+  // Get date range information
+  const getDateInfo = () => {
+    if (!aggregatedData || aggregatedData.length === 0) return null;
+    
+    return {
+      startDate: aggregatedData[0].date,
+      endDate: aggregatedData[aggregatedData.length - 1].date,
+      totalDataPoints: aggregatedData.length,
+      dataGranularity: "daily"
+    };
+  };
+
+  const dateInfo = getDateInfo();
 
   // Format value based on metric type
   const formatValue = (value: any, metricType: string) => {
@@ -210,6 +223,29 @@ const DataPage = () => {
         </div>
       </PageHeader>
 
+      {/* Date and Data Range Information */}
+      {!loading && dateInfo && (
+        <div className="mb-6 bg-muted/30 p-4 rounded-lg border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <Calendar className="h-5 w-5 text-muted-foreground" />
+            <span className="text-sm text-muted-foreground">
+              Date Range: <span className="font-medium">{dateInfo.startDate} to {dateInfo.endDate}</span>
+            </span>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <span className="text-sm text-muted-foreground">
+              <span className="font-medium">{dateInfo.totalDataPoints}</span> data points
+            </span>
+            <span className="text-sm text-muted-foreground">
+              Granularity: <span className="font-medium capitalize">{dateInfo.dataGranularity}</span>
+            </span>
+            <span className="text-sm text-muted-foreground">
+              Timeframe: <span className="font-medium">{timeframe === '7d' ? '7 Days' : timeframe === '30d' ? '30 Days' : '90 Days'}</span>
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Summary Metrics Cards */}
       {!loading && summaryMetrics && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
@@ -259,6 +295,13 @@ const DataPage = () => {
             This section provides a detailed view of your marketing performance data. Use the chart or table view to analyze trends and patterns over time. 
             Select different metrics and timeframes to customize your analysis.
           </p>
+          {!loading && (
+            <p className="text-sm text-muted-foreground mt-2">
+              Currently displaying <span className="font-medium">{aggregatedData.length}</span> days of data from{" "}
+              <span className="font-medium">{aggregatedData[0]?.date}</span> to{" "}
+              <span className="font-medium">{aggregatedData[aggregatedData.length - 1]?.date}</span>.
+            </p>
+          )}
         </div>
 
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
