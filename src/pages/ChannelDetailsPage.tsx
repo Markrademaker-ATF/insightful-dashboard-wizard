@@ -322,11 +322,6 @@ const ChannelDetailsPage = () => {
   const handleCampaignChange = (campaignId: string) => {
     setSelectedCampaign(campaignId);
     setLoading(true);
-    
-    // If we're selecting a specific campaign, switch to campaign breakdown tab
-    if (campaignId !== "all" && activeTab !== "campaign-breakdown") {
-      setActiveTab("campaign-breakdown");
-    }
   };
 
   return (
@@ -513,114 +508,96 @@ const ChannelDetailsPage = () => {
         </CardContent>
       </Card>
 
-      {/* Main Tabs for different analysis views - Reordering tabs here */}
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="mb-2">
-          <TabsTrigger value="overview" className="flex items-center gap-1">
-            <LineChart className="h-4 w-4" /> Overview
-          </TabsTrigger>
-          <TabsTrigger value="campaign-filters" className="flex items-center gap-1">
-            <Filter className="h-4 w-4" /> Campaign Filters
-          </TabsTrigger>
-          {selectedCampaign !== "all" && (
-            <TabsTrigger value="campaign-breakdown" className="flex items-center gap-1">
-              <Target className="h-4 w-4" /> Campaign Breakdown
-            </TabsTrigger>
-          )}
-        </TabsList>
+      {/* Overview Section - Journey Analysis */}
+      <div className="space-y-6 mb-6">
+        {journeyData && (
+          <ChannelJourneyComparison 
+            data={journeyData || { channels: [] }} 
+            loading={loading} 
+          />
+        )}
+      </div>
 
-        {/* Overview Tab - Now First Tab */}
-        <TabsContent value="overview" className="space-y-6">
-          {/* Journey Analysis Section */}
-          {journeyData && (
-            <ChannelJourneyComparison 
-              data={journeyData || { channels: [] }} 
-              loading={loading} 
-            />
-          )}
-        </TabsContent>
-
-        {/* Campaign Filters Tab - Moved to second position */}
-        <TabsContent value="campaign-filters" className="space-y-6">
-          {/* Campaign Selector */}
-          <Card>
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Filter className="h-5 w-5 text-primary" />
-                  <CardTitle>Campaign Filter</CardTitle>
-                </div>
-                <FilterExportControls 
-                  filterOptions={{ 
-                    channels: false,
-                    metrics: true
-                  }}
-                />
+      {/* Campaign Filter Section */}
+      <div className="space-y-6">
+        {/* Campaign Selector */}
+        <Card>
+          <CardHeader className="pb-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Filter className="h-5 w-5 text-primary" />
+                <CardTitle>Campaign Filter</CardTitle>
               </div>
-              <CardDescription>Select a specific campaign to view detailed analytics</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Select
-                value={selectedCampaign}
-                onValueChange={handleCampaignChange}
-              >
-                <SelectTrigger className="w-full md:w-[320px]">
-                  <SelectValue placeholder="Select campaign" />
-                </SelectTrigger>
-                <SelectContent>
-                  {campaigns.map((campaign) => (
-                    <SelectItem key={campaign.id} value={campaign.id}>
-                      {campaign.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </CardContent>
-          </Card>
-
-          {/* Attribution over time */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Campaign Performance Over Time</CardTitle>
-              <CardDescription>
-                Visualize attributed revenue and conversions across the selected time period
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <PerformanceChart 
-                data={attributionData} 
-                lines={[
-                  {
-                    dataKey: "value",
-                    color: "#4361ee",
-                    label: "Attributed Revenue",
-                    yAxisId: "left"
-                  },
-                  {
-                    dataKey: "conversions",
-                    color: "#f72585",
-                    label: "Conversions",
-                    yAxisId: "right"
-                  },
-                ]}
-                loading={loading}
-                height={350}
+              <FilterExportControls 
+                filterOptions={{ 
+                  channels: false,
+                  metrics: true
+                }}
               />
-            </CardContent>
-          </Card>
-        </TabsContent>
+            </div>
+            <CardDescription>Select a specific campaign to view detailed analytics</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Select
+              value={selectedCampaign}
+              onValueChange={handleCampaignChange}
+            >
+              <SelectTrigger className="w-full md:w-[320px]">
+                <SelectValue placeholder="Select campaign" />
+              </SelectTrigger>
+              <SelectContent>
+                {campaigns.map((campaign) => (
+                  <SelectItem key={campaign.id} value={campaign.id}>
+                    {campaign.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </CardContent>
+        </Card>
 
-        {/* Campaign Breakdown Tab - Only shown when a specific campaign is selected */}
+        {/* Attribution over time */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Campaign Performance Over Time</CardTitle>
+            <CardDescription>
+              Visualize attributed revenue and conversions across the selected time period
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <PerformanceChart 
+              data={attributionData} 
+              lines={[
+                {
+                  dataKey: "value",
+                  color: "#4361ee",
+                  label: "Attributed Revenue",
+                  yAxisId: "left"
+                },
+                {
+                  dataKey: "conversions",
+                  color: "#f72585",
+                  label: "Conversions",
+                  yAxisId: "right"
+                },
+              ]}
+              loading={loading}
+              height={350}
+            />
+          </CardContent>
+        </Card>
+
+        {/* Campaign Breakdown - Only shown when a specific campaign is selected */}
         {selectedCampaign !== "all" && (
-          <TabsContent value="campaign-breakdown" className="space-y-6">
+          <div className="space-y-6 mt-6">
             <CampaignBreakdownTab 
               campaignData={campaignData} 
               loading={loading} 
               campaign={campaigns.find(c => c.id === selectedCampaign) || { id: "", name: "" }}
             />
-          </TabsContent>
+          </div>
         )}
-      </Tabs>
+      </div>
     </div>
   );
 };
