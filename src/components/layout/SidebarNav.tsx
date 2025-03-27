@@ -15,7 +15,8 @@ import {
   ChevronDown,
   ChevronRight,
   FileBarChart,
-  Lightbulb
+  Lightbulb,
+  Home
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -27,6 +28,11 @@ type NavItem = {
 };
 
 const navItems: NavItem[] = [
+  {
+    title: "Home",
+    href: "/guide",
+    icon: Home,
+  },
   {
     title: "Overview",
     icon: LayoutDashboard,
@@ -83,11 +89,6 @@ const navItems: NavItem[] = [
     title: "A/B Testing",
     href: "/ab-testing",
     icon: LineChart,
-  },
-  {
-    title: "Guide",
-    href: "/guide",
-    icon: HelpCircle,
   },
   {
     title: "Settings",

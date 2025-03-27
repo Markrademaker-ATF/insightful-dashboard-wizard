@@ -19,8 +19,8 @@ const GuidePage = () => {
   return (
     <div className="animate-fade-in">
       <PageHeader
-        title="Dashboard Guide"
-        description="Learn how to interpret and use your marketing analytics dashboard"
+        title="Home"
+        description="Welcome to your marketing analytics dashboard"
       />
 
       <Tabs defaultValue="overview" className="dashboard-card">
