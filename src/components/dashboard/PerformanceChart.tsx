@@ -12,13 +12,16 @@ import {
 } from "recharts";
 import { cn } from "@/lib/utils";
 
+type LineConfig = {
+  dataKey: string;
+  color: string;
+  label?: string;
+  yAxisId?: string;
+};
+
 type PerformanceChartProps = {
   data: any[];
-  lines: {
-    dataKey: string;
-    color: string;
-    label?: string;
-  }[];
+  lines: LineConfig[];
   xAxisKey?: string;
   loading?: boolean;
   height?: number;
@@ -89,6 +92,7 @@ export function PerformanceChart({
               strokeWidth={2}
               dot={{ r: 3 }}
               activeDot={{ r: 5 }}
+              yAxisId={line.yAxisId}
               animationDuration={1000 + index * 500}
               animationBegin={index * 150}
             />
