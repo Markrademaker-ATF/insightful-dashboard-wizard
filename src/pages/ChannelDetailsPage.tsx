@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useSearchParams, useLocation } from "react-router-dom";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -519,14 +520,18 @@ const ChannelDetailsPage = () => {
           </Card>
 
           {/* Overview Section - Journey Analysis */}
-          <div className="space-y-6 mb-6">
-            {journeyData && (
-              <ChannelJourneyComparison 
-                data={journeyData || { channels: [] }} 
-                loading={loading} 
-              />
-            )}
-          </div>
+          <Card className="mb-6">
+            <CardContent className="p-0">
+              {loading ? (
+                <Skeleton className="h-[500px] w-full" />
+              ) : (
+                <ChannelJourneyComparison 
+                  data={journeyData || { channels: [] }} 
+                  loading={loading} 
+                />
+              )}
+            </CardContent>
+          </Card>
         </TabsContent>
         
         {/* Campaign Detailed Tab Content */}
