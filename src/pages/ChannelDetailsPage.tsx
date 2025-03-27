@@ -18,6 +18,7 @@ import {
 } from "@/data/mockData";
 import { CampaignBreakdownTab } from "@/components/campaigns/CampaignBreakdownTab";
 import { Cpu, Database, BarChart4, Info } from "lucide-react";
+import { ChannelJourneyComparison } from "@/components/campaigns/ChannelJourneyComparison";
 
 const ChannelDetailsPage = () => {
   const [searchParams] = useSearchParams();
@@ -33,6 +34,9 @@ const ChannelDetailsPage = () => {
   const [selectedCampaign, setSelectedCampaign] = useState("all");
   const [activeTab, setActiveTab] = useState("attribution");
   const [campaignData, setCampaignData] = useState<any | null>(null);
+  
+  // Generate journey analysis data
+  const [journeyData, setJourneyData] = useState<any | null>(null);
 
   // Mock campaigns for the filter
   const campaigns = [
@@ -174,6 +178,100 @@ const ChannelDetailsPage = () => {
       } else {
         setCampaignData(null);
       }
+      
+      // Generate journey analysis data
+      const journeyChannels = [
+        {
+          name: "Paid Search",
+          colorClass: "bg-blue-600",
+          conversions: 171850,
+          journeyContribution: {
+            awareness: 31,
+            consideration: 12,
+            conversion: 8,
+            advocacy: 0
+          }
+        },
+        {
+          name: "Social Media",
+          colorClass: "bg-gray-500",
+          conversions: 56205,
+          journeyContribution: {
+            awareness: 32,
+            consideration: 18,
+            conversion: 9,
+            advocacy: 8
+          }
+        },
+        {
+          name: "Video",
+          colorClass: "bg-purple-300",
+          conversions: 13824,
+          journeyContribution: {
+            awareness: 0,
+            consideration: 0,
+            conversion: 24,
+            advocacy: 47
+          }
+        },
+        {
+          name: "Display",
+          colorClass: "bg-red-300",
+          conversions: 2847,
+          journeyContribution: {
+            awareness: 24,
+            consideration: 24,
+            conversion: 8,
+            advocacy: 12
+          }
+        },
+        {
+          name: "Amazon Search",
+          colorClass: "bg-blue-400",
+          conversions: 1234,
+          journeyContribution: {
+            awareness: 23,
+            consideration: 15,
+            conversion: 6,
+            advocacy: 0
+          }
+        },
+        {
+          name: "Audience: Env conscious",
+          colorClass: "bg-teal-300",
+          conversions: 1435,
+          journeyContribution: {
+            awareness: 12,
+            consideration: 12,
+            conversion: 4,
+            advocacy: 23
+          }
+        },
+        {
+          name: "Campaign: #HelloVoisins",
+          colorClass: "bg-blue-300",
+          conversions: 23,
+          journeyContribution: {
+            awareness: 0,
+            consideration: 0,
+            conversion: 0,
+            advocacy: 48
+          }
+        },
+        {
+          name: "Creative: Well at Home",
+          colorClass: "bg-green-300",
+          conversions: 9,
+          journeyContribution: {
+            awareness: 0,
+            consideration: 9,
+            conversion: 0,
+            advocacy: 0
+          }
+        }
+      ];
+      
+      setJourneyData({ channels: journeyChannels });
       
       setLoading(false);
     };
@@ -416,6 +514,12 @@ const ChannelDetailsPage = () => {
               </div>
             </CardContent>
           </Card>
+
+          {/* Journey Analysis Section - New! */}
+          <ChannelJourneyComparison 
+            data={journeyData || { channels: [] }} 
+            loading={loading} 
+          />
 
           {/* Attribution over time */}
           <Card>
