@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
   ResponsiveContainer,
@@ -6,13 +7,11 @@ import {
   XAxis,
   YAxis,
   Tooltip,
-  Legend,
   ReferenceLine,
   Cell,
-  LabelList,
+  CartesianGrid,
 } from "recharts";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -24,6 +23,9 @@ const categoryColors = {
   organic: "#6E59A5", // Tertiary Purple
   paid: "#F97316", // Bright Orange
   total: "#33C3F0", // Sky Blue
+  remaining: "#888888", // Gray
+  positive: "#4ade80", // Green
+  negative: "#f87171", // Red
 };
 
 // Define colors for channels within each category
@@ -231,6 +233,11 @@ export function EnhancedWaterfallChart({
                 : `Contribution: $${Math.abs(data.value).toLocaleString()} (${getPercentage(data.value)})`
               }
             </p>
+            {!data.isTotal && (
+              <p className="text-xs text-muted-foreground mt-1">
+                Running Total: ${data.end.toLocaleString()}
+              </p>
+            )}
           </CardContent>
         </Card>
       );
@@ -245,8 +252,14 @@ export function EnhancedWaterfallChart({
     return `${Math.round(Math.abs(value) / latestData.total * 100)}%`;
   };
   
-  // Get color for a bar
+  // Get color for a bar based on whether it's positive or negative
   const getBarColor = (item: any) => {
+    if (item.value > 0 && !item.isTotal) {
+      return categoryColors.positive;
+    } else if (item.value < 0) {
+      return categoryColors.negative;
+    }
+    
     if (item.parentCategory) {
       // For child items, use channel colors
       const channelName = item.name.toLowerCase().replace(/\s+/g, '');
@@ -257,27 +270,29 @@ export function EnhancedWaterfallChart({
     }
   };
   
-  // Custom label component for bars
+  // Custom label component for bars to show the value
   const renderCustomBarLabel = (props: any) => {
-    const { x, y, width, height, value, index } = props;
+    const { x, y, width, value, index } = props;
     const item = chartData[index];
     
     // Only show label if bar is large enough
-    if (height < 15) return null;
+    if (width < 40) return null;
     
     // For "Remaining" item, show total value
     const displayText = item.name === "Remaining" 
       ? `$${item.displayValue.toLocaleString()}`
       : `$${Math.abs(item.value).toLocaleString()}`;
     
+    const xPosition = item.value >= 0 ? x + width - 5 : x + 5;
+    const textAnchor = item.value >= 0 ? "end" : "start";
+    
     return (
       <text
-        x={x + width / 2}
-        y={y + height / 2}
-        fill="#fff"
-        textAnchor="middle"
-        dominantBaseline="middle"
-        fontSize={12}
+        x={xPosition}
+        y={y + 15}
+        fill="#333"
+        textAnchor={textAnchor}
+        fontSize={11}
         fontWeight="bold"
       >
         {displayText}
@@ -291,17 +306,18 @@ export function EnhancedWaterfallChart({
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={chartData}
-            margin={{ top: 20, right: 30, left: 40, bottom: 5 }}
-            barGap={0}
-            layout="vertical"
+            margin={{ top: 20, right: 50, left: 120, bottom: 5 }}
+            layout="horizontal"
           >
-            <XAxis
+            <CartesianGrid strokeDasharray="3 3" vertical={false} />
+            <XAxis 
               type="number"
-              tickFormatter={(value) => `$${Math.abs(value).toLocaleString()}`}
+              tickFormatter={(value) => `$${Math.abs(value / 1000).toLocaleString()}k`}
             />
             <YAxis
               type="category"
               dataKey="name"
+              width={110}
               tick={({ x, y, payload, index }) => {
                 const item = chartData[index];
                 
@@ -342,10 +358,33 @@ export function EnhancedWaterfallChart({
                   </g>
                 );
               }}
-              width={150}
             />
             <Tooltip content={<CustomTooltip />} />
             <ReferenceLine x={0} stroke="#000" />
+            
+            {/* Connector lines for waterfall effect */}
+            {chartData.map((entry, index) => {
+              // Skip first and last items
+              if (index === 0 || index === chartData.length - 1) return null;
+              
+              // Get previous item
+              const prevItem = chartData[index - 1];
+              
+              return (
+                <line
+                  key={`connector-${index}`}
+                  x1={prevItem.end}
+                  y1={index - 0.5}
+                  x2={entry.start}
+                  y2={index + 0.5}
+                  stroke="#888"
+                  strokeDasharray="3 3"
+                  strokeWidth={1}
+                />
+              );
+            })}
+            
+            {/* Bar for values */}
             <Bar
               dataKey="value"
               fill="#8884d8"
@@ -355,8 +394,8 @@ export function EnhancedWaterfallChart({
                   toggleCategory(data.category);
                 }
               }}
+              label={renderCustomBarLabel}
             >
-              <LabelList dataKey="value" content={renderCustomBarLabel} />
               {chartData.map((entry, index) => (
                 <Cell 
                   key={`cell-${index}`}
@@ -367,6 +406,22 @@ export function EnhancedWaterfallChart({
             </Bar>
           </BarChart>
         </ResponsiveContainer>
+      </div>
+      
+      {/* Color legend */}
+      <div className="flex flex-wrap gap-4 mt-4 justify-center">
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full" style={{ backgroundColor: categoryColors.positive }}></div>
+          <span className="text-xs">Positive Impact</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full" style={{ backgroundColor: categoryColors.negative }}></div>
+          <span className="text-xs">Negative Impact</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full" style={{ backgroundColor: categoryColors.total }}></div>
+          <span className="text-xs">Total Value</span>
+        </div>
       </div>
     </div>
   );

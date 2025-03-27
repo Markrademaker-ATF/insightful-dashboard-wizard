@@ -1,7 +1,6 @@
 
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DownloadIcon, BarChart3, TableIcon } from "lucide-react";
@@ -93,12 +92,18 @@ export function PerformanceBreakdownSection({ data, loading }: PerformanceBreakd
           <>
             {view === 'chart' ? (
               <div className="space-y-6">
-                {/* Enhanced Waterfall Chart */}
+                {/* Enhanced Waterfall Chart - now horizontal */}
                 <EnhancedWaterfallChart
                   data={data}
                   loading={loading}
                   height={450}
                 />
+                
+                <div className="text-sm text-muted-foreground mt-4">
+                  <p className="text-xs italic text-center">
+                    Click on a category bar to expand and see channel breakdown. Values show cumulative contribution.
+                  </p>
+                </div>
               </div>
             ) : (
               // Table view
