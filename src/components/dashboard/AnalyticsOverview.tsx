@@ -12,6 +12,7 @@ import {
 import { ROISummaryCard } from "@/components/dashboard/ROISummaryCard";
 import { PerformanceSection } from "@/components/dashboard/PerformanceSection";
 import { AnalyticsSection } from "@/components/dashboard/AnalyticsSection";
+import { TimeSeriesSection } from "@/components/dashboard/TimeSeriesSection";
 
 export function AnalyticsOverview() {
   const [loading, setLoading] = useState(true);
@@ -72,6 +73,29 @@ export function AnalyticsOverview() {
   const roasChange = revenueChange - costChange;
   const conversionChange = 4.2;
 
+  // Prepare data for time series visualization
+  const timeSeriesData = React.useMemo(() => {
+    if (loading || performanceData.length === 0) return [];
+    
+    // Transform performance data for time series
+    return performanceData.map((day, index) => {
+      // Calculate estimated cost based on revenue and overall ROAS
+      const dailyCost = day.totalRevenue / (totalRoas || 1);
+      
+      return {
+        date: day.name,
+        total: day.totalRevenue,
+        cost: Math.round(dailyCost),
+        revenue: day.totalRevenue,
+        // Calculate media type contributions (simulated for this example)
+        baseline: Math.round(day.totalRevenue * 0.2),
+        nonPaid: Math.round(day.totalRevenue * 0.15),
+        organic: Math.round(day.totalRevenue * 0.25),
+        paid: Math.round(day.totalRevenue * 0.4)
+      };
+    });
+  }, [performanceData, loading, totalRoas]);
+
   return (
     <div className="animate-fade-in">
       <PageHeader 
@@ -102,6 +126,12 @@ export function AnalyticsOverview() {
         roasChange={roasChange}
         topChannel={topChannel}
         bottomChannel={bottomChannel}
+      />
+      
+      {/* Revenue and Cost Time Series */}
+      <TimeSeriesSection
+        data={timeSeriesData}
+        loading={loading}
       />
       
       {/* Performance chart */}
