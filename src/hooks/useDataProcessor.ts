@@ -29,14 +29,36 @@ export function useDataProcessor(timeframe: string) {
     if (!data.length) return [];
     
     return data.map(day => {
+      const revenue = day.totalRevenue;
+      const cost = Object.keys(channelNames).reduce((sum, channel) => sum + (day[channel] || 0) * 0.4, 0);
+      const clicks = Math.round(revenue / 2.5);
+      const impressions = Math.round(revenue * 10);
+      const conversions = Math.round(revenue / 50);
+      const ctr = (clicks / impressions) * 100;
+      const conversionRate = (conversions / clicks) * 100;
+      const bounce = 35 + (Math.random() * 20);
+      const sessionDuration = 120 + (Math.random() * 180);
+      const reach = Math.round(impressions * 0.7);
+      const frequency = impressions / reach;
+      const engagementRate = 10 + (Math.random() * 15);
+      
       const metrics: Record<string, any> = {
         date: day.name,
-        revenue: day.totalRevenue,
-        cost: Object.keys(channelNames).reduce((sum, channel) => sum + (day[channel] || 0) * 0.4, 0),
-        clicks: Math.round(day.totalRevenue / 2.5),
-        impressions: Math.round(day.totalRevenue * 10),
-        conversions: Math.round(day.totalRevenue / 50),
-        ctr: (Math.round(day.totalRevenue / 2.5) / Math.round(day.totalRevenue * 10) * 100).toFixed(2) + '%',
+        revenue: revenue,
+        cost: cost,
+        clicks: clicks,
+        impressions: impressions,
+        conversions: conversions,
+        ctr: ctr.toFixed(2),
+        conversionRate: conversionRate.toFixed(2),
+        cpc: (cost / clicks).toFixed(2),
+        cpa: (cost / conversions).toFixed(2),
+        roas: revenue / cost,
+        bounceRate: bounce.toFixed(1),
+        avgSessionDuration: Math.round(sessionDuration),
+        frequency: frequency.toFixed(1),
+        reach: reach,
+        engagementRate: engagementRate.toFixed(1)
       };
       
       return metrics;
@@ -49,20 +71,35 @@ export function useDataProcessor(timeframe: string) {
   const getSummaryMetrics = () => {
     if (!aggregatedData.length) return null;
     
-    const summary = {
-      totalRevenue: aggregatedData.reduce((sum, day) => sum + day.revenue, 0),
-      totalCost: aggregatedData.reduce((sum, day) => sum + day.cost, 0),
-      totalClicks: aggregatedData.reduce((sum, day) => sum + day.clicks, 0),
-      totalImpressions: aggregatedData.reduce((sum, day) => sum + day.impressions, 0),
-      totalConversions: aggregatedData.reduce((sum, day) => sum + day.conversions, 0),
-      avgCTR: aggregatedData.reduce((sum, day) => sum + parseFloat(day.ctr), 0) / aggregatedData.length,
-    };
+    const totalRevenue = aggregatedData.reduce((sum, day) => sum + day.revenue, 0);
+    const totalCost = aggregatedData.reduce((sum, day) => sum + day.cost, 0);
+    const totalClicks = aggregatedData.reduce((sum, day) => sum + day.clicks, 0);
+    const totalImpressions = aggregatedData.reduce((sum, day) => sum + day.impressions, 0);
+    const totalConversions = aggregatedData.reduce((sum, day) => sum + day.conversions, 0);
+    const avgCTR = aggregatedData.reduce((sum, day) => sum + parseFloat(day.ctr), 0) / aggregatedData.length;
+    const avgConversionRate = aggregatedData.reduce((sum, day) => sum + parseFloat(day.conversionRate), 0) / aggregatedData.length;
+    const avgBounceRate = aggregatedData.reduce((sum, day) => sum + parseFloat(day.bounceRate), 0) / aggregatedData.length;
+    const avgSessionDuration = aggregatedData.reduce((sum, day) => sum + day.avgSessionDuration, 0) / aggregatedData.length;
+    const totalReach = aggregatedData.reduce((sum, day) => sum + day.reach, 0);
+    const avgFrequency = aggregatedData.reduce((sum, day) => sum + parseFloat(day.frequency), 0) / aggregatedData.length;
+    const avgEngagementRate = aggregatedData.reduce((sum, day) => sum + parseFloat(day.engagementRate), 0) / aggregatedData.length;
 
     return {
-      ...summary,
-      roas: summary.totalRevenue / summary.totalCost,
-      cpa: summary.totalCost / summary.totalConversions,
-      cpc: summary.totalCost / summary.totalClicks
+      revenue: totalRevenue,
+      cost: totalCost,
+      clicks: totalClicks,
+      impressions: totalImpressions,
+      conversions: totalConversions,
+      ctr: avgCTR.toFixed(2),
+      conversionRate: avgConversionRate.toFixed(2),
+      roas: totalRevenue / totalCost,
+      cpa: totalCost / totalConversions,
+      cpc: totalCost / totalClicks,
+      bounceRate: avgBounceRate.toFixed(1),
+      avgSessionDuration: Math.round(avgSessionDuration),
+      reach: totalReach,
+      frequency: avgFrequency.toFixed(1),
+      engagementRate: avgEngagementRate.toFixed(1)
     };
   };
 
