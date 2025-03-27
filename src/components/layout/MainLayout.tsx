@@ -17,7 +17,7 @@ export function MainLayout() {
   const sidebarTransition = "transition-all duration-300 ease-smooth";
 
   return (
-    <div className={cn("flex min-h-screen", mounted ? "animate-fade-in" : "opacity-0")}>
+    <div className={cn("flex min-h-screen bg-gray-50", mounted ? "animate-fade-in" : "opacity-0")}>
       {/* Sidebar */}
       <div className={cn(
         "fixed inset-y-0 left-0 z-50 flex flex-col glass premium-shadow",
@@ -39,7 +39,7 @@ export function MainLayout() {
       
       {/* Main Content */}
       <div className={cn(
-        "flex-1 transition-all duration-300 ease-smooth",
+        "flex-1 transition-all duration-300 ease-smooth bg-gray-50",
         collapsed ? "ml-16" : "ml-64",
         "p-8"
       )}>

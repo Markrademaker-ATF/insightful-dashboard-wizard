@@ -14,7 +14,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
 
-    --primary: 220 80% 56%;
+    --primary: 259 76% 74%;
     --primary-foreground: 0 0% 98%;
 
     --secondary: 240 4.8% 95.9%;
@@ -23,8 +23,8 @@
     --muted: 240 4.8% 95.9%;
     --muted-foreground: 240 3.8% 46.1%;
 
-    --accent: 228 96% 98%;
-    --accent-foreground: 220 80% 56%;
+    --accent: 258 55% 95%;
+    --accent-foreground: 259 76% 74%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
@@ -79,11 +79,11 @@
   }
   
   .nav-link {
-    @apply flex items-center gap-2 px-3 py-2 rounded-lg text-muted-foreground font-medium transition-all duration-200 hover:bg-accent hover:text-primary;
+    @apply flex items-center gap-2 px-3 py-2 rounded-lg text-muted-foreground font-medium transition-all duration-200 hover:bg-accent hover:text-[#9b87f5];
   }
   
   .nav-link.active {
-    @apply bg-accent text-primary;
+    @apply bg-accent text-[#9b87f5];
   }
   
   .chip {
