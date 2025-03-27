@@ -19,12 +19,8 @@ import {
   DollarSign, 
   PieChart, 
   Download, 
-  ArrowRight, 
   Check, 
-  ArrowUp, 
-  ArrowDown, 
   Minus,
-  Calculator,
   LineChart,
   TrendingUp,
   TrendingDown,
@@ -37,7 +33,6 @@ import {
 } from "@/data/mockData";
 import { cn } from "@/lib/utils";
 import { ScenarioSelector } from "@/components/budget/ScenarioSelector";
-import { BudgetSlider } from "@/components/budget/BudgetSlider";
 import { ScenarioDetails } from "@/components/budget/ScenarioDetails";
 import { toast } from "sonner";
 
@@ -155,29 +150,6 @@ const BudgetPage = () => {
         projectedROI: ruROI, 
         projectedRevenue: ruRevenue 
       }
-    });
-  };
-
-  // Handle budget change for a specific channel
-  const handleBudgetChange = (channelName: string, newBudget: number) => {
-    setCustomBudgets(prev => {
-      const updatedBudgets = {
-        ...prev,
-        [activeScenario]: {
-          ...prev[activeScenario],
-          [channelName]: newBudget
-        }
-      };
-      
-      // Recalculate scenario metrics
-      calculateScenarioMetrics(
-        updatedBudgets.bau, 
-        updatedBudgets["cost-savings"], 
-        updatedBudgets["revenue-uplift"],
-        recommendations
-      );
-      
-      return updatedBudgets;
     });
   };
 
@@ -308,49 +280,8 @@ const BudgetPage = () => {
         </div>
       </div>
       
-      {/* Budget adjustments */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <Calculator className="h-5 w-5 text-primary" />
-              <CardTitle>Budget Adjustments</CardTitle>
-            </div>
-            <CardDescription>
-              Adjust channel budgets to see projected impact
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              {loading ? (
-                // Loading skeleton for sliders
-                Array.from({ length: 5 }).map((_, i) => (
-                  <div key={i} className="space-y-2 mb-4">
-                    <div className="flex justify-between">
-                      <div className="h-4 w-24 bg-muted rounded animate-pulse"></div>
-                      <div className="h-4 w-16 bg-muted rounded animate-pulse"></div>
-                    </div>
-                    <div className="h-2 bg-muted rounded animate-pulse"></div>
-                  </div>
-                ))
-              ) : (
-                recommendations.map((channel, idx) => (
-                  <BudgetSlider
-                    key={channel.name}
-                    channelName={channel.name}
-                    initialBudget={channel.currentBudget}
-                    recommendedBudget={activeBudgets[channel.name] || channel.currentBudget}
-                    maxBudget={channel.currentBudget * 2}
-                    color={channel.color}
-                    onChange={(value) => handleBudgetChange(channel.name, value)}
-                    disabled={activeScenario === "bau"}
-                  />
-                ))
-              )}
-            </div>
-          </CardContent>
-        </Card>
-        
+      {/* Impact analysis section - Now the only section that was previously second in the grid */}
+      <div className="mb-8">
         <Card>
           <CardHeader>
             <div className="flex items-center gap-2">
