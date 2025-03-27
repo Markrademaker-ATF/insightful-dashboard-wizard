@@ -518,21 +518,15 @@ const ChannelDetailsPage = () => {
             </CardContent>
           </Card>
 
-          {/* Customer Journey Driver Analysis */}
-          <Card className="mb-6">
-            <CardContent className="p-0">
-              {loading ? (
-                <div className="p-6">
-                  <Skeleton className="h-[500px] w-full" />
-                </div>
-              ) : (
-                <ChannelJourneyComparison 
-                  data={journeyData || { channels: [] }} 
-                  loading={loading} 
-                />
-              )}
-            </CardContent>
-          </Card>
+          {/* Overview Section - Journey Analysis */}
+          <div className="space-y-6 mb-6">
+            {journeyData && (
+              <ChannelJourneyComparison 
+                data={journeyData || { channels: [] }} 
+                loading={loading} 
+              />
+            )}
+          </div>
         </TabsContent>
         
         {/* Campaign Detailed Tab Content */}
