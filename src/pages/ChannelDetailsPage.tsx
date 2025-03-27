@@ -184,7 +184,7 @@ const ChannelDetailsPage = () => {
         {
           id: "search",
           name: channelNames.search,
-          colorClass: "bg-blue-600",
+          colorClass: `bg-[${channelColors.search}]`,
           conversions: 171850,
           journeyContribution: {
             awareness: 31,
@@ -196,7 +196,7 @@ const ChannelDetailsPage = () => {
         {
           id: "social",
           name: channelNames.social,
-          colorClass: "bg-gray-500",
+          colorClass: `bg-[${channelColors.social}]`,
           conversions: 56205,
           journeyContribution: {
             awareness: 32,
@@ -208,11 +208,11 @@ const ChannelDetailsPage = () => {
         {
           id: "video",
           name: channelNames.video,
-          colorClass: "bg-purple-300",
+          colorClass: `bg-[${channelColors.video}]`,
           conversions: 13824,
           journeyContribution: {
-            awareness: 0,
-            consideration: 0,
+            awareness: 42,
+            consideration: 27,
             conversion: 24,
             advocacy: 47
           }
@@ -220,8 +220,8 @@ const ChannelDetailsPage = () => {
         {
           id: "display",
           name: channelNames.display,
-          colorClass: "bg-red-300",
-          conversions: 2847,
+          colorClass: `bg-[${channelColors.display}]`,
+          conversions: 28470,
           journeyContribution: {
             awareness: 24,
             consideration: 24,
@@ -232,49 +232,49 @@ const ChannelDetailsPage = () => {
         {
           id: "affiliate",
           name: channelNames.affiliate,
-          colorClass: "bg-blue-400",
-          conversions: 1234,
+          colorClass: `bg-[${channelColors.affiliate}]`,
+          conversions: 12340,
           journeyContribution: {
             awareness: 23,
             consideration: 15,
             conversion: 6,
-            advocacy: 0
+            advocacy: 16
           }
         },
         {
           id: "email",
           name: channelNames.email,
-          colorClass: "bg-teal-300",
-          conversions: 1435,
+          colorClass: `bg-[${channelColors.email}]`,
+          conversions: 14350,
           journeyContribution: {
             awareness: 12,
             consideration: 12,
-            conversion: 4,
+            conversion: 38,
             advocacy: 23
           }
         },
         {
           id: "direct",
           name: channelNames.direct,
-          colorClass: "bg-blue-300",
-          conversions: 23,
+          colorClass: `bg-[${channelColors.direct}]`,
+          conversions: 8230,
           journeyContribution: {
-            awareness: 0,
-            consideration: 0,
-            conversion: 0,
+            awareness: 15,
+            consideration: 21,
+            conversion: 32,
             advocacy: 48
           }
         },
         {
           id: "referral",
           name: channelNames.referral,
-          colorClass: "bg-green-300",
-          conversions: 9,
+          colorClass: `bg-[${channelColors.referral}]`,
+          conversions: 5290,
           journeyContribution: {
-            awareness: 0,
+            awareness: 10,
             consideration: 9,
-            conversion: 0,
-            advocacy: 0
+            conversion: 22,
+            advocacy: 35
           }
         }
       ];

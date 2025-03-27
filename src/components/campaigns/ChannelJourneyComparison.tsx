@@ -112,20 +112,14 @@ export const ChannelJourneyComparison: React.FC<ChannelJourneyComparisonProps> =
                     <div className="col-span-6 grid grid-cols-4 gap-1 p-1">
                       {Object.entries(channel.journeyContribution).map(([stage, percentage], i) => (
                         <div key={stage} className="flex justify-center p-1">
-                          {percentage > 0 ? (
-                            <div 
-                              className={`h-8 w-8 rounded-md flex items-center justify-center ${channelColor} ${getColorIntensity(percentage)}`}
-                              title={`${percentage}% contribution at ${journeyStages[i]?.label}`}
-                            >
-                              <span className="text-xs font-medium text-white">
-                                {percentage > 0 ? `${percentage}%` : ""}
-                              </span>
-                            </div>
-                          ) : (
-                            <div className="h-8 w-8 flex items-center justify-center text-muted-foreground">
-                              —
-                            </div>
-                          )}
+                          <div 
+                            className={`h-8 w-8 rounded-md flex items-center justify-center ${channelColor} ${getColorIntensity(percentage)}`}
+                            title={`${percentage}% contribution at ${journeyStages[i]?.label}`}
+                          >
+                            <span className="text-xs font-medium text-white">
+                              {percentage > 0 ? `${percentage}%` : "—"}
+                            </span>
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -168,4 +162,3 @@ export const ChannelJourneyComparison: React.FC<ChannelJourneyComparisonProps> =
     </Card>
   );
 };
-

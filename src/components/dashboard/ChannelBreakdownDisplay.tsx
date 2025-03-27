@@ -48,6 +48,9 @@ export function ChannelBreakdownDisplay({ channelData, loading, mediaType }: Cha
                   }}
                 ></div>
               </div>
+              <div className="text-xs text-right mt-1 text-muted-foreground">
+                {percentage}% of total
+              </div>
             </div>
           );
         })}
