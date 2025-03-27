@@ -12,6 +12,7 @@ import MetricsPage from "./pages/MetricsPage";
 import ChannelDetailsPage from "./pages/ChannelDetailsPage";
 import IncrementalPage from "./pages/IncrementalPage";
 import BudgetPage from "./pages/BudgetPage";
+import ABTestingPage from "./pages/ABTestingPage";
 import GuidePage from "./pages/GuidePage";
 import SettingsPage from "./pages/SettingsPage";
 import NotFound from "./pages/NotFound";
@@ -33,6 +34,7 @@ const App = () => (
             <Route path="/channel-details" element={<ChannelDetailsPage />} />
             <Route path="/incremental" element={<IncrementalPage />} />
             <Route path="/budget" element={<BudgetPage />} />
+            <Route path="/ab-testing" element={<ABTestingPage />} />
             <Route path="/guide" element={<GuidePage />} />
             <Route path="/settings" element={<SettingsPage />} />
           </Route>

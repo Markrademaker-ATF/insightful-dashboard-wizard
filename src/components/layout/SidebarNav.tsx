@@ -10,7 +10,8 @@ import {
   TrendingUp, 
   PieChart, 
   Settings, 
-  HelpCircle 
+  HelpCircle,
+  LineChart
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -55,6 +56,11 @@ const navItems: NavItem[] = [
     title: "Budget Optimizer",
     href: "/budget",
     icon: PieChart,
+  },
+  {
+    title: "A/B Testing",
+    href: "/ab-testing",
+    icon: LineChart,
   },
   {
     title: "Guide",
