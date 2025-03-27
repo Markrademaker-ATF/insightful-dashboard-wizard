@@ -190,7 +190,7 @@ const ChannelDetailsPage = () => {
             awareness: 31,
             consideration: 12,
             conversion: 8,
-            advocacy: 0
+            advocacy: 4
           }
         },
         {
