@@ -87,14 +87,14 @@ const MarketingMixModelingDetails = () => {
               <h3 className="text-lg font-semibold mb-2">Adstock Transformation</h3>
               <p className="mb-2">Adstock accounts for lagged and diminishing effects of advertising over time:</p>
               <div className="p-4 bg-muted rounded-md font-mono">
-                A_t = X_t + λ·A_{t-1}
+                A_t = X_t + λ·A_{'{'}t-1{'}'}
               </div>
               <p className="mt-2">Where:</p>
               <ul className="list-disc pl-6 mt-2 space-y-2">
                 <li>A_t: Adstock at time t</li>
                 <li>X_t: Marketing spend at time t</li>
                 <li>λ: Decay rate (0 to 1)</li>
-                <li>A_{t-1}: Previous period's adstock</li>
+                <li>A_{'{'}t-1{'}'}: Previous period's adstock</li>
               </ul>
             </div>
             
@@ -117,7 +117,7 @@ const MarketingMixModelingDetails = () => {
               <h3 className="text-lg font-semibold mb-2">Complete Multiplicative Model</h3>
               <p className="mb-2">A full MMM might look like:</p>
               <div className="p-4 bg-muted rounded-md font-mono">
-                Y_t = β₀·∏(1 + S_i(A_{i,t}))·∏(1 + Control_j) + ε_t
+                Y_t = β₀·∏(1 + S_i(A_{'{'}i,t{'}'}))·∏(1 + Control_j) + ε_t
               </div>
               <p className="mt-2">This multiplicative form captures interactions between variables better than additive models.</p>
             </div>
@@ -289,7 +289,7 @@ const IncrementalityTestingDetails = () => {
                 <li>n₁: Sample size of treatment group</li>
                 <li>n₀: Sample size of control group</li>
               </ul>
-              <p className="mt-2">We typically reject the null hypothesis (no effect) if |z| > 1.96 (for 95% confidence).</p>
+              <p className="mt-2">We typically reject the null hypothesis (no effect) if |z| {'>'} 1.96 (for 95% confidence).</p>
             </div>
           </TabsContent>
           
@@ -465,7 +465,7 @@ const MultiTouchAttributionDetails = () => {
                   <strong>Shapley Value:</strong>
                   <p>Cooperative game theory approach that averages marginal contributions across all possible orderings.</p>
                   <div className="p-4 bg-muted rounded-md font-mono">
-                    φ_i = Σ [|S|!(n-|S|-1)!/n!] × [v(S∪{i}) - v(S)]
+                    φ_i = Σ [|S|!(n-|S|-1)!/n!] × [v(S∪{'{'}i{'}'}) - v(S)]
                   </div>
                   <p className="mt-2">Where S is a subset of channels excluding i, v is the value function</p>
                 </li>
