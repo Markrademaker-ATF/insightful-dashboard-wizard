@@ -15,7 +15,10 @@ import {
   Radio,
   DollarSign,
   Percent,
-  Users
+  Users,
+  ArrowUpRight,
+  ArrowDownRight,
+  Wallet
 } from "lucide-react";
 import { 
   generatePerformanceData, 
@@ -23,6 +26,7 @@ import {
   generateBudgetAllocation, 
   channelColors 
 } from "@/data/mockData";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 const Index = () => {
   const [loading, setLoading] = useState(true);
@@ -53,23 +57,41 @@ const Index = () => {
     loadData();
   }, [timeframe]);
 
+  // Calculate top-level metrics
   const totalRevenue = !loading && performanceData.length
     ? performanceData.reduce((sum, day) => sum + day.totalRevenue, 0)
     : 0;
     
-  const averageRoas = !loading && channelData.length
-    ? channelData.reduce((sum, channel) => sum + channel.roas, 0) / channelData.length
+  const totalCost = !loading && channelData.length
+    ? channelData.reduce((sum, channel) => sum + channel.cost, 0)
     : 0;
     
+  const totalRoas = totalCost > 0 ? totalRevenue / totalCost : 0;
+  
   const totalConversions = !loading && channelData.length
     ? channelData.reduce((sum, channel) => sum + (channel.revenue / channel.cpa), 0)
     : 0;
+    
+  // Find top and bottom performing channels
+  const topChannel = !loading && channelData.length
+    ? channelData.reduce((prev, current) => (prev.roas > current.roas) ? prev : current, channelData[0])
+    : null;
+    
+  const bottomChannel = !loading && channelData.length
+    ? channelData.reduce((prev, current) => (prev.roas < current.roas) ? prev : current, channelData[0])
+    : null;
+
+  // Calculate week-over-week changes for revenue and cost
+  const revenueChange = 5.8; // Mocked for now, would calculate from actual data
+  const costChange = 3.2;    // Mocked for now, would calculate from actual data
+  const roasChange = revenueChange - costChange;
+  const conversionChange = 4.2;
 
   return (
     <div className="animate-fade-in">
       <PageHeader 
-        title="Marketing Analytics Dashboard" 
-        description="Overview of your marketing performance across all channels"
+        title="Analytics Overview" 
+        description="High-level view of marketing performance and ROI across channels"
       >
         <Tabs 
           defaultValue="30d" 
@@ -85,36 +107,101 @@ const Index = () => {
         </Tabs>
       </PageHeader>
       
+      {/* Top-level ROI overview card */}
+      <Card className="mb-8 animate-fade-in border-l-4 border-l-primary">
+        <CardContent className="pt-6">
+          <div className="flex flex-col md:flex-row justify-between gap-6">
+            <div>
+              <h2 className="text-xl font-semibold mb-2">Marketing ROI Summary</h2>
+              <p className="text-muted-foreground mb-4">
+                Overall campaign performance for the selected period
+              </p>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                <div>
+                  <div className="text-sm text-muted-foreground">Total Return</div>
+                  <div className="text-2xl font-bold">${totalRevenue.toLocaleString()}</div>
+                  <div className={`text-sm flex items-center gap-1 ${revenueChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {revenueChange >= 0 ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
+                    {Math.abs(revenueChange)}% vs. prev
+                  </div>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground">Total Investment</div>
+                  <div className="text-2xl font-bold">${totalCost.toLocaleString()}</div>
+                  <div className={`text-sm flex items-center gap-1 ${costChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {costChange >= 0 ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
+                    {Math.abs(costChange)}% vs. prev
+                  </div>
+                </div>
+                <div>
+                  <div className="text-sm text-muted-foreground">Overall ROAS</div>
+                  <div className="text-2xl font-bold">{totalRoas.toFixed(2)}x</div>
+                  <div className={`text-sm flex items-center gap-1 ${roasChange >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {roasChange >= 0 ? <ArrowUpRight className="h-3 w-3" /> : <ArrowDownRight className="h-3 w-3" />}
+                    {Math.abs(roasChange).toFixed(1)}% vs. prev
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="min-w-[280px] border-l pl-6 hidden lg:block">
+              <h3 className="text-sm font-medium mb-4">Performance Insights</h3>
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <div className="rounded-full bg-green-100 p-2 text-green-700">
+                    <TrendingUp className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium">Top Performer</div>
+                    <div className="text-sm text-muted-foreground">{topChannel?.name || 'Loading...'}</div>
+                    <div className="text-sm font-medium">{topChannel ? `${topChannel.roas.toFixed(2)}x ROAS` : ''}</div>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="rounded-full bg-red-100 p-2 text-red-700">
+                    <TrendingUp className="h-4 w-4 transform rotate-180" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium">Needs Attention</div>
+                    <div className="text-sm text-muted-foreground">{bottomChannel?.name || 'Loading...'}</div>
+                    <div className="text-sm font-medium">{bottomChannel ? `${bottomChannel.roas.toFixed(2)}x ROAS` : ''}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+      
       {/* Key metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <MetricCard 
           title="Total Revenue" 
           value={loading ? "-" : `$${totalRevenue.toLocaleString()}`} 
-          change={5.8} 
+          change={revenueChange} 
           description="vs. previous period"
           icon={<DollarSign className="h-4 w-4" />}
           loading={loading}
         />
         <MetricCard 
-          title="Average ROAS" 
-          value={loading ? "-" : `${averageRoas.toFixed(2)}x`} 
-          change={2.4}
+          title="Marketing Spend" 
+          value={loading ? "-" : `$${totalCost.toLocaleString()}`} 
+          change={costChange}
+          description="vs. previous period"
+          icon={<Wallet className="h-4 w-4" />}
+          loading={loading}
+        />
+        <MetricCard 
+          title="Return on Ad Spend" 
+          value={loading ? "-" : `${totalRoas.toFixed(2)}x`} 
+          change={roasChange}
           description="vs. previous period"
           icon={<TrendingUp className="h-4 w-4" />}
           loading={loading}
         />
         <MetricCard 
-          title="Conversion Rate" 
-          value={loading ? "-" : "3.2%"} 
-          change={-0.8}
-          description="vs. previous period"
-          icon={<Percent className="h-4 w-4" />}
-          loading={loading}
-        />
-        <MetricCard 
           title="Total Conversions" 
           value={loading ? "-" : Math.round(totalConversions).toLocaleString()} 
-          change={4.2}
+          change={conversionChange}
           description="vs. previous period"
           icon={<Users className="h-4 w-4" />}
           loading={loading}
@@ -125,7 +212,7 @@ const Index = () => {
       <div className="dashboard-card mb-8 animate-fade-in" style={{ animationDelay: "150ms" }}>
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
           <div>
-            <h3 className="text-lg font-medium">Performance Trend</h3>
+            <h3 className="text-lg font-medium">Revenue Performance</h3>
             <p className="text-sm text-muted-foreground">Revenue by channel over time</p>
           </div>
           <Button variant="ghost" size="sm" className="gap-1" asChild>
@@ -154,8 +241,8 @@ const Index = () => {
         <div className="dashboard-card animate-fade-in" style={{ animationDelay: "300ms" }}>
           <div className="flex justify-between items-center mb-4">
             <div>
-              <h3 className="text-lg font-medium">Channel Performance</h3>
-              <p className="text-sm text-muted-foreground">Revenue and ROAS by channel</p>
+              <h3 className="text-lg font-medium">Channel ROAS</h3>
+              <p className="text-sm text-muted-foreground">Return on ad spend by channel</p>
             </div>
             <Button variant="ghost" size="sm" asChild>
               <a href="/channels">
@@ -167,7 +254,7 @@ const Index = () => {
           <ChannelBreakdownChart
             data={channelData}
             bars={[
-              { dataKey: "revenue", color: channelColors.search, label: "Revenue" },
+              { dataKey: "roas", color: channelColors.search, label: "ROAS" },
             ]}
             xAxisKey="name"
             loading={loading}

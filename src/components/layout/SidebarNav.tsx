@@ -3,7 +3,7 @@ import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
   BarChart3, 
-  LayoutDashboard, 
+  LineChart,
   Radio, 
   Layers, 
   GitCompare, 
@@ -11,7 +11,7 @@ import {
   PieChart, 
   Settings, 
   HelpCircle,
-  LineChart
+  LayoutDashboard
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -23,7 +23,7 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   {
-    title: "Dashboard",
+    title: "Analytics Overview",
     href: "/",
     icon: LayoutDashboard,
   },
