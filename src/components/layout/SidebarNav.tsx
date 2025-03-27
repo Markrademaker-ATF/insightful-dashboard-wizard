@@ -60,11 +60,6 @@ const navItems: NavItem[] = [
         icon: BarChart3,
       },
       {
-        title: "Multi-Touch Attribution",
-        href: "/attribution",
-        icon: GitCompare,
-      },
-      {
         title: "Metric Comparison",
         href: "/metrics",
         icon: GitCompare,

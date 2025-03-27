@@ -10,7 +10,6 @@ import DataPage from "./pages/DataPage";
 import ChannelsPage from "./pages/ChannelsPage";
 import MetricsPage from "./pages/MetricsPage";
 import ChannelDetailsPage from "./pages/ChannelDetailsPage";
-import MultiTouchAttributionPage from "./pages/MultiTouchAttributionPage";
 import IncrementalPage from "./pages/IncrementalPage";
 import BudgetPage from "./pages/BudgetPage";
 import ABTestingPage from "./pages/ABTestingPage";
@@ -33,7 +32,7 @@ const App = () => (
             <Route path="/channels" element={<ChannelsPage />} />
             <Route path="/metrics" element={<MetricsPage />} />
             <Route path="/channel-details" element={<ChannelDetailsPage />} />
-            <Route path="/attribution" element={<MultiTouchAttributionPage />} />
+            <Route path="/attribution" element={<ChannelDetailsPage />} />
             <Route path="/incremental" element={<IncrementalPage />} />
             <Route path="/budget" element={<BudgetPage />} />
             <Route path="/ab-testing" element={<ABTestingPage />} />
