@@ -513,14 +513,14 @@ const ChannelDetailsPage = () => {
         </CardContent>
       </Card>
 
-      {/* Main Tabs for different analysis views */}
+      {/* Main Tabs for different analysis views - Reordering tabs here */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList className="mb-2">
-          <TabsTrigger value="campaign-filters" className="flex items-center gap-1">
-            <Filter className="h-4 w-4" /> Campaign Filters
-          </TabsTrigger>
           <TabsTrigger value="overview" className="flex items-center gap-1">
             <LineChart className="h-4 w-4" /> Overview
+          </TabsTrigger>
+          <TabsTrigger value="campaign-filters" className="flex items-center gap-1">
+            <Filter className="h-4 w-4" /> Campaign Filters
           </TabsTrigger>
           {selectedCampaign !== "all" && (
             <TabsTrigger value="campaign-breakdown" className="flex items-center gap-1">
@@ -529,7 +529,18 @@ const ChannelDetailsPage = () => {
           )}
         </TabsList>
 
-        {/* Campaign Filters Tab - Contains filter and performance charts */}
+        {/* Overview Tab - Now First Tab */}
+        <TabsContent value="overview" className="space-y-6">
+          {/* Journey Analysis Section */}
+          {journeyData && (
+            <ChannelJourneyComparison 
+              data={journeyData || { channels: [] }} 
+              loading={loading} 
+            />
+          )}
+        </TabsContent>
+
+        {/* Campaign Filters Tab - Moved to second position */}
         <TabsContent value="campaign-filters" className="space-y-6">
           {/* Campaign Selector */}
           <Card>
@@ -597,17 +608,6 @@ const ChannelDetailsPage = () => {
               />
             </CardContent>
           </Card>
-        </TabsContent>
-
-        {/* Overview Tab - Now contains Journey Analysis */}
-        <TabsContent value="overview" className="space-y-6">
-          {/* Journey Analysis Section */}
-          {journeyData && (
-            <ChannelJourneyComparison 
-              data={journeyData || { channels: [] }} 
-              loading={loading} 
-            />
-          )}
         </TabsContent>
 
         {/* Campaign Breakdown Tab - Only shown when a specific campaign is selected */}
