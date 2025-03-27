@@ -13,7 +13,8 @@ import {
   HelpCircle,
   LayoutDashboard,
   ChevronDown,
-  ChevronRight
+  ChevronRight,
+  FileBarChart
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -46,6 +47,11 @@ const navItems: NavItem[] = [
     icon: BarChart3,
     children: [
       {
+        title: "Exploratory Data Analysis",
+        href: "/metrics",
+        icon: FileBarChart,
+      },
+      {
         title: "Channel Analysis",
         href: "/channels",
         icon: Radio,
@@ -59,11 +65,6 @@ const navItems: NavItem[] = [
         title: "Incremental Analysis",
         href: "/incremental",
         icon: TrendingUp,
-      },
-      {
-        title: "Metric Comparison",
-        href: "/metrics",
-        icon: GitCompare,
       },
     ]
   },

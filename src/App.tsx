@@ -29,8 +29,8 @@ const App = () => (
           <Route element={<MainLayout />}>
             <Route path="/" element={<Index />} />
             <Route path="/data" element={<DataPage />} />
-            <Route path="/channels" element={<ChannelsPage />} />
             <Route path="/metrics" element={<MetricsPage />} />
+            <Route path="/channels" element={<ChannelsPage />} />
             <Route path="/channel-details" element={<ChannelDetailsPage />} />
             <Route path="/incremental" element={<IncrementalPage />} />
             <Route path="/budget" element={<BudgetPage />} />

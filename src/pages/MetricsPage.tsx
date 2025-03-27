@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -60,8 +61,8 @@ const MetricsPage = () => {
   return (
     <div className="animate-fade-in">
       <PageHeader
-        title="Metric Comparison"
-        description="Compare different metrics across channels to identify patterns and insights"
+        title="Exploratory Data Analysis"
+        description="Analyze distributions, correlations, and patterns across metrics to gain deeper insights"
       >
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" size="sm" className="gap-1">
@@ -76,12 +77,12 @@ const MetricsPage = () => {
         <ChannelMetricsCards data={channelData} loading={loading} />
       </div>
 
-      {/* Exploratory Data Analysis Section - MOVED UP */}
+      {/* Exploratory Data Analysis Section */}
       <div className="dashboard-card mb-8">
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-2">
             <FileBarChart className="h-5 w-5 text-primary" />
-            <h3 className="text-lg font-medium">Exploratory Data Analysis</h3>
+            <h3 className="text-lg font-medium">Data Analysis</h3>
           </div>
           <Button variant="outline" size="sm" className="gap-1">
             <InfoIcon className="h-4 w-4" /> 
@@ -95,17 +96,17 @@ const MetricsPage = () => {
           onValueChange={setEdaTab}
         >
           <TabsList className="grid w-full grid-cols-3 mb-6">
-            <TabsTrigger value="correlation">Correlation Analysis</TabsTrigger>
             <TabsTrigger value="distribution">Distribution Analysis</TabsTrigger>
+            <TabsTrigger value="correlation">Correlation Analysis</TabsTrigger>
             <TabsTrigger value="scatter">Scatter Analysis</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="correlation">
-            <CorrelationMatrix data={channelData} loading={loading} />
-          </TabsContent>
-          
           <TabsContent value="distribution">
             <MetricDistributionChart data={channelData} loading={loading} />
+          </TabsContent>
+          
+          <TabsContent value="correlation">
+            <CorrelationMatrix data={channelData} loading={loading} />
           </TabsContent>
           
           <TabsContent value="scatter">
