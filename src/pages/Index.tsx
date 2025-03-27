@@ -1,10 +1,11 @@
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { AnalyticsOverview } from "@/components/dashboard/AnalyticsOverview";
 import { Helmet } from "react-helmet";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { SectionNav } from "@/components/dashboard/SectionNav";
+import { ChevronRight } from "lucide-react";
 
 const journeySections = [
   { id: "roi", title: "ROI Summary" },
@@ -47,11 +48,13 @@ const Index = () => {
             Follow this guided path to understand your marketing performance, from high-level metrics to optimization opportunities
           </p>
           
-          <SectionNav 
-            sections={journeySections}
-            activeSection={activeSection}
-            onSectionChange={setActiveSection}
-          />
+          <div className="p-4 bg-accent/30 rounded-lg">
+            <SectionNav 
+              sections={journeySections}
+              activeSection={activeSection}
+              onSectionChange={setActiveSection}
+            />
+          </div>
         </CardContent>
       </Card>
 

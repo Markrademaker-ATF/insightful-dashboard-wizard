@@ -16,32 +16,23 @@ interface SectionNavProps {
 }
 
 export function SectionNav({ sections, activeSection, onSectionChange }: SectionNavProps) {
-  const getSegmentColor = (index: number, currentIndex: number) => {
-    return currentIndex >= index ? "bg-primary" : "bg-muted";
-  };
-
   const currentIndex = sections.findIndex(s => s.id === activeSection);
-
+  
   return (
-    <div className="mb-6 overflow-hidden">
-      <div className="flex flex-wrap justify-center gap-y-2 relative">
+    <div className="mb-6 overflow-auto">
+      <div className="flex items-center justify-between min-w-max">
         {sections.map((section, index) => {
           const isActive = activeSection === section.id;
           const isPassed = sections.findIndex(s => s.id === activeSection) > index;
-          const isOdd = index % 2 !== 0;
           
           return (
-            <div key={section.id} className={cn(
-              "flex items-center",
-              isOdd ? "flex-row-reverse" : "flex-row",
-              index === 0 ? "" : ""
-            )}>
+            <div key={section.id} className="flex items-center">
               {/* Section button */}
               <Button
                 variant={isActive ? "default" : "outline"}
                 size="sm"
                 className={cn(
-                  "flex items-center gap-2 rounded-full z-10 transition-all",
+                  "relative flex items-center gap-2 rounded-full z-10 transition-all",
                   isPassed && !isActive ? "border-primary text-primary hover:bg-primary/10" : ""
                 )}
                 onClick={() => onSectionChange(section.id)}
@@ -54,31 +45,15 @@ export function SectionNav({ sections, activeSection, onSectionChange }: Section
                 )}>
                   {index + 1}
                 </span>
-                <span className="hidden md:inline">{section.title}</span>
+                <span>{section.title}</span>
               </Button>
               
               {/* Connecting line */}
               {index < sections.length - 1 && (
                 <div className={cn(
-                  "relative",
-                  isOdd ? "order-2" : "order-last"
-                )}>
-                  <div className={cn(
-                    "h-0.5 w-8 mx-1",
-                    getSegmentColor(index, currentIndex)
-                  )} />
-                  
-                  {/* Vertical connecting line for the snake effect */}
-                  {index < sections.length - 2 && (
-                    <div className="relative">
-                      <div className={cn(
-                        "absolute h-8 w-0.5 right-0",
-                        isOdd ? "-top-4" : "top-0",
-                        getSegmentColor(index, currentIndex)
-                      )} />
-                    </div>
-                  )}
-                </div>
+                  "h-0.5 w-10 mx-1",
+                  index < currentIndex ? "bg-primary" : "bg-muted"
+                )} />
               )}
             </div>
           );
