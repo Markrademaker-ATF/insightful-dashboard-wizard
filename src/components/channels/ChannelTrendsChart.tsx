@@ -27,19 +27,32 @@ export function ChannelTrendsChart({ data, loading }: ChannelTrendsChartProps) {
   }
 
   // Get all available channels from first data point
-  const channels = Object.keys(data[0] || {}).filter(
+  const allChannels = Object.keys(data[0] || {}).filter(
     (key) => key !== "name" && key !== "date" && key !== "totalRevenue"
   );
 
+  // Handle filter changes from the FilterExportControls component
+  const handleFilterChange = (filters: {channels?: string[], metrics?: string[]}) => {
+    if (filters.channels && filters.channels.length > 0) {
+      setSelectedChannels(filters.channels);
+    } else {
+      // If no channels selected, show all
+      setSelectedChannels([]);
+    }
+  };
+
   // Filter channels if any are selected
   const displayChannels = selectedChannels.length > 0 
-    ? channels.filter(channel => selectedChannels.includes(channel))
-    : channels;
+    ? allChannels.filter(channel => selectedChannels.includes(channel))
+    : allChannels;
 
   return (
     <div className="w-full space-y-4">
       <div className="flex justify-end">
-        <FilterExportControls filterOptions={{ channels: true, metrics: false }} />
+        <FilterExportControls 
+          filterOptions={{ channels: true, metrics: false }} 
+          onFilterChange={handleFilterChange}
+        />
       </div>
       
       <ResponsiveContainer width="100%" height={400}>

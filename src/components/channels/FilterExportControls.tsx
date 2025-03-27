@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Download, Filter, ArrowDownToLine, FileDown, SlidersHorizontal, Check } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 type FilterExportControlsProps = {
-  onFilterChange?: (filters: any) => void;
+  onFilterChange?: (filters: {channels?: string[], metrics?: string[]}) => void;
   filterOptions?: {
     channels?: boolean;
     metrics?: boolean;
@@ -61,6 +61,23 @@ export const FilterExportControls = ({
     { id: "impressions", label: "Impressions" },
     { id: "clicks", label: "Clicks" },
   ];
+
+  // Emit filter changes to parent component when filters change
+  useEffect(() => {
+    if (onFilterChange) {
+      const filters: {channels?: string[], metrics?: string[]} = {};
+      
+      if (filterOptions.channels) {
+        filters.channels = channelFilters;
+      }
+      
+      if (filterOptions.metrics) {
+        filters.metrics = metricFilters;
+      }
+      
+      onFilterChange(filters);
+    }
+  }, [channelFilters, metricFilters, onFilterChange, filterOptions]);
 
   const handleChannelFilterChange = (channel: string) => {
     setChannelFilters(prev => {
@@ -215,3 +232,4 @@ export const FilterExportControls = ({
     </div>
   );
 };
+

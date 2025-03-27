@@ -22,7 +22,7 @@ type ChannelComparisonChartProps = {
 
 export function ChannelComparisonChart({ data, loading }: ChannelComparisonChartProps) {
   const [metric, setMetric] = useState("roas");
-  const [filteredData, setFilteredData] = useState(data);
+  const [filteredChannels, setFilteredChannels] = useState<string[]>([]);
 
   if (loading) {
     return <Skeleton className="w-full h-[400px]" />;
@@ -36,6 +36,11 @@ export function ChannelComparisonChart({ data, loading }: ChannelComparisonChart
     { value: "cpa", label: "CPA" },
   ];
 
+  // Apply filters to data
+  const filteredData = filteredChannels.length > 0
+    ? data.filter(item => filteredChannels.includes(item.id))
+    : data;
+
   const formatValue = (value: number, metricType: string) => {
     if (metricType === "revenue" || metricType === "cost") {
       return `$${value.toLocaleString()}`;
@@ -47,6 +52,13 @@ export function ChannelComparisonChart({ data, loading }: ChannelComparisonChart
       return `$${value}`;
     }
     return value;
+  };
+
+  // Handle filter changes
+  const handleFilterChange = (filters: {channels?: string[], metrics?: string[]}) => {
+    if (filters.channels) {
+      setFilteredChannels(filters.channels);
+    }
   };
 
   return (
@@ -68,12 +80,13 @@ export function ChannelComparisonChart({ data, loading }: ChannelComparisonChart
         <FilterExportControls 
           filterOptions={{ channels: true, metrics: false }}
           className="flex justify-end"
+          onFilterChange={handleFilterChange}
         />
       </div>
 
       <ResponsiveContainer width="100%" height={400}>
         <BarChart
-          data={data}
+          data={filteredData}
           margin={{
             top: 5,
             right: 30,
