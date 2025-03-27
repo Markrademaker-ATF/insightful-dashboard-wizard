@@ -340,10 +340,9 @@ export function AnalyticsOverview() {
           </h2>
         </div>
         
-        {/* Lower section */}
+        {/* Channel Analysis with combined view */}
         <AnalyticsSection
           channelData={channelData}
-          budgetData={budgetData}
           loading={loading}
           channelColors={channelColors}
         />
