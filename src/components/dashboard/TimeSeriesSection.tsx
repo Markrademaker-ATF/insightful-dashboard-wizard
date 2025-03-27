@@ -33,30 +33,53 @@ export function TimeSeriesSection({ data, loading }: TimeSeriesSectionProps) {
             <TabsTrigger value="stacked">Stacked</TabsTrigger>
             <TabsTrigger value="grouped">Layered</TabsTrigger>
           </TabsList>
+        
+          <TabsContent value="stacked">
+            <TimeSeriesChart
+              data={data}
+              series={[
+                { dataKey: "baseline", color: mediaGroupColors.baseline, label: "Baseline", type: "area" },
+                { dataKey: "nonPaid", color: mediaGroupColors.nonPaid, label: "Non-Paid Media", type: "area" },
+                { dataKey: "organic", color: mediaGroupColors.organic, label: "Organic Media", type: "area" },
+                { dataKey: "paid", color: mediaGroupColors.paid, label: "Paid Media", type: "area" },
+                { dataKey: "total", color: "#6366f1", label: "Total Revenue", type: "line" }
+              ]}
+              loading={loading}
+              height={400}
+              stacked={true}
+            />
+            
+            <div className="mt-4 text-sm text-muted-foreground">
+              <p className="flex items-center gap-2">
+                <Info className="h-4 w-4 text-primary" /> 
+                The stacked view shows how each media type contributes to total revenue over time.
+              </p>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="grouped">
+            <TimeSeriesChart
+              data={data}
+              series={[
+                { dataKey: "baseline", color: mediaGroupColors.baseline, label: "Baseline", type: "area" },
+                { dataKey: "nonPaid", color: mediaGroupColors.nonPaid, label: "Non-Paid Media", type: "area" },
+                { dataKey: "organic", color: mediaGroupColors.organic, label: "Organic Media", type: "area" },
+                { dataKey: "paid", color: mediaGroupColors.paid, label: "Paid Media", type: "area" },
+                { dataKey: "total", color: "#6366f1", label: "Total Revenue", type: "line" }
+              ]}
+              loading={loading}
+              height={400}
+              stacked={false}
+            />
+            
+            <div className="mt-4 text-sm text-muted-foreground">
+              <p className="flex items-center gap-2">
+                <Info className="h-4 w-4 text-primary" /> 
+                The layered view allows comparison of media performance trends over time.
+              </p>
+            </div>
+          </TabsContent>
         </Tabs>
-        
-        <TimeSeriesChart
-          data={data}
-          series={[
-            { dataKey: "baseline", color: mediaGroupColors.baseline, label: "Baseline", type: "area" },
-            { dataKey: "nonPaid", color: mediaGroupColors.nonPaid, label: "Non-Paid Media", type: "area" },
-            { dataKey: "organic", color: mediaGroupColors.organic, label: "Organic Media", type: "area" },
-            { dataKey: "paid", color: mediaGroupColors.paid, label: "Paid Media", type: "area" },
-            { dataKey: "total", color: "#6366f1", label: "Total Revenue", type: "line" }
-          ]}
-          loading={loading}
-          height={400}
-          stacked={chartView === "stacked"}
-        />
-        
-        <div className="mt-4 text-sm text-muted-foreground">
-          <p className="flex items-center gap-2">
-            <Info className="h-4 w-4 text-primary" /> 
-            {chartView === "stacked" 
-              ? "The stacked view shows how each media type contributes to total revenue over time." 
-              : "The layered view allows comparison of media performance trends over time."}
-          </p>
-        </div>
       </CardContent>
     </Card>
   );

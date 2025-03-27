@@ -63,75 +63,75 @@ export function MediaTypeAnalysisSection({
               </TabsTrigger>
             )}
           </TabsList>
-        </Tabs>
 
-        {/* Breakdown Chart */}
-        <TabsContent value="breakdown" className="mt-0">
-          <MediaGroupBreakdownChart
-            data={mediaGroupData}
-            mediaGroups={[
-              { dataKey: "baseline", color: mediaGroupColors.baseline, label: "Baseline" },
-              { dataKey: "nonPaid", color: mediaGroupColors.nonPaid, label: "Non-Paid Media" },
-              { dataKey: "organic", color: mediaGroupColors.organic, label: "Organic Media" },
-              { dataKey: "paid", color: mediaGroupColors.paid, label: "Paid Media" }
-            ]}
-            loading={loading}
-            height={400}
-            stacked={true}
-          />
-          <div className="mt-4 text-sm text-muted-foreground">
-            <p className="flex items-center gap-2">
-              <Info className="h-4 w-4 text-primary" /> 
-              This chart shows the monthly contribution of each media type to total revenue.
-            </p>
-          </div>
-        </TabsContent>
-
-        {/* Saturation Chart */}
-        <TabsContent value="saturation" className="mt-0">
-          <MediaSaturationChart
-            data={saturationData}
-            curves={[
-              { dataKey: "search", color: "#4361ee", label: "Search" },
-              { dataKey: "social", color: "#3a0ca3", label: "Social" },
-              { dataKey: "display", color: "#7209b7", label: "Display" }
-            ]}
-            loading={loading}
-            height={400}
-          />
-          <div className="mt-4 text-sm text-muted-foreground">
-            <p className="flex items-center gap-2">
-              <Info className="h-4 w-4 text-primary" /> 
-              Saturation curves show how incremental revenue changes as media spend increases, highlighting diminishing returns.
-            </p>
-          </div>
-        </TabsContent>
-
-        {/* Marginal Returns Chart */}
-        <TabsContent value="marginal" className="mt-0">
-          <MarginalReturnsChart data={marginalReturnsData} />
-          <div className="mt-4 text-sm text-muted-foreground">
-            <p className="flex items-center gap-2">
-              <Info className="h-4 w-4 text-primary" /> 
-              The marginal returns chart shows the average and incremental return on ad spend (ROAS) at different spending levels.
-              <span className="font-medium">Note:</span> When the marginal ROAS drops below 1.0, additional spend becomes unprofitable.
-            </p>
-          </div>
-        </TabsContent>
-
-        {/* Channels Chart */}
-        {mediaType !== "all" && (
-          <TabsContent value="channels" className="mt-0">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <ChannelBreakdownDisplay 
-                channelData={channelData} 
-                loading={loading} 
-                mediaType={mediaType} 
-              />
-              <ChannelInsights mediaType={mediaType} />
+          {/* Breakdown Chart */}
+          <TabsContent value="breakdown" className="mt-0">
+            <MediaGroupBreakdownChart
+              data={mediaGroupData}
+              mediaGroups={[
+                { dataKey: "baseline", color: mediaGroupColors.baseline, label: "Baseline" },
+                { dataKey: "nonPaid", color: mediaGroupColors.nonPaid, label: "Non-Paid Media" },
+                { dataKey: "organic", color: mediaGroupColors.organic, label: "Organic Media" },
+                { dataKey: "paid", color: mediaGroupColors.paid, label: "Paid Media" }
+              ]}
+              loading={loading}
+              height={400}
+              stacked={true}
+            />
+            <div className="mt-4 text-sm text-muted-foreground">
+              <p className="flex items-center gap-2">
+                <Info className="h-4 w-4 text-primary" /> 
+                This chart shows the monthly contribution of each media type to total revenue.
+              </p>
             </div>
           </TabsContent>
-        )}
+
+          {/* Saturation Chart */}
+          <TabsContent value="saturation" className="mt-0">
+            <MediaSaturationChart
+              data={saturationData}
+              curves={[
+                { dataKey: "search", color: "#4361ee", label: "Search" },
+                { dataKey: "social", color: "#3a0ca3", label: "Social" },
+                { dataKey: "display", color: "#7209b7", label: "Display" }
+              ]}
+              loading={loading}
+              height={400}
+            />
+            <div className="mt-4 text-sm text-muted-foreground">
+              <p className="flex items-center gap-2">
+                <Info className="h-4 w-4 text-primary" /> 
+                Saturation curves show how incremental revenue changes as media spend increases, highlighting diminishing returns.
+              </p>
+            </div>
+          </TabsContent>
+
+          {/* Marginal Returns Chart */}
+          <TabsContent value="marginal" className="mt-0">
+            <MarginalReturnsChart data={marginalReturnsData} />
+            <div className="mt-4 text-sm text-muted-foreground">
+              <p className="flex items-center gap-2">
+                <Info className="h-4 w-4 text-primary" /> 
+                The marginal returns chart shows the average and incremental return on ad spend (ROAS) at different spending levels.
+                <span className="font-medium">Note:</span> When the marginal ROAS drops below 1.0, additional spend becomes unprofitable.
+              </p>
+            </div>
+          </TabsContent>
+
+          {/* Channels Chart */}
+          {mediaType !== "all" && (
+            <TabsContent value="channels" className="mt-0">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <ChannelBreakdownDisplay 
+                  channelData={channelData} 
+                  loading={loading} 
+                  mediaType={mediaType} 
+                />
+                <ChannelInsights mediaType={mediaType} />
+              </div>
+            </TabsContent>
+          )}
+        </Tabs>
       </CardContent>
     </Card>
   );

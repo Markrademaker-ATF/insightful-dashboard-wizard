@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Info } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
@@ -46,6 +46,11 @@ export function ScenarioSelector({ activeScenario, onScenarioChange }: ScenarioS
             Revenue Uplift
           </TabsTrigger>
         </TabsList>
+        
+        {/* Add empty TabsContent elements for each tab to maintain correct structure */}
+        <TabsContent value="bau" className="hidden" />
+        <TabsContent value="cost-savings" className="hidden" />
+        <TabsContent value="revenue-uplift" className="hidden" />
       </Tabs>
     </div>
   );
