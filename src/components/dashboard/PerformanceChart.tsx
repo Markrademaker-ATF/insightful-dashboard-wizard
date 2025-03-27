@@ -44,6 +44,9 @@ export function PerformanceChart({
     );
   }
 
+  // Check if we have any lines with yAxisId="right"
+  const hasRightAxis = lines.some(line => line.yAxisId === "right");
+
   return (
     <div className={cn("w-full", className)} style={{ height }}>
       <ResponsiveContainer width="100%" height="100%">
@@ -64,11 +67,23 @@ export function PerformanceChart({
             axisLine={{ stroke: "rgba(0,0,0,0.09)" }}
           />
           <YAxis
+            yAxisId="left"
+            orientation="left"
             tick={{ fontSize: 12 }}
             tickLine={false}
             axisLine={false}
             tickFormatter={(value) => `$${value}`}
           />
+          {hasRightAxis && (
+            <YAxis
+              yAxisId="right"
+              orientation="right"
+              tick={{ fontSize: 12 }}
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={(value) => `$${value}`}
+            />
+          )}
           <Tooltip
             contentStyle={{
               borderRadius: "0.5rem",
@@ -92,7 +107,7 @@ export function PerformanceChart({
               strokeWidth={2}
               dot={{ r: 3 }}
               activeDot={{ r: 5 }}
-              yAxisId={line.yAxisId}
+              yAxisId={line.yAxisId || "left"}
               animationDuration={1000 + index * 500}
               animationBegin={index * 150}
             />

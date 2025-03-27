@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -287,6 +286,7 @@ const MultiTouchAttributionPage = () => {
                 dataKey: "value",
                 color: "#4361ee",
                 label: "Attributed Revenue",
+                yAxisId: "left"
               },
             ]}
             loading={loading}

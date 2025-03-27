@@ -32,10 +32,10 @@ export function PerformanceSection({
       <PerformanceChart
         data={performanceData}
         lines={[
-          { dataKey: "search", color: channelColors.search, label: "Search" },
-          { dataKey: "social", color: channelColors.social, label: "Social" },
-          { dataKey: "email", color: channelColors.email, label: "Email" },
-          { dataKey: "display", color: channelColors.display, label: "Display" },
+          { dataKey: "search", color: channelColors.search, label: "Search", yAxisId: "left" },
+          { dataKey: "social", color: channelColors.social, label: "Social", yAxisId: "left" },
+          { dataKey: "email", color: channelColors.email, label: "Email", yAxisId: "left" },
+          { dataKey: "display", color: channelColors.display, label: "Display", yAxisId: "left" },
         ]}
         loading={loading}
         height={350}

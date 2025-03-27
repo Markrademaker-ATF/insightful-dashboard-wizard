@@ -1,4 +1,3 @@
-
 import React from "react";
 import { 
   Card, 
@@ -116,11 +115,13 @@ export const CampaignBreakdownTab: React.FC<CampaignBreakdownTabProps> = ({
                 dataKey: "revenue",
                 color: "#4361ee",
                 label: "Revenue",
+                yAxisId: "left"
               },
               {
                 dataKey: "cost",
                 color: "#f72585",
                 label: "Cost",
+                yAxisId: "left"
               }
             ]}
             height={350}

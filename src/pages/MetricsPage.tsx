@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -159,21 +158,25 @@ const MetricsPage = () => {
                     dataKey: "search",
                     color: channelColors.search,
                     label: "Search",
+                    yAxisId: "left"
                   },
                   {
                     dataKey: "social",
                     color: channelColors.social,
                     label: "Social",
+                    yAxisId: "left"
                   },
                   {
                     dataKey: "email",
                     color: channelColors.email,
                     label: "Email",
+                    yAxisId: "left"
                   },
                   {
                     dataKey: "display",
                     color: channelColors.display,
                     label: "Display",
+                    yAxisId: "left"
                   },
                 ]}
                 loading={loading}

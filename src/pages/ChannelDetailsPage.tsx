@@ -585,6 +585,7 @@ const ChannelDetailsPage = () => {
                     dataKey: "value",
                     color: "#4361ee",
                     label: "Attributed Revenue",
+                    yAxisId: "left"
                   },
                   {
                     dataKey: "conversions",
@@ -626,6 +627,7 @@ const ChannelDetailsPage = () => {
                     dataKey: "value",
                     color: "#4361ee",
                     label: "Attributed Revenue",
+                    yAxisId: "left"
                   },
                 ]}
                 loading={loading}
