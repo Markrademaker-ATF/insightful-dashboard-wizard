@@ -13,7 +13,11 @@ import {
   AreaChart,
   ReferenceArea,
   ReferenceLine,
-  Brush
+  Brush,
+  Scatter,
+  ScatterChart,
+  ZAxis,
+  ComposedChart
 } from "recharts";
 import { cn } from "@/lib/utils";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
@@ -24,7 +28,7 @@ type TimeSeriesChartProps = {
     dataKey: string;
     color: string;
     label: string;
-    type?: "line" | "area";
+    type?: "line" | "area" | "scatter";
     strokeDasharray?: string;
     hidden?: boolean;
   }[];
@@ -36,6 +40,7 @@ type TimeSeriesChartProps = {
   showBrush?: boolean;
   showRollingAverage?: boolean;
   comparisonPeriod?: {start: number, end: number} | null;
+  roasScatterVisible?: boolean;
 };
 
 export function TimeSeriesChart({
@@ -49,6 +54,7 @@ export function TimeSeriesChart({
   showBrush = false,
   showRollingAverage = false,
   comparisonPeriod = null,
+  roasScatterVisible = false,
 }: TimeSeriesChartProps) {
   const [visibleSeries, setVisibleSeries] = useState<string[]>(
     series.map(s => s.dataKey)
@@ -58,8 +64,8 @@ export function TimeSeriesChart({
   const rollingAverageData = React.useMemo(() => {
     if (!showRollingAverage) return [];
     
-    const totalSeries = series.find(s => s.dataKey === "total");
-    if (!totalSeries) return [];
+    const revenueSeries = series.find(s => s.dataKey === "revenue");
+    if (!revenueSeries) return [];
     
     const windowSize = 7;
     return data.map((item, index) => {
@@ -67,7 +73,7 @@ export function TimeSeriesChart({
       
       let sum = 0;
       for (let i = 0; i < windowSize; i++) {
-        sum += data[index - i].total;
+        sum += data[index - i].revenue;
       }
       
       return {
@@ -75,7 +81,7 @@ export function TimeSeriesChart({
         rollingAvg: sum / windowSize
       };
     });
-  }, [data, showRollingAverage]);
+  }, [data, showRollingAverage, series]);
 
   // Filter series by visibility
   const filteredSeries = series.filter(s => visibleSeries.includes(s.dataKey) || s.dataKey === "rollingAvg");
@@ -119,7 +125,7 @@ export function TimeSeriesChart({
 
   return (
     <ChartContainer className={cn("w-full", className)} style={{ height }} config={chartConfig}>
-      <AreaChart
+      <ComposedChart
         data={showRollingAverage ? rollingAverageData : data}
         margin={{
           top: 20,
@@ -136,15 +142,30 @@ export function TimeSeriesChart({
           axisLine={{ stroke: "rgba(0,0,0,0.09)" }}
         />
         <YAxis
+          yAxisId="left"
           tick={{ fontSize: 12 }}
           tickLine={false}
           axisLine={false}
           tickFormatter={(value) => `$${value.toLocaleString()}`}
         />
+        {roasScatterVisible && (
+          <YAxis
+            yAxisId="right"
+            orientation="right"
+            tick={{ fontSize: 12 }}
+            tickLine={false}
+            axisLine={false}
+            domain={[0, 'dataMax + 1']}
+            label={{ value: 'ROAS', angle: -90, position: 'insideRight' }}
+          />
+        )}
         <ChartTooltip
           content={
             <ChartTooltipContent 
               formatter={(value, name) => {
+                if (name === "roas") {
+                  return [`${Number(value).toFixed(2)}x`, name];
+                }
                 return [`$${Number(value).toLocaleString()}`, name];
               }}
             />
@@ -180,36 +201,54 @@ export function TimeSeriesChart({
           const isVisible = visibleSeries.includes(item.dataKey);
           if (!isVisible && item.dataKey !== "rollingAvg") return null;
           
-          return item.type === "line" || item.dataKey === "rollingAvg" ? (
-            <Line
-              key={item.dataKey}
-              type="monotone"
-              dataKey={item.dataKey === "rollingAvg" ? "rollingAvg" : item.dataKey}
-              name={item.dataKey === "rollingAvg" ? "Rolling Average (7-period)" : item.label}
-              stroke={item.dataKey === "rollingAvg" ? "#9b87f5" : item.color}
-              strokeWidth={item.dataKey === "rollingAvg" ? 3 : 2}
-              strokeDasharray={item.dataKey === "rollingAvg" ? "" : item.strokeDasharray}
-              dot={item.dataKey === "rollingAvg" ? false : { r: 3 }}
-              activeDot={item.dataKey === "rollingAvg" ? { r: 4 } : { r: 5 }}
-              animationDuration={1000 + index * 250}
-              animationBegin={index * 100}
-              fill="transparent"
-            />
-          ) : (
-            <Area
-              key={item.dataKey}
-              type="monotone"
-              dataKey={item.dataKey}
-              name={item.label}
-              stroke={item.color}
-              fill={item.color}
-              strokeWidth={1.5}
-              fillOpacity={0.3}
-              animationDuration={1000 + index * 250}
-              animationBegin={index * 100}
-              stackId={stacked ? "stack" : undefined}
-            />
-          );
+          if (item.type === "scatter" && roasScatterVisible) {
+            return (
+              <Scatter
+                key={item.dataKey}
+                dataKey={item.dataKey}
+                name={item.label}
+                fill={item.color}
+                yAxisId="right"
+                animationDuration={1000 + index * 250}
+                animationBegin={index * 100}
+              />
+            );
+          } else if (item.type === "line" || item.dataKey === "rollingAvg") {
+            return (
+              <Line
+                key={item.dataKey}
+                type="monotone"
+                dataKey={item.dataKey === "rollingAvg" ? "rollingAvg" : item.dataKey}
+                name={item.dataKey === "rollingAvg" ? "Rolling Average (7-period)" : item.label}
+                stroke={item.dataKey === "rollingAvg" ? "#9b87f5" : item.color}
+                strokeWidth={item.dataKey === "rollingAvg" ? 3 : 2}
+                strokeDasharray={item.dataKey === "rollingAvg" ? "" : item.strokeDasharray}
+                dot={item.dataKey === "rollingAvg" ? false : { r: 3 }}
+                activeDot={item.dataKey === "rollingAvg" ? { r: 4 } : { r: 5 }}
+                animationDuration={1000 + index * 250}
+                animationBegin={index * 100}
+                fill="transparent"
+                yAxisId="left"
+              />
+            );
+          } else {
+            return (
+              <Area
+                key={item.dataKey}
+                type="monotone"
+                dataKey={item.dataKey}
+                name={item.label}
+                stroke={item.color}
+                fill={item.color}
+                strokeWidth={1.5}
+                fillOpacity={0.3}
+                animationDuration={1000 + index * 250}
+                animationBegin={index * 100}
+                stackId={stacked ? "stack" : undefined}
+                yAxisId="left"
+              />
+            );
+          }
         })}
 
         {/* Add brush for zooming */}
@@ -221,7 +260,7 @@ export function TimeSeriesChart({
             startIndex={Math.max(0, data.length - 30)} 
           />
         )}
-      </AreaChart>
+      </ComposedChart>
     </ChartContainer>
   );
 }

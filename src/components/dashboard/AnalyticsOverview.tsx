@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -84,10 +83,10 @@ export function AnalyticsOverview() {
       
       return {
         date: day.name,
-        total: day.totalRevenue,
-        cost: Math.round(dailyCost),
         revenue: day.totalRevenue,
-        // Calculate media type contributions (simulated for this example)
+        cost: Math.round(dailyCost),
+        roas: dailyCost > 0 ? +(day.totalRevenue / dailyCost).toFixed(2) : 0,
+        // Keep these for possible future use
         baseline: Math.round(day.totalRevenue * 0.2),
         nonPaid: Math.round(day.totalRevenue * 0.15),
         organic: Math.round(day.totalRevenue * 0.25),

@@ -4,11 +4,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Info, Calendar, ArrowDownUp, TrendingUp, Layers } from "lucide-react";
 import { TimeSeriesChart } from "@/components/dashboard/TimeSeriesChart";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { mediaGroupColors } from "@/components/dashboard/MediaGroupBreakdownChart";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { ScenarioSelector } from "@/components/budget/ScenarioSelector";
 
 interface TimeSeriesSectionProps {
   data: any[];
@@ -16,16 +14,23 @@ interface TimeSeriesSectionProps {
 }
 
 export function TimeSeriesSection({ data, loading }: TimeSeriesSectionProps) {
-  const [chartView, setChartView] = useState("stacked");
+  const [chartView, setChartView] = useState("layered");
   const [timeGranularity, setTimeGranularity] = useState("all");
   const [showRollingAverage, setShowRollingAverage] = useState(false);
   const [showBrush, setShowBrush] = useState(false);
-  const [scenario, setScenario] = useState("bau");
   const [showComparison, setShowComparison] = useState(false);
+
+  // Calculate ROAS for each data point
+  const enhancedData = React.useMemo(() => {
+    return data.map(item => ({
+      ...item,
+      roas: item.cost > 0 ? +(item.revenue / item.cost).toFixed(2) : 0
+    }));
+  }, [data]);
 
   // Filter data based on time granularity selection
   const filteredData = React.useMemo(() => {
-    if (timeGranularity === "all") return data;
+    if (timeGranularity === "all") return enhancedData;
     
     const now = new Date();
     let cutoffDate = new Date();
@@ -41,14 +46,14 @@ export function TimeSeriesSection({ data, loading }: TimeSeriesSectionProps) {
         cutoffDate.setFullYear(now.getFullYear() - 1);
         break;
       default:
-        return data;
+        return enhancedData;
     }
     
-    return data.filter(item => {
+    return enhancedData.filter(item => {
       const itemDate = new Date(item.date);
       return itemDate >= cutoffDate;
     });
-  }, [data, timeGranularity]);
+  }, [enhancedData, timeGranularity]);
 
   // Define comparison period (middle third of the data for demo purposes)
   const comparisonPeriod = React.useMemo(() => {
@@ -67,9 +72,9 @@ export function TimeSeriesSection({ data, loading }: TimeSeriesSectionProps) {
     <Card className="mb-8">
       <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <CardTitle>Performance Over Time</CardTitle>
+          <CardTitle>Revenue, Cost & ROAS Over Time</CardTitle>
           <CardDescription>
-            Historical trends by media type
+            Track performance trends over time
           </CardDescription>
         </div>
         
@@ -92,18 +97,18 @@ export function TimeSeriesSection({ data, loading }: TimeSeriesSectionProps) {
       </CardHeader>
       <CardContent>
         <Tabs
-          defaultValue="stacked"
+          defaultValue="layered"
           value={chartView}
           onValueChange={setChartView}
           className="mb-4"
         >
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4">
             <TabsList className="grid w-full sm:w-[240px] grid-cols-2">
+              <TabsTrigger value="layered" className="flex items-center gap-1">
+                <ArrowDownUp className="h-4 w-4" /> Layered
+              </TabsTrigger>
               <TabsTrigger value="stacked" className="flex items-center gap-1">
                 <Layers className="h-4 w-4" /> Stacked
-              </TabsTrigger>
-              <TabsTrigger value="grouped" className="flex items-center gap-1">
-                <ArrowDownUp className="h-4 w-4" /> Layered
               </TabsTrigger>
             </TabsList>
             
@@ -141,42 +146,13 @@ export function TimeSeriesSection({ data, loading }: TimeSeriesSectionProps) {
             </div>
           </div>
         
-          <TabsContent value="stacked">
+          <TabsContent value="layered">
             <TimeSeriesChart
               data={filteredData}
               series={[
-                { dataKey: "baseline", color: mediaGroupColors.baseline, label: "Baseline", type: "area" },
-                { dataKey: "nonPaid", color: mediaGroupColors.nonPaid, label: "Non-Paid Media", type: "area" },
-                { dataKey: "organic", color: mediaGroupColors.organic, label: "Organic Media", type: "area" },
-                { dataKey: "paid", color: mediaGroupColors.paid, label: "Paid Media", type: "area" },
-                { dataKey: "total", color: "#6366f1", label: "Total Revenue", type: "line" }
-              ]}
-              loading={loading}
-              height={400}
-              stacked={true}
-              showBrush={showBrush}
-              showRollingAverage={showRollingAverage}
-              comparisonPeriod={comparisonPeriod}
-            />
-            
-            <div className="mt-4 text-sm text-muted-foreground">
-              <p className="flex items-center gap-2">
-                <Info className="h-4 w-4 text-primary" /> 
-                The stacked view shows how each media type contributes to total revenue over time.
-                {showComparison && " The highlighted area represents a comparison period for analysis."}
-              </p>
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="grouped">
-            <TimeSeriesChart
-              data={filteredData}
-              series={[
-                { dataKey: "baseline", color: mediaGroupColors.baseline, label: "Baseline", type: "area" },
-                { dataKey: "nonPaid", color: mediaGroupColors.nonPaid, label: "Non-Paid Media", type: "area" },
-                { dataKey: "organic", color: mediaGroupColors.organic, label: "Organic Media", type: "area" },
-                { dataKey: "paid", color: mediaGroupColors.paid, label: "Paid Media", type: "area" },
-                { dataKey: "total", color: "#6366f1", label: "Total Revenue", type: "line" }
+                { dataKey: "cost", color: "#ea384c", label: "Marketing Cost", type: "area" },
+                { dataKey: "revenue", color: "#0EA5E9", label: "Total Revenue", type: "area" },
+                { dataKey: "roas", color: "#9b87f5", label: "ROAS", type: "scatter" }
               ]}
               loading={loading}
               height={400}
@@ -184,43 +160,44 @@ export function TimeSeriesSection({ data, loading }: TimeSeriesSectionProps) {
               showBrush={showBrush}
               showRollingAverage={showRollingAverage}
               comparisonPeriod={comparisonPeriod}
+              roasScatterVisible={true}
             />
             
             <div className="mt-4 text-sm text-muted-foreground">
               <p className="flex items-center gap-2">
                 <Info className="h-4 w-4 text-primary" /> 
-                The layered view allows comparison of media performance trends over time.
+                This chart shows revenue and marketing costs over time, with ROAS (Return on Ad Spend) plotted as scatter points.
+                {showComparison && " The highlighted area represents a comparison period for analysis."}
+              </p>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="stacked">
+            <TimeSeriesChart
+              data={filteredData}
+              series={[
+                { dataKey: "cost", color: "#ea384c", label: "Marketing Cost", type: "area" },
+                { dataKey: "revenue", color: "#0EA5E9", label: "Total Revenue", type: "area" },
+                { dataKey: "roas", color: "#9b87f5", label: "ROAS", type: "scatter" }
+              ]}
+              loading={loading}
+              height={400}
+              stacked={true}
+              showBrush={showBrush}
+              showRollingAverage={showRollingAverage}
+              comparisonPeriod={comparisonPeriod}
+              roasScatterVisible={true}
+            />
+            
+            <div className="mt-4 text-sm text-muted-foreground">
+              <p className="flex items-center gap-2">
+                <Info className="h-4 w-4 text-primary" /> 
+                The stacked view compares the total marketing investment against generated revenue, with ROAS as scatter points.
                 Click on legend items to show/hide specific series.
               </p>
             </div>
           </TabsContent>
         </Tabs>
-        
-        {/* Scenario Comparison Section */}
-        <div className="mt-8 border-t pt-4">
-          <h3 className="text-lg font-medium mb-4">Budget Scenario Analysis</h3>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="col-span-1">
-              <ScenarioSelector
-                activeScenario={scenario}
-                onScenarioChange={setScenario}
-              />
-            </div>
-            <div className="lg:col-span-2">
-              <div className="text-sm text-muted-foreground">
-                <p className="flex items-center gap-2 mb-2">
-                  <Info className="h-4 w-4 text-primary" /> 
-                  {scenario === "bau" && "The Business As Usual scenario shows expected performance with current budgets."}
-                  {scenario === "cost-savings" && "The Cost Savings scenario shows how reducing media spend affects performance."}
-                  {scenario === "revenue-uplift" && "The Revenue Uplift scenario shows potential gains from increased media investment."}
-                </p>
-                <p>
-                  Click on different scenarios to compare their impact on performance metrics.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
       </CardContent>
     </Card>
   );
