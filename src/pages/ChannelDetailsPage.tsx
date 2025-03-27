@@ -516,11 +516,11 @@ const ChannelDetailsPage = () => {
       {/* Main Tabs for different analysis views */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
         <TabsList className="mb-2">
-          <TabsTrigger value="overview" className="flex items-center gap-1">
-            <LineChart className="h-4 w-4" /> Overview
-          </TabsTrigger>
           <TabsTrigger value="campaign-filters" className="flex items-center gap-1">
             <Filter className="h-4 w-4" /> Campaign Filters
+          </TabsTrigger>
+          <TabsTrigger value="overview" className="flex items-center gap-1">
+            <LineChart className="h-4 w-4" /> Overview
           </TabsTrigger>
           {selectedCampaign !== "all" && (
             <TabsTrigger value="campaign-breakdown" className="flex items-center gap-1">
@@ -528,17 +528,6 @@ const ChannelDetailsPage = () => {
             </TabsTrigger>
           )}
         </TabsList>
-
-        {/* Overview Tab - Now contains Journey Analysis */}
-        <TabsContent value="overview" className="space-y-6">
-          {/* Journey Analysis Section */}
-          {journeyData && (
-            <ChannelJourneyComparison 
-              data={journeyData || { channels: [] }} 
-              loading={loading} 
-            />
-          )}
-        </TabsContent>
 
         {/* Campaign Filters Tab - Contains filter and performance charts */}
         <TabsContent value="campaign-filters" className="space-y-6">
@@ -608,6 +597,17 @@ const ChannelDetailsPage = () => {
               />
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* Overview Tab - Now contains Journey Analysis */}
+        <TabsContent value="overview" className="space-y-6">
+          {/* Journey Analysis Section */}
+          {journeyData && (
+            <ChannelJourneyComparison 
+              data={journeyData || { channels: [] }} 
+              loading={loading} 
+            />
+          )}
         </TabsContent>
 
         {/* Campaign Breakdown Tab - Only shown when a specific campaign is selected */}
