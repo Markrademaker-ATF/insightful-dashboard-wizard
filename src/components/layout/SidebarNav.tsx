@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
@@ -50,14 +51,19 @@ const navItems: NavItem[] = [
         icon: Radio,
       },
       {
-        title: "Incremental Analysis",
-        href: "/incremental",
+        title: "Multi-Touch Attribution",
+        href: "/attribution",
         icon: TrendingUp,
       },
       {
         title: "Campaign Analysis",
         href: "/channel-details",
         icon: BarChart3,
+      },
+      {
+        title: "Incremental Analysis",
+        href: "/incremental",
+        icon: TrendingUp,
       },
       {
         title: "Metric Comparison",
