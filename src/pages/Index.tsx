@@ -1,12 +1,27 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { AnalyticsOverview } from "@/components/dashboard/AnalyticsOverview";
 import { Helmet } from "react-helmet";
 import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { Progress } from "@/components/ui/progress";
+import { SectionNav } from "@/components/dashboard/SectionNav";
+
+const journeySections = [
+  { id: "roi", title: "ROI Summary" },
+  { id: "revenue", title: "Revenue Trends" },
+  { id: "channel", title: "Channel Performance" },
+  { id: "attribution", title: "Attribution" },
+  { id: "optimization", title: "Optimization" },
+  { id: "forecasting", title: "Forecasting" },
+  { id: "insights", title: "Insights" }
+];
 
 const Index = () => {
+  const [activeSection, setActiveSection] = useState("roi");
+  
+  // Calculate progress based on active section
+  const progress = ((journeySections.findIndex(s => s.id === activeSection) + 1) / journeySections.length) * 100;
+  
   return (
     <>
       <Helmet>
@@ -21,7 +36,7 @@ const Index = () => {
         
         <Card className="inline-flex items-center px-4 py-2 bg-accent/50 border-none">
           <span className="text-sm font-medium text-primary mr-3">Your analytics journey</span>
-          <Progress value={33} className="w-24 h-2" />
+          <Progress value={progress} className="w-24 h-2" />
         </Card>
       </div>
 
@@ -32,27 +47,11 @@ const Index = () => {
             Follow this guided path to understand your marketing performance, from high-level metrics to optimization opportunities
           </p>
           
-          <div className="flex flex-wrap gap-4 mt-4">
-            <div className="flex items-center gap-2">
-              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-primary text-white text-xs font-medium">1</div>
-              <span className="text-sm">ROI Summary</span>
-            </div>
-            <div className="flex items-center">
-              <Separator orientation="vertical" className="h-4 mx-2" />
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/20 text-primary text-xs font-medium">2</div>
-              <span className="text-sm">Revenue Trends</span>
-            </div>
-            <div className="flex items-center">
-              <Separator orientation="vertical" className="h-4 mx-2" />
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-medium">3</div>
-              <span className="text-sm">Channel Performance</span>
-            </div>
-            <span className="text-sm text-muted-foreground">and 4 more steps...</span>
-          </div>
+          <SectionNav 
+            sections={journeySections}
+            activeSection={activeSection}
+            onSectionChange={setActiveSection}
+          />
         </CardContent>
       </Card>
 
