@@ -10,7 +10,6 @@ import {
 } from "@/data/mockData";
 
 import { ROISummaryCard } from "@/components/dashboard/ROISummaryCard";
-import { KeyMetricsGrid } from "@/components/dashboard/KeyMetricsGrid";
 import { PerformanceSection } from "@/components/dashboard/PerformanceSection";
 import { AnalyticsSection } from "@/components/dashboard/AnalyticsSection";
 
@@ -103,19 +102,6 @@ export function AnalyticsOverview() {
         roasChange={roasChange}
         topChannel={topChannel}
         bottomChannel={bottomChannel}
-      />
-      
-      {/* Key metrics */}
-      <KeyMetricsGrid
-        totalRevenue={totalRevenue}
-        totalCost={totalCost}
-        totalRoas={totalRoas}
-        totalConversions={totalConversions}
-        revenueChange={revenueChange}
-        costChange={costChange}
-        roasChange={roasChange}
-        conversionChange={conversionChange}
-        loading={loading}
       />
       
       {/* Performance chart */}
