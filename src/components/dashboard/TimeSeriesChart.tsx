@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { 
   LineChart, 
   Line, 
@@ -10,7 +10,10 @@ import {
   Legend, 
   ResponsiveContainer,
   Area,
-  AreaChart
+  AreaChart,
+  ReferenceArea,
+  ReferenceLine,
+  Brush
 } from "recharts";
 import { cn } from "@/lib/utils";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
@@ -23,12 +26,16 @@ type TimeSeriesChartProps = {
     label: string;
     type?: "line" | "area";
     strokeDasharray?: string;
+    hidden?: boolean;
   }[];
   xAxisKey?: string;
   loading?: boolean;
   height?: number;
   className?: string;
   stacked?: boolean;
+  showBrush?: boolean;
+  showRollingAverage?: boolean;
+  comparisonPeriod?: {start: number, end: number} | null;
 };
 
 export function TimeSeriesChart({
@@ -39,7 +46,53 @@ export function TimeSeriesChart({
   height = 350,
   className,
   stacked = false,
+  showBrush = false,
+  showRollingAverage = false,
+  comparisonPeriod = null,
 }: TimeSeriesChartProps) {
+  const [visibleSeries, setVisibleSeries] = useState<string[]>(
+    series.map(s => s.dataKey)
+  );
+
+  // Calculate rolling average (7-period) for the total
+  const rollingAverageData = React.useMemo(() => {
+    if (!showRollingAverage) return [];
+    
+    const totalSeries = series.find(s => s.dataKey === "total");
+    if (!totalSeries) return [];
+    
+    const windowSize = 7;
+    return data.map((item, index) => {
+      if (index < windowSize - 1) return { ...item, rollingAvg: null };
+      
+      let sum = 0;
+      for (let i = 0; i < windowSize; i++) {
+        sum += data[index - i].total;
+      }
+      
+      return {
+        ...item,
+        rollingAvg: sum / windowSize
+      };
+    });
+  }, [data, showRollingAverage]);
+
+  // Filter series by visibility
+  const filteredSeries = series.filter(s => visibleSeries.includes(s.dataKey) || s.dataKey === "rollingAvg");
+  
+  // Handle legend click to toggle series visibility
+  const handleLegendClick = (e: any) => {
+    const { dataKey } = e;
+    
+    setVisibleSeries(prev => {
+      if (prev.includes(dataKey)) {
+        return prev.filter(key => key !== dataKey);
+      } else {
+        return [...prev, dataKey];
+      }
+    });
+  };
+
   if (loading) {
     return (
       <div className={cn("w-full animate-pulse", className)} style={{ height }}>
@@ -56,10 +109,18 @@ export function TimeSeriesChart({
     return acc;
   }, {} as Record<string, any>);
 
+  // Add rolling average to config
+  if (showRollingAverage) {
+    chartConfig.rollingAvg = {
+      label: "Rolling Average (7-period)",
+      color: "#9b87f5" // Primary purple
+    };
+  }
+
   return (
     <ChartContainer className={cn("w-full", className)} style={{ height }} config={chartConfig}>
       <AreaChart
-        data={data}
+        data={showRollingAverage ? rollingAverageData : data}
         margin={{
           top: 20,
           right: 30,
@@ -90,22 +151,46 @@ export function TimeSeriesChart({
           }
         />
         <Legend 
-          formatter={(value, entry, index) => (
-            <span className="text-sm">{series[index]?.label || value}</span>
-          )}
+          onClick={handleLegendClick}
+          formatter={(value, entry, index) => {
+            const seriesItem = series[index];
+            if (!seriesItem) return <span className="text-sm">{value}</span>;
+            
+            const isActive = visibleSeries.includes(seriesItem.dataKey);
+            return (
+              <span className={cn("text-sm", {"opacity-50": !isActive})}>
+                {seriesItem.label || value}
+              </span>
+            );
+          }}
         />
-        {series.map((item, index) => (
-          item.type === "line" ? (
+
+        {/* Reference area for comparison period */}
+        {comparisonPeriod && (
+          <ReferenceArea 
+            x1={comparisonPeriod.start} 
+            x2={comparisonPeriod.end} 
+            fill="#8884d83a" 
+            fillOpacity={0.3} 
+          />
+        )}
+
+        {/* Render each series based on visibility and type */}
+        {filteredSeries.map((item, index) => {
+          const isVisible = visibleSeries.includes(item.dataKey);
+          if (!isVisible && item.dataKey !== "rollingAvg") return null;
+          
+          return item.type === "line" || item.dataKey === "rollingAvg" ? (
             <Line
               key={item.dataKey}
               type="monotone"
-              dataKey={item.dataKey}
-              name={item.label}
-              stroke={item.color}
-              strokeWidth={2}
-              strokeDasharray={item.strokeDasharray}
-              dot={{ r: 3 }}
-              activeDot={{ r: 5 }}
+              dataKey={item.dataKey === "rollingAvg" ? "rollingAvg" : item.dataKey}
+              name={item.dataKey === "rollingAvg" ? "Rolling Average (7-period)" : item.label}
+              stroke={item.dataKey === "rollingAvg" ? "#9b87f5" : item.color}
+              strokeWidth={item.dataKey === "rollingAvg" ? 3 : 2}
+              strokeDasharray={item.dataKey === "rollingAvg" ? "" : item.strokeDasharray}
+              dot={item.dataKey === "rollingAvg" ? false : { r: 3 }}
+              activeDot={item.dataKey === "rollingAvg" ? { r: 4 } : { r: 5 }}
               animationDuration={1000 + index * 250}
               animationBegin={index * 100}
               fill="transparent"
@@ -124,8 +209,18 @@ export function TimeSeriesChart({
               animationBegin={index * 100}
               stackId={stacked ? "stack" : undefined}
             />
-          )
-        ))}
+          );
+        })}
+
+        {/* Add brush for zooming */}
+        {showBrush && (
+          <Brush 
+            dataKey={xAxisKey} 
+            height={30} 
+            stroke="#8884d8" 
+            startIndex={Math.max(0, data.length - 30)} 
+          />
+        )}
       </AreaChart>
     </ChartContainer>
   );

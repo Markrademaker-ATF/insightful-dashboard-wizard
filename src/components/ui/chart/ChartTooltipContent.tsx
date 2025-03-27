@@ -5,13 +5,19 @@ import { cn } from "@/lib/utils"
 import { useChart } from "./ChartContext"
 import { getPayloadConfigFromPayload } from "./helpers"
 
-interface ChartTooltipContentProps extends React.ComponentProps<"div">, 
-  Omit<React.ComponentProps<typeof RechartsPrimitive.Tooltip>, "ref"> {
+interface ChartTooltipContentProps extends React.ComponentProps<"div"> {
+  formatter?: (value: any, name: any, entry?: any, index?: number, payload?: any) => React.ReactNode | [React.ReactNode, React.ReactNode]
+  labelFormatter?: (label: any, payload: any) => React.ReactNode
+  labelClassName?: string
+  payload?: any[]
+  label?: any
+  active?: boolean
+  color?: string
+  nameKey?: string
+  labelKey?: string
   hideLabel?: boolean
   hideIndicator?: boolean
   indicator?: "line" | "dot" | "dashed"
-  nameKey?: string
-  labelKey?: string
 }
 
 const ChartTooltipContent = React.forwardRef<
