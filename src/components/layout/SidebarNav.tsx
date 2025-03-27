@@ -51,11 +51,6 @@ const navItems: NavItem[] = [
         icon: Radio,
       },
       {
-        title: "Multi-Touch Attribution",
-        href: "/attribution",
-        icon: TrendingUp,
-      },
-      {
         title: "Campaign Analysis",
         href: "/channel-details",
         icon: BarChart3,
