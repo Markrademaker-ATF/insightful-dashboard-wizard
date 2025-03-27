@@ -24,18 +24,21 @@ export function ChannelImpressionsCostChart({
   data, 
   color 
 }: ChannelImpressionsCostChartProps) {
-  // Transform data to include impressions and cost for this channel
+  // Transform data to include impressions, cost and revenue for this channel
   const chartData = data.map((item, index) => {
     const value = item[channelId] || 0;
     // Generate impressions as a function of value with some variability
     const impressions = Math.round(value * (5 + Math.random() * 2));
     // Calculate cost as a portion of value
     const cost = Math.round(value * (0.3 + Math.random() * 0.2));
+    // Revenue is the original value
+    const revenue = value;
     
     return {
       name: item.name,
       impressions: impressions,
       cost: cost,
+      revenue: revenue,
     };
   });
 
@@ -79,7 +82,7 @@ export function ChannelImpressionsCostChart({
             axisLine={false}
             tickFormatter={(value) => `$${value}`}
             label={{ 
-              value: 'Cost', 
+              value: 'Amount ($)', 
               angle: 90, 
               position: 'insideRight',
               style: { textAnchor: 'middle' },
@@ -88,7 +91,7 @@ export function ChannelImpressionsCostChart({
           />
           <Tooltip 
             formatter={(value, name) => {
-              if (name === 'cost') return [`$${value}`, 'Cost'];
+              if (name === 'cost' || name === 'revenue') return [`$${value}`, name.charAt(0).toUpperCase() + name.slice(1)];
               return [value.toLocaleString(), 'Impressions'];
             }}
           />
@@ -109,6 +112,16 @@ export function ChannelImpressionsCostChart({
             strokeWidth={2}
             name="Cost" 
             dot={{ fill: '#ef476f', r: 4 }}
+            activeDot={{ r: 6 }}
+          />
+          <Line 
+            yAxisId="right"
+            type="monotone" 
+            dataKey="revenue" 
+            stroke="#4361ee" 
+            strokeWidth={2}
+            name="Revenue" 
+            dot={{ fill: '#4361ee', r: 4 }}
             activeDot={{ r: 6 }}
           />
         </ComposedChart>
