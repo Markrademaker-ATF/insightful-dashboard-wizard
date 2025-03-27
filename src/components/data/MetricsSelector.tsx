@@ -9,7 +9,6 @@ type MetricsSelectorProps = {
   view: string;
   setView: (view: string) => void;
   selectedMetrics: string[];
-  setSelectedMetrics: (metrics: string[]) => void; // Adding the missing prop
   showAllMetrics: boolean;
   availableMetrics: Array<{ key: string; name: string }>;
   handleMetricSelect: (value: string) => void;
@@ -25,7 +24,6 @@ export function MetricsSelector({
   view,
   setView,
   selectedMetrics,
-  setSelectedMetrics, // Add the missing prop to the destructuring
   showAllMetrics,
   availableMetrics,
   handleMetricSelect,
