@@ -26,6 +26,7 @@ const DataPage = () => {
   const [timeframe, setTimeframe] = useState("30d");
   const [view, setView] = useState("chart");
   const [metric, setMetric] = useState("revenue");
+  const [showAllMetrics, setShowAllMetrics] = useState(false);
 
   useEffect(() => {
     // Simulate data loading
@@ -103,6 +104,16 @@ const DataPage = () => {
     return colors[metricKey] || "#64748b";
   };
 
+  // List of all available metrics
+  const availableMetrics = [
+    { key: "revenue", name: "Revenue" },
+    { key: "cost", name: "Marketing Cost" },
+    { key: "clicks", name: "Clicks" },
+    { key: "impressions", name: "Impressions" },
+    { key: "conversions", name: "Conversions" },
+    { key: "ctr", name: "Click-Through Rate" },
+  ];
+
   return (
     <div className="animate-fade-in">
       <PageHeader
@@ -127,7 +138,13 @@ const DataPage = () => {
             <Tabs
               defaultValue="chart"
               value={view}
-              onValueChange={setView}
+              onValueChange={(val) => {
+                setView(val);
+                // Reset showAllMetrics when switching to chart view
+                if (val === "chart") {
+                  setShowAllMetrics(false);
+                }
+              }}
               className="w-[200px]"
             >
               <TabsList className="grid w-full grid-cols-2">
@@ -138,19 +155,28 @@ const DataPage = () => {
             
             <div className="flex items-center gap-2 ml-4">
               <Select
-                value={metric}
-                onValueChange={setMetric}
+                value={showAllMetrics ? "all" : metric}
+                onValueChange={(value) => {
+                  if (value === "all") {
+                    setShowAllMetrics(true);
+                  } else {
+                    setShowAllMetrics(false);
+                    setMetric(value);
+                  }
+                }}
               >
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select metric" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="revenue">Revenue</SelectItem>
-                  <SelectItem value="cost">Marketing Cost</SelectItem>
-                  <SelectItem value="clicks">Clicks</SelectItem>
-                  <SelectItem value="impressions">Impressions</SelectItem>
-                  <SelectItem value="conversions">Conversions</SelectItem>
-                  <SelectItem value="ctr">Click-Through Rate</SelectItem>
+                  {view === "table" && (
+                    <SelectItem value="all">All Metrics</SelectItem>
+                  )}
+                  {availableMetrics.map((m) => (
+                    <SelectItem key={m.key} value={m.key}>
+                      {m.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -186,8 +212,7 @@ const DataPage = () => {
                 { 
                   dataKey: metric, 
                   color: getMetricColor(metric), 
-                  label: getMetricDisplayName(metric),
-                  type: metric === 'ctr' ? 'line' : 'area'
+                  label: getMetricDisplayName(metric)
                 },
               ]}
               height={450}
@@ -200,14 +225,28 @@ const DataPage = () => {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Date</TableHead>
-                    <TableHead>{getMetricDisplayName(metric)}</TableHead>
+                    {showAllMetrics ? (
+                      availableMetrics.map((m) => (
+                        <TableHead key={m.key}>{m.name}</TableHead>
+                      ))
+                    ) : (
+                      <TableHead>{getMetricDisplayName(metric)}</TableHead>
+                    )}
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {aggregatedData.map((entry, i) => (
                     <TableRow key={i}>
                       <TableCell className="font-medium">{entry.date}</TableCell>
-                      <TableCell>{formatValue(entry[metric], metric)}</TableCell>
+                      {showAllMetrics ? (
+                        availableMetrics.map((m) => (
+                          <TableCell key={m.key}>
+                            {formatValue(entry[m.key], m.key)}
+                          </TableCell>
+                        ))
+                      ) : (
+                        <TableCell>{formatValue(entry[metric], metric)}</TableCell>
+                      )}
                     </TableRow>
                   ))}
                 </TableBody>
