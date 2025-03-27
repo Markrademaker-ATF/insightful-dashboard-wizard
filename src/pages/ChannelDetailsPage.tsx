@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useSearchParams, useLocation } from "react-router-dom";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -8,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { TrendingUp, BarChart3, DollarSign, Users, Percent, Info, Filter, Cpu, Database, BarChart4, Brain, LineChart, Target } from "lucide-react";
+import { Brain, LineChart, Target, Users, DollarSign, BarChart3 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FilterExportControls } from "@/components/channels/FilterExportControls";
 import {
@@ -18,6 +17,7 @@ import {
   channelNames,
 } from "@/data/mockData";
 import { CampaignBreakdownTab } from "@/components/campaigns/CampaignBreakdownTab";
+import { Cpu, Database, BarChart4, Info } from "lucide-react";
 
 const ChannelDetailsPage = () => {
   const [searchParams] = useSearchParams();
@@ -213,22 +213,6 @@ const ChannelDetailsPage = () => {
   // Calculate channel metrics for current data
   const channelName = channelNames[channelId as keyof typeof channelNames] || "Channel";
   const channelColor = channelColors[channelId as keyof typeof channelColors] || "#4361ee";
-  
-  const channelTotalRevenue = !loading && performanceData.length
-    ? performanceData.reduce((sum, day) => sum + day.revenue, 0)
-    : 0;
-    
-  const totalClicks = !loading && performanceData.length
-    ? performanceData.reduce((sum, day) => sum + day.clicks, 0)
-    : 0;
-    
-  const totalImpressions = !loading && performanceData.length
-    ? performanceData.reduce((sum, day) => sum + day.impressions, 0)
-    : 0;
-    
-  const avgCtr = totalImpressions > 0
-    ? ((totalClicks / totalImpressions) * 100).toFixed(2)
-    : "0";
 
   // Handle campaign change
   const handleCampaignChange = (campaignId: string) => {
@@ -289,9 +273,6 @@ const ChannelDetailsPage = () => {
         <TabsList>
           <TabsTrigger value="attribution" className="flex items-center gap-1">
             <Brain className="h-4 w-4" /> Data-Driven Attribution
-          </TabsTrigger>
-          <TabsTrigger value="details" className="flex items-center gap-1">
-            <BarChart3 className="h-4 w-4" /> Campaign Details
           </TabsTrigger>
           {selectedCampaign !== "all" && (
             <TabsTrigger value="campaign-breakdown" className="flex items-center gap-1">
@@ -414,7 +395,7 @@ const ChannelDetailsPage = () => {
                   value={loading ? "-" : `${conversionRate}%`}
                   change={0.3}
                   description="vs. previous period"
-                  icon={<TrendingUp className="h-4 w-4" />}
+                  icon={<LineChart className="h-4 w-4" />}
                   loading={loading}
                 />
               </div>
@@ -459,199 +440,6 @@ const ChannelDetailsPage = () => {
               />
             </CardContent>
           </Card>
-        </TabsContent>
-
-        {/* Campaign Details Tab */}
-        <TabsContent value="details" className="space-y-6">
-          {/* Campaign Details Section */}
-          <div>
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold">Campaign Details</h2>
-              <FilterExportControls 
-                filterOptions={{ 
-                  metrics: true, 
-                  channels: false
-                }}
-              />
-            </div>
-
-            {/* Key metrics */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <MetricCard
-                title="Total Revenue"
-                value={loading ? "-" : `$${channelTotalRevenue.toLocaleString()}`}
-                change={5.2}
-                description="vs. previous period"
-                icon={<DollarSign className="h-4 w-4" />}
-                loading={loading}
-              />
-              <MetricCard
-                title="ROAS"
-                value={loading || !channelData ? "-" : `${channelData.roas}x`}
-                change={2.1}
-                description="vs. previous period"
-                icon={<TrendingUp className="h-4 w-4" />}
-                loading={loading}
-              />
-              <MetricCard
-                title="Clicks"
-                value={loading ? "-" : totalClicks.toLocaleString()}
-                change={3.8}
-                description="vs. previous period"
-                icon={<Users className="h-4 w-4" />}
-                loading={loading}
-              />
-              <MetricCard
-                title="CTR"
-                value={loading ? "-" : `${avgCtr}%`}
-                change={-0.5}
-                description="vs. previous period"
-                icon={<Percent className="h-4 w-4" />}
-                loading={loading}
-              />
-            </div>
-
-            {/* Performance chart */}
-            <Card className="mb-8">
-              <CardHeader>
-                <CardTitle>{selectedCampaign === "all" ? "All Campaigns" : campaigns.find(c => c.id === selectedCampaign)?.name || "Campaign"} Performance</CardTitle>
-                <CardDescription>
-                  Revenue and engagement metrics over time
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <PerformanceChart
-                  data={performanceData}
-                  lines={[
-                    {
-                      dataKey: "revenue",
-                      color: channelColor,
-                      label: "Revenue",
-                    },
-                  ]}
-                  loading={loading}
-                  height={350}
-                />
-              </CardContent>
-            </Card>
-
-            {/* Channel insights */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-              <Card className="col-span-1">
-                <CardHeader>
-                  <CardTitle>Performance Breakdown</CardTitle>
-                  <CardDescription>
-                    Key metrics for the {channelName} channel
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium">Revenue</span>
-                      <span className="font-semibold">
-                        ${channelData?.revenue?.toLocaleString() || "-"}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium">Cost</span>
-                      <span className="font-semibold">
-                        ${channelData?.cost?.toLocaleString() || "-"}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium">ROAS</span>
-                      <span className="font-semibold">
-                        {channelData?.roas || "-"}x
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium">Conversion Rate</span>
-                      <span className="font-semibold">
-                        {channelData?.conversion || "-"}%
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium">CPA</span>
-                      <span className="font-semibold">
-                        ${channelData?.cpa || "-"}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium">Impressions</span>
-                      <span className="font-semibold">
-                        {totalImpressions?.toLocaleString() || "-"}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium">Clicks</span>
-                      <span className="font-semibold">
-                        {totalClicks?.toLocaleString() || "-"}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium">CTR</span>
-                      <span className="font-semibold">{avgCtr}%</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <div className="col-span-2">
-                <Card className="h-full">
-                  <CardHeader>
-                    <CardTitle>Campaign Insights</CardTitle>
-                    <CardDescription>
-                      Analysis and recommendations for {selectedCampaign === "all" ? "all campaigns" : campaigns.find(c => c.id === selectedCampaign)?.name || "the campaign"}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-6">
-                      <div>
-                        <h4 className="text-sm font-semibold mb-2">Performance Summary</h4>
-                        <p className="text-sm text-muted-foreground">
-                          {channelName} is currently {channelData?.roas >= 2 ? "performing well" : "underperforming"} with a ROAS of {channelData?.roas || "-"}x. 
-                          {channelData?.roas >= 3 
-                            ? " This channel is one of your top performers and should be considered for additional investment."
-                            : channelData?.roas >= 2
-                            ? " This channel is performing at an acceptable level but has room for optimization."
-                            : " This channel needs attention to improve efficiency and return on investment."}
-                        </p>
-                      </div>
-
-                      <div>
-                        <h4 className="text-sm font-semibold mb-2">Trends</h4>
-                        <p className="text-sm text-muted-foreground">
-                          Revenue has {Math.random() > 0.5 ? "increased" : "decreased"} by {Math.round(Math.random() * 15 + 5)}% compared to the previous period.
-                          Conversion rates have remained relatively stable with a slight {Math.random() > 0.5 ? "upward" : "downward"} trend.
-                        </p>
-                      </div>
-
-                      <div>
-                        <h4 className="text-sm font-semibold mb-2">Recommendations</h4>
-                        <ul className="text-sm text-muted-foreground space-y-2 list-disc pl-5">
-                          <li>
-                            {channelData?.roas >= 3 
-                              ? "Increase budget allocation to capitalize on strong performance"
-                              : channelData?.roas >= 2
-                              ? "Optimize targeting parameters to improve conversion rates"
-                              : "Review campaign structure and targeting to address underperformance"}
-                          </li>
-                          <li>
-                            Consider {channelData?.roas >= 2.5 ? "expanding" : "refining"} your keyword strategy to {channelData?.roas >= 2.5 ? "capture more traffic" : "focus on higher-converting terms"}
-                          </li>
-                          <li>
-                            {channelData?.conversion >= 3 
-                              ? "Leverage successful creative elements across other campaigns"
-                              : "Test new creative variations to improve engagement metrics"}
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-          </div>
         </TabsContent>
 
         {/* Campaign Breakdown Tab - Only shown when a specific campaign is selected */}
