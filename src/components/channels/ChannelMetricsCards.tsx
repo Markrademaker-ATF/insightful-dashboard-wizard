@@ -33,6 +33,17 @@ export function ChannelMetricsCards({ data, loading }: ChannelMetricsCardsProps)
   const totalCost = data.reduce((sum, channel) => sum + channel.cost, 0);
   const avgRoas = totalRevenue / totalCost || 0;
   const avgConversion = data.reduce((sum, channel) => sum + channel.conversion, 0) / data.length || 0;
+  
+  // Calculate standard deviations for each metric (new)
+  const revenueValues = data.map(c => c.revenue);
+  const costValues = data.map(c => c.cost);
+  const roasValues = data.map(c => c.roas);
+  const conversionValues = data.map(c => c.conversion);
+  
+  const stdDevRevenue = calculateStdDev(revenueValues);
+  const stdDevCost = calculateStdDev(costValues);
+  const stdDevRoas = calculateStdDev(roasValues);
+  const stdDevConversion = calculateStdDev(conversionValues);
 
   const metrics = [
     {
@@ -40,24 +51,32 @@ export function ChannelMetricsCards({ data, loading }: ChannelMetricsCardsProps)
       value: `$${totalRevenue.toLocaleString()}`,
       trend: totalRevenue > 500000 ? 12.5 : -5.2,
       icon: DollarSign,
+      stdDev: stdDevRevenue.toFixed(0),
+      stdDevFormatted: `$${stdDevRevenue.toLocaleString()}`
     },
     {
       title: "Total Cost",
       value: `$${totalCost.toLocaleString()}`,
       trend: totalCost > 200000 ? 8.3 : -3.1,
       icon: DollarSign,
+      stdDev: stdDevCost.toFixed(0),
+      stdDevFormatted: `$${stdDevCost.toLocaleString()}`
     },
     {
       title: "Average ROAS",
       value: `${avgRoas.toFixed(2)}x`,
       trend: avgRoas > 2.5 ? 5.7 : -2.4,
       icon: TrendingUp,
+      stdDev: stdDevRoas.toFixed(2),
+      stdDevFormatted: `${stdDevRoas.toFixed(2)}x`
     },
     {
       title: "Average Conversion",
       value: `${avgConversion.toFixed(2)}%`,
       trend: avgConversion > 2 ? 9.2 : -4.1,
       icon: PercentIcon,
+      stdDev: stdDevConversion.toFixed(2),
+      stdDevFormatted: `${stdDevConversion.toFixed(2)}%`
     },
   ];
 
@@ -83,6 +102,11 @@ export function ChannelMetricsCards({ data, loading }: ChannelMetricsCardsProps)
                     </>
                   )}
                 </div>
+                <div className="mt-1">
+                  <span className="text-xs text-muted-foreground">
+                    Std Dev: {metric.stdDevFormatted}
+                  </span>
+                </div>
               </div>
               <div className="rounded-full bg-muted p-3">
                 <metric.icon className="h-5 w-5 text-foreground" />
@@ -93,4 +117,12 @@ export function ChannelMetricsCards({ data, loading }: ChannelMetricsCardsProps)
       ))}
     </div>
   );
+}
+
+// Helper function to calculate standard deviation
+function calculateStdDev(values: number[]): number {
+  const mean = values.reduce((sum, val) => sum + val, 0) / values.length;
+  const squaredDiffs = values.map(val => Math.pow(val - mean, 2));
+  const variance = squaredDiffs.reduce((sum, val) => sum + val, 0) / values.length;
+  return Math.sqrt(variance);
 }

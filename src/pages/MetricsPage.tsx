@@ -6,12 +6,16 @@ import { PerformanceChart } from "@/components/dashboard/PerformanceChart";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { GitCompare, Download, Share2, ChevronDown } from "lucide-react";
+import { GitCompare, Download, Share2, ChevronDown, InfoIcon, FileBarChart } from "lucide-react";
 import {
   generateChannelData,
   generatePerformanceData,
   channelColors,
 } from "@/data/mockData";
+import { ChannelMetricsCards } from "@/components/channels/ChannelMetricsCards";
+import { CorrelationMatrix } from "@/components/channels/CorrelationMatrix";
+import { MetricDistributionChart } from "@/components/channels/MetricDistributionChart";
+import { MetricScatterPlot } from "@/components/channels/MetricScatterPlot";
 
 const MetricsPage = () => {
   const [loading, setLoading] = useState(true);
@@ -19,6 +23,7 @@ const MetricsPage = () => {
   const [performanceData, setPerformanceData] = useState<any[]>([]);
   const [compareMetrics, setCompareMetrics] = useState("revenue-cost");
   const [timeframe, setTimeframe] = useState("30d");
+  const [edaTab, setEdaTab] = useState("correlation");
 
   useEffect(() => {
     // Simulate data loading
@@ -66,6 +71,11 @@ const MetricsPage = () => {
           </Button>
         </div>
       </PageHeader>
+
+      {/* Key Metrics Overview */}
+      <div className="mb-8">
+        <ChannelMetricsCards data={channelData} loading={loading} />
+      </div>
 
       {/* Comparison controls */}
       <div className="dashboard-card mb-8">
@@ -172,6 +182,45 @@ const MetricsPage = () => {
             </CardContent>
           </Card>
         </div>
+      </div>
+
+      {/* Exploratory Data Analysis Section */}
+      <div className="dashboard-card mb-8">
+        <div className="flex justify-between items-center mb-6">
+          <div className="flex items-center gap-2">
+            <FileBarChart className="h-5 w-5 text-primary" />
+            <h3 className="text-lg font-medium">Exploratory Data Analysis</h3>
+          </div>
+          <Button variant="outline" size="sm" className="gap-1">
+            <InfoIcon className="h-4 w-4" /> 
+            About EDA
+          </Button>
+        </div>
+
+        <Tabs
+          defaultValue="correlation"
+          value={edaTab}
+          onValueChange={setEdaTab}
+          className="w-full mb-6"
+        >
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="correlation">Correlation Analysis</TabsTrigger>
+            <TabsTrigger value="distribution">Distribution Analysis</TabsTrigger>
+            <TabsTrigger value="scatter">Scatter Analysis</TabsTrigger>
+          </TabsList>
+        </Tabs>
+
+        <TabsContent value="correlation" className="m-0">
+          <CorrelationMatrix data={channelData} loading={loading} />
+        </TabsContent>
+        
+        <TabsContent value="distribution" className="m-0">
+          <MetricDistributionChart data={channelData} loading={loading} />
+        </TabsContent>
+        
+        <TabsContent value="scatter" className="m-0">
+          <MetricScatterPlot data={channelData} loading={loading} />
+        </TabsContent>
       </div>
 
       {/* Correlation Analysis */}
