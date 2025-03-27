@@ -117,6 +117,7 @@ const DataPage = () => {
           view={view}
           setView={setView}
           selectedMetrics={selectedMetrics}
+          setSelectedMetrics={setSelectedMetrics}
           showAllMetrics={showAllMetrics}
           availableMetrics={availableMetrics}
           handleMetricSelect={handleMetricSelect}
