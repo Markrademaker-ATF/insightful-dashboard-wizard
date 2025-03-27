@@ -47,7 +47,41 @@ const Index = () => {
             Dive deep into your marketing strategy with a comprehensive analytics journey. Uncover insights from ROI metrics to channel optimization.
           </p>
           
-          <div className="p-4 bg-accent/30 rounded-lg">
+          <div className="p-4 bg-accent/30 rounded-lg space-y-6">
+            <div className="text-sm">
+              <p className="font-medium mb-3">Your Analytics Journey Path:</p>
+              <ol className="space-y-3 list-decimal list-inside">
+                <li className="font-medium text-primary">
+                  <span>ROI Summary</span>
+                  <p className="ml-6 text-muted-foreground font-normal">Begin with a high-level overview of your overall marketing return on investment</p>
+                </li>
+                <li>
+                  <span>Revenue Trends</span>
+                  <p className="ml-6 text-muted-foreground font-normal">Analyze revenue patterns and growth trajectories over time</p>
+                </li>
+                <li>
+                  <span>Channel Performance</span>
+                  <p className="ml-6 text-muted-foreground font-normal">Compare effectiveness across different marketing channels</p>
+                </li>
+                <li>
+                  <span>Attribution</span>
+                  <p className="ml-6 text-muted-foreground font-normal">Understand which touchpoints drive conversions in the customer journey</p>
+                </li>
+                <li>
+                  <span>Optimization</span>
+                  <p className="ml-6 text-muted-foreground font-normal">Discover opportunities to improve campaign efficiency and effectiveness</p>
+                </li>
+                <li>
+                  <span>Forecasting</span>
+                  <p className="ml-6 text-muted-foreground font-normal">Project future performance based on historical data and trends</p>
+                </li>
+                <li>
+                  <span>Insights</span>
+                  <p className="ml-6 text-muted-foreground font-normal">Extract actionable recommendations to enhance marketing strategy</p>
+                </li>
+              </ol>
+            </div>
+            
             <SectionNav 
               sections={journeySections}
               activeSection={activeSection}
