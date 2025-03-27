@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
@@ -31,8 +32,8 @@ const navItems: NavItem[] = [
     icon: LayoutDashboard,
     children: [
       {
-        title: "Welcome",  // Changed from "Analytics Overview"
-        href: "/",         // Updated to root path
+        title: "Analytics Overview",
+        href: "/",
         icon: LayoutDashboard,
       },
       {
