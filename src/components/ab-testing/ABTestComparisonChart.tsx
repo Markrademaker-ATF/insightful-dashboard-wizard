@@ -1,152 +1,135 @@
 
-import React, { useState } from "react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  LineChart,
-  Line
-} from "recharts";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import React from "react";
+import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ABTest } from "@/hooks/useMockABTestData";
 
 interface ABTestComparisonChartProps {
-  test: ABTest;
-  loading: boolean;
+  test: any;
+  loading?: boolean;
 }
 
-export function ABTestComparisonChart({ test, loading }: ABTestComparisonChartProps) {
-  const [chartType, setChartType] = useState<"overview" | "timeseries">("overview");
-
+export function ABTestComparisonChart({ test, loading = false }: ABTestComparisonChartProps) {
   if (loading) {
-    return <Skeleton className="w-full h-[400px]" />;
+    return (
+      <div className="w-full">
+        <Skeleton className="h-[350px] w-full" />
+      </div>
+    );
   }
 
-  // Prepare data for overview comparison chart
-  const overviewData = test.variants.map(variant => ({
-    name: variant.name,
-    conversionRate: variant.conversionRate,
-    visitors: variant.visitors,
-    conversions: variant.conversions,
-    isControl: variant.isControl
-  }));
+  // Extract variant data
+  const variantA = test.variants.find((v: any) => v.name === "Control");
+  const variantB = test.variants.find((v: any) => v.name === "Variant");
 
-  // Prepare data for time series chart (assuming the data exists)
-  const hasTimeSeriesData = test.variants[0]?.timeSeriesData?.length > 0;
-  
-  // Transform the time series data to be suitable for a multi-line chart
-  const timeSeriesData = hasTimeSeriesData 
-    ? test.variants[0].timeSeriesData?.map((dataPoint, index) => {
-        const result: any = { date: dataPoint.date };
-        
-        // Add data from each variant
-        test.variants.forEach(variant => {
-          if (variant.timeSeriesData && variant.timeSeriesData[index]) {
-            result[variant.name] = (variant.timeSeriesData[index].conversions / variant.timeSeriesData[index].visitors) * 100;
-          }
-        });
-        
-        return result;
-      })
-    : [];
+  // Prepare chart data for display
+  const chartData = [
+    {
+      name: "Conversion Rate",
+      Control: variantA?.conversionRate || 0,
+      Variant: variantB?.conversionRate || 0,
+      controlValue: variantA?.conversionRate || 0,
+      variantValue: variantB?.conversionRate || 0,
+    },
+    {
+      name: "Average Order Value",
+      Control: variantA?.averageOrderValue || 0,
+      Variant: variantB?.averageOrderValue || 0,
+      controlValue: variantA?.averageOrderValue || 0,
+      variantValue: variantB?.averageOrderValue || 0,
+    },
+    {
+      name: "Revenue per Visitor",
+      Control: variantA?.revenuePerVisitor || 0,
+      Variant: variantB?.revenuePerVisitor || 0,
+      controlValue: variantA?.revenuePerVisitor || 0,
+      variantValue: variantB?.revenuePerVisitor || 0,
+    }
+  ];
+
+  // Calculate percentage differences for tooltips
+  const percentageDiffs = {
+    "Conversion Rate": calculatePercentDiff(variantA?.conversionRate, variantB?.conversionRate),
+    "Average Order Value": calculatePercentDiff(variantA?.averageOrderValue, variantB?.averageOrderValue),
+    "Revenue per Visitor": calculatePercentDiff(variantA?.revenuePerVisitor, variantB?.revenuePerVisitor),
+  };
+
+  // Format values for tooltip
+  const formatValue = (value: number, metricName: string) => {
+    if (metricName === "Conversion Rate") {
+      return `${(value * 100).toFixed(2)}%`;
+    }
+    if (metricName === "Average Order Value") {
+      return `$${value.toFixed(2)}`;
+    }
+    if (metricName === "Revenue per Visitor") {
+      return `$${value.toFixed(2)}`;
+    }
+    return value.toString();
+  };
+
+  // Custom tooltip component
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      const controlValue = payload[0].value;
+      const variantValue = payload[1].value;
+      const diff = percentageDiffs[label as keyof typeof percentageDiffs];
+      
+      return (
+        <div className="bg-background p-3 border rounded shadow-lg">
+          <p className="font-semibold">{label}</p>
+          <p className="text-sm">Control: {formatValue(controlValue, label)}</p>
+          <p className="text-sm">Variant: {formatValue(variantValue, label)}</p>
+          <p className="text-sm font-medium mt-1" style={{ color: diff >= 0 ? "#10b981" : "#ef4444" }}>
+            {diff >= 0 ? "+" : ""}{diff.toFixed(2)}%
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  // Function to determine bar fill color
+  const getBarFill = (data: any) => {
+    const isControl = data.dataKey === "Control";
+    return isControl ? "#94a3b8" : "#4361ee";
+  };
 
   return (
-    <div className="space-y-4">
-      <Tabs value={chartType} onValueChange={(value) => setChartType(value as "overview" | "timeseries")}>
-        <TabsList>
-          <TabsTrigger value="overview">Conversion Rate Comparison</TabsTrigger>
-          {hasTimeSeriesData && (
-            <TabsTrigger value="timeseries">Time Series Analysis</TabsTrigger>
-          )}
-        </TabsList>
-        
-        <TabsContent value="overview" className="pt-4">
-          <ResponsiveContainer width="100%" height={400}>
-            <BarChart
-              data={overviewData}
-              margin={{ top: 20, right: 30, left: 20, bottom: 70 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis 
-                dataKey="name" 
-                angle={-45} 
-                textAnchor="end" 
-                height={70}
-                tick={{ fontSize: 12 }}
-              />
-              <YAxis 
-                tickFormatter={(value) => `${value}%`}
-                domain={[0, 'auto']}
-                label={{ value: 'Conversion Rate (%)', angle: -90, position: 'insideLeft', offset: -5 }}
-              />
-              <Tooltip 
-                formatter={(value: number) => [`${value.toFixed(2)}%`, "Conversion Rate"]}
-                contentStyle={{
-                  borderRadius: "8px",
-                  backgroundColor: "rgba(255, 255, 255, 0.95)",
-                  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.05)",
-                  border: "none",
-                  padding: "8px 12px",
-                }}
-              />
-              <Legend />
-              <Bar 
-                dataKey="conversionRate" 
-                name="Conversion Rate"
-                fill={(data: any) => data.isControl ? "#94a3b8" : "#4361ee"} 
-                radius={[4, 4, 0, 0]}
-              />
-            </BarChart>
-          </ResponsiveContainer>
-        </TabsContent>
-        
-        {hasTimeSeriesData && (
-          <TabsContent value="timeseries" className="pt-4">
-            <ResponsiveContainer width="100%" height={400}>
-              <LineChart
-                data={timeSeriesData}
-                margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="date" />
-                <YAxis 
-                  tickFormatter={(value) => `${value}%`}
-                  domain={[0, 'auto']}
-                  label={{ value: 'Conversion Rate (%)', angle: -90, position: 'insideLeft', offset: -5 }}
-                />
-                <Tooltip 
-                  formatter={(value: number) => [`${value.toFixed(2)}%`, ""]}
-                  contentStyle={{
-                    borderRadius: "8px",
-                    backgroundColor: "rgba(255, 255, 255, 0.95)",
-                    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.05)",
-                    border: "none",
-                    padding: "8px 12px",
-                  }}
-                />
-                <Legend />
-                {test.variants.map((variant, index) => (
-                  <Line
-                    key={variant.id}
-                    type="monotone"
-                    dataKey={variant.name}
-                    stroke={variant.isControl ? "#94a3b8" : "#4361ee"}
-                    strokeWidth={2}
-                    dot={{ stroke: variant.isControl ? "#94a3b8" : "#4361ee", strokeWidth: 2, r: 4 }}
-                    activeDot={{ r: 6 }}
-                  />
-                ))}
-              </LineChart>
-            </ResponsiveContainer>
-          </TabsContent>
-        )}
-      </Tabs>
-    </div>
+    <ResponsiveContainer width="100%" height={350}>
+      <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 20 }}>
+        <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.1)" />
+        <XAxis 
+          dataKey="name" 
+          tickLine={false} 
+          axisLine={{ stroke: 'rgba(0,0,0,0.1)' }} 
+        />
+        <YAxis 
+          tickFormatter={(value) => value.toString()} 
+          tickLine={false} 
+          axisLine={false} 
+          tickCount={6} 
+        />
+        <Tooltip content={<CustomTooltip />} />
+        <Legend />
+        <Bar 
+          dataKey="Control" 
+          name="Control" 
+          fill="#94a3b8" 
+          radius={[4, 4, 0, 0]} 
+        />
+        <Bar 
+          dataKey="Variant" 
+          name="Variant" 
+          fill="#4361ee" 
+          radius={[4, 4, 0, 0]} 
+        />
+      </BarChart>
+    </ResponsiveContainer>
   );
+}
+
+function calculatePercentDiff(valueA: number = 0, valueB: number = 0): number {
+  if (valueA === 0) return valueB > 0 ? 100 : 0;
+  return ((valueB - valueA) / valueA) * 100;
 }
