@@ -18,12 +18,14 @@ import {
   channelColors,
   channelNames,
 } from "@/data/mockData";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 const DataPage = () => {
   const [loading, setLoading] = useState(true);
   const [performanceData, setPerformanceData] = useState<any[]>([]);
   const [timeframe, setTimeframe] = useState("30d");
   const [view, setView] = useState("chart");
+  const [metric, setMetric] = useState("revenue");
 
   useEffect(() => {
     // Simulate data loading
@@ -42,6 +44,64 @@ const DataPage = () => {
 
     loadData();
   }, [timeframe]);
+
+  // Aggregate the data based on selected metric
+  const aggregateData = (data: any[], selectedMetric: string) => {
+    if (!data.length) return [];
+    
+    return data.map(day => {
+      const metrics: Record<string, any> = {
+        date: day.name,
+        revenue: day.totalRevenue,
+        cost: Object.keys(channelNames).reduce((sum, channel) => sum + (day[channel] || 0) * 0.4, 0),
+        clicks: Math.round(day.totalRevenue / 2.5),
+        impressions: Math.round(day.totalRevenue * 10),
+        conversions: Math.round(day.totalRevenue / 50),
+        ctr: (Math.round(day.totalRevenue / 2.5) / Math.round(day.totalRevenue * 10) * 100).toFixed(2) + '%',
+      };
+      
+      return metrics;
+    });
+  };
+
+  const aggregatedData = aggregateData(performanceData, metric);
+
+  // Format value based on metric type
+  const formatValue = (value: any, metricType: string) => {
+    if (metricType === 'revenue' || metricType === 'cost') {
+      return `$${value?.toLocaleString() || "0"}`;
+    }
+    if (metricType === 'ctr') {
+      return value;
+    }
+    return value?.toLocaleString() || "0";
+  };
+
+  // Get display name for metric
+  const getMetricDisplayName = (metricKey: string) => {
+    const displayNames: Record<string, string> = {
+      revenue: "Revenue",
+      cost: "Marketing Cost",
+      clicks: "Clicks",
+      impressions: "Impressions",
+      conversions: "Conversions",
+      ctr: "Click-Through Rate",
+    };
+    return displayNames[metricKey] || metricKey;
+  };
+
+  // Get color for metric
+  const getMetricColor = (metricKey: string) => {
+    const colors: Record<string, string> = {
+      revenue: "#0EA5E9",
+      cost: "#ea384c",
+      clicks: "#22c55e",
+      impressions: "#8b5cf6",
+      conversions: "#f59e0b",
+      ctr: "#ec4899",
+    };
+    return colors[metricKey] || "#64748b";
+  };
 
   return (
     <div className="animate-fade-in">
@@ -63,17 +123,38 @@ const DataPage = () => {
 
       <div className="dashboard-card">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-          <Tabs
-            defaultValue="chart"
-            value={view}
-            onValueChange={setView}
-            className="w-[200px]"
-          >
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="chart">Chart</TabsTrigger>
-              <TabsTrigger value="table">Table</TabsTrigger>
-            </TabsList>
-          </Tabs>
+          <div className="flex gap-2 items-center">
+            <Tabs
+              defaultValue="chart"
+              value={view}
+              onValueChange={setView}
+              className="w-[200px]"
+            >
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="chart">Chart</TabsTrigger>
+                <TabsTrigger value="table">Table</TabsTrigger>
+              </TabsList>
+            </Tabs>
+            
+            <div className="flex items-center gap-2 ml-4">
+              <Select
+                value={metric}
+                onValueChange={setMetric}
+              >
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Select metric" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="revenue">Revenue</SelectItem>
+                  <SelectItem value="cost">Marketing Cost</SelectItem>
+                  <SelectItem value="clicks">Clicks</SelectItem>
+                  <SelectItem value="impressions">Impressions</SelectItem>
+                  <SelectItem value="conversions">Conversions</SelectItem>
+                  <SelectItem value="ctr">Click-Through Rate</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
 
           <Tabs
             defaultValue="30d"
@@ -95,17 +176,19 @@ const DataPage = () => {
           </div>
         ) : view === "chart" ? (
           <>
+            <div className="mb-4">
+              <h3 className="text-lg font-medium">{getMetricDisplayName(metric)} Over Time</h3>
+              <p className="text-sm text-muted-foreground">Aggregated data across all channels</p>
+            </div>
             <PerformanceChart
-              data={performanceData}
+              data={aggregatedData}
               lines={[
-                { dataKey: "search", color: channelColors.search, label: "Search" },
-                { dataKey: "social", color: channelColors.social, label: "Social" },
-                { dataKey: "email", color: channelColors.email, label: "Email" },
-                { dataKey: "display", color: channelColors.display, label: "Display" },
-                { dataKey: "video", color: channelColors.video, label: "Video" },
-                { dataKey: "affiliate", color: channelColors.affiliate, label: "Affiliate" },
-                { dataKey: "direct", color: channelColors.direct, label: "Direct" },
-                { dataKey: "referral", color: channelColors.referral, label: "Referral" },
+                { 
+                  dataKey: metric, 
+                  color: getMetricColor(metric), 
+                  label: getMetricDisplayName(metric),
+                  type: metric === 'ctr' ? 'line' : 'area'
+                },
               ]}
               height={450}
             />
@@ -117,26 +200,14 @@ const DataPage = () => {
                 <TableHeader>
                   <TableRow>
                     <TableHead>Date</TableHead>
-                    {Object.keys(channelNames).map((channel) => (
-                      <TableHead key={channel}>
-                        {channelNames[channel as keyof typeof channelNames]}
-                      </TableHead>
-                    ))}
-                    <TableHead>Total</TableHead>
+                    <TableHead>{getMetricDisplayName(metric)}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {performanceData.map((entry, i) => (
+                  {aggregatedData.map((entry, i) => (
                     <TableRow key={i}>
-                      <TableCell className="font-medium">{entry.name}</TableCell>
-                      {Object.keys(channelNames).map((channel) => (
-                        <TableCell key={channel}>
-                          ${entry[channel]?.toLocaleString() || "0"}
-                        </TableCell>
-                      ))}
-                      <TableCell className="font-semibold">
-                        ${entry.totalRevenue.toLocaleString()}
-                      </TableCell>
+                      <TableCell className="font-medium">{entry.date}</TableCell>
+                      <TableCell>{formatValue(entry[metric], metric)}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
