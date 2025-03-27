@@ -6,6 +6,7 @@ import { Download } from "lucide-react";
 import {
   generateIncrementalData,
   channelColors,
+  generateSankeyData
 } from "@/data/mockData";
 import {
   generateMediaGroupData,
@@ -22,6 +23,8 @@ import { PerformanceBreakdownSection } from "@/components/dashboard/PerformanceB
 import { MediaTypeAnalysisSection } from "@/components/dashboard/MediaTypeAnalysisSection";
 import { KeyContributorsSection } from "@/components/dashboard/KeyContributorsSection";
 import { MediaTypesExplanationCard } from "@/components/dashboard/MediaTypesExplanationCard";
+import { WaterfallSection } from "@/components/dashboard/WaterfallSection";
+import { MediaFlowSection } from "@/components/dashboard/MediaFlowSection";
 
 const IncrementalPage = () => {
   const [loading, setLoading] = useState(true);
@@ -32,6 +35,7 @@ const IncrementalPage = () => {
   const [waterfallData, setWaterfallData] = useState<any[]>([]);
   const [marginalReturnsData, setMarginalReturnsData] = useState<any[]>([]);
   const [channelData, setChannelData] = useState<any[]>([]);
+  const [sankeyData, setSankeyData] = useState<any>({ nodes: [], links: [] });
   const [mediaType, setMediaType] = useState("all");
 
   useEffect(() => {
@@ -50,6 +54,7 @@ const IncrementalPage = () => {
       const wfData = generateWaterfallData();
       const mrData = generateMarginalReturnsData();
       const chData = getChannelDataByMediaType(mediaType);
+      const skData = generateSankeyData();
 
       setIncrementalData(incData);
       setMediaGroupData(mediaData);
@@ -58,6 +63,7 @@ const IncrementalPage = () => {
       setWaterfallData(wfData);
       setMarginalReturnsData(mrData);
       setChannelData(chData);
+      setSankeyData(skData);
       setLoading(false);
     };
 
@@ -93,6 +99,12 @@ const IncrementalPage = () => {
 
       {/* Performance Breakdown Section - replacing TimeSeriesSection */}
       <PerformanceBreakdownSection data={timeSeriesData} loading={loading} />
+
+      {/* Waterfall Chart Section */}
+      <WaterfallSection data={waterfallData} loading={loading} />
+
+      {/* NEW: Media Flow Sankey Diagram Section */}
+      <MediaFlowSection data={sankeyData} loading={loading} />
 
       {/* Media Type Analysis */}
       <MediaTypeAnalysisSection
