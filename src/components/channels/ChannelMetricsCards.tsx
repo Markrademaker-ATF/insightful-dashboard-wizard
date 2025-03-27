@@ -2,7 +2,7 @@
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { BadgeTrendingDown, BadgeTrendingUp, DollarSign, PercentIcon, TrendingDown, TrendingUp } from "lucide-react";
+import { DollarSign, PercentIcon, TrendingDown, TrendingUp } from "lucide-react";
 
 type ChannelMetricsCardsProps = {
   data: any[];
@@ -73,12 +73,12 @@ export function ChannelMetricsCards({ data, loading }: ChannelMetricsCardsProps)
                 <div className="flex items-center gap-1 mt-1">
                   {metric.trend > 0 ? (
                     <>
-                      <BadgeTrendingUp className="h-4 w-4 text-green-500" />
+                      <TrendingUp className="h-4 w-4 text-green-500" />
                       <span className="text-xs text-green-500">+{metric.trend}% vs prev. period</span>
                     </>
                   ) : (
                     <>
-                      <BadgeTrendingDown className="h-4 w-4 text-red-500" />
+                      <TrendingDown className="h-4 w-4 text-red-500" />
                       <span className="text-xs text-red-500">{metric.trend}% vs prev. period</span>
                     </>
                   )}

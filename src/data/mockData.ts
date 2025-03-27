@@ -22,6 +22,11 @@ export const channelNames = {
   referral: "Referral"
 };
 
+// This function was referenced but not defined - adding it here
+export function generateChannelBreakdown() {
+  return generateChannelData("Q3"); // Default to Q3 data
+}
+
 // Mock data functions
 export function generatePerformanceData(days = 30) {
   const data = [];

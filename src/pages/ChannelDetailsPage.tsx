@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrendingUp, ArrowRight, BarChart3, DollarSign, Users, Percent } from "lucide-react";
 import {
-  generateChannelBreakdown,
+  generateChannelData,
   generatePerformanceData,
   channelColors,
   channelNames,
@@ -32,7 +32,7 @@ const ChannelDetailsPage = () => {
       // Simulate API call delay
       await new Promise((resolve) => setTimeout(resolve, 800));
 
-      const channels = generateChannelBreakdown();
+      const channels = generateChannelData(timeframe === "7d" ? "Q1" : timeframe === "30d" ? "Q2" : "Q3");
       const channel = channels.find((c) => c.id === channelId) || channels[0];
       
       const days = timeframe === "7d" ? 7 : timeframe === "30d" ? 30 : 90;

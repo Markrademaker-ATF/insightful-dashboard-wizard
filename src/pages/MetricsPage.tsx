@@ -8,7 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { GitCompare, Download, Share2, ChevronDown } from "lucide-react";
 import {
-  generateChannelBreakdown,
+  generateChannelData,
   generatePerformanceData,
   channelColors,
 } from "@/data/mockData";
@@ -28,7 +28,7 @@ const MetricsPage = () => {
       // Simulate API call delay
       await new Promise((resolve) => setTimeout(resolve, 700));
 
-      const channels = generateChannelBreakdown();
+      const channels = generateChannelData(timeframe === "7d" ? "Q1" : timeframe === "30d" ? "Q2" : "Q3");
       const days = timeframe === "7d" ? 7 : timeframe === "30d" ? 30 : 90;
       const performance = generatePerformanceData(days);
       

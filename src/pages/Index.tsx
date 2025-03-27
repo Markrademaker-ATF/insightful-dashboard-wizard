@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { 
   generatePerformanceData, 
-  generateChannelBreakdown, 
+  generateChannelData, 
   generateBudgetAllocation, 
   channelColors 
 } from "@/data/mockData";
@@ -41,7 +41,7 @@ const Index = () => {
       
       const days = timeframe === "7d" ? 7 : timeframe === "30d" ? 30 : 90;
       const performance = generatePerformanceData(days);
-      const channels = generateChannelBreakdown();
+      const channels = generateChannelData(timeframe === "7d" ? "Q1" : timeframe === "30d" ? "Q2" : "Q3");
       const budget = generateBudgetAllocation();
       
       setPerformanceData(performance);
