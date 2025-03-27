@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useSearchParams, useLocation } from "react-router-dom";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -8,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { TrendingUp, ArrowRight, BarChart3, DollarSign, Users, Percent, Info } from "lucide-react";
+import { TrendingUp, BarChart3, DollarSign, Users, Percent, Info } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   generateChannelData,
@@ -46,8 +45,8 @@ const ChannelDetailsPage = () => {
       // Simulate API call delay
       await new Promise((resolve) => setTimeout(resolve, 800));
 
-      const channels = generateChannelData(timeframe === "7d" ? "Q1" : timeframe === "30d" ? "Q2" : "Q3");
-      const channel = channels.find((c) => c.id === channelId) || channels[0];
+      const channelsData = generateChannelData(timeframe === "7d" ? "Q1" : timeframe === "30d" ? "Q2" : "Q3");
+      const channel = channelsData.find((c) => c.id === channelId) || channelsData[0];
       
       const days = timeframe === "7d" ? 7 : timeframe === "30d" ? 30 : 90;
       const allPerformance = generatePerformanceData(days);
@@ -68,7 +67,7 @@ const ChannelDetailsPage = () => {
       
       // Generate attribution data
       const models = ["linear", "first_touch", "last_touch", "position_based", "time_decay"];
-      const channels = ["Paid Search", "Organic Search", "Social Media", "Display", "Email", "Direct"];
+      const attributionChannels = ["Paid Search", "Organic Search", "Social Media", "Display", "Email", "Direct"];
       
       // Generate date range based on timeframe
       const attributionData = Array.from({ length: days }).map((_, i) => {
@@ -83,25 +82,25 @@ const ChannelDetailsPage = () => {
       });
       
       // Generate channel contribution data for each model
-      const channelContribution = channels.map(channel => {
+      const channelContribution = attributionChannels.map(channelName => {
         const modelData: Record<string, number> = {};
         
         models.forEach(model => {
           // Different models have different attribution patterns
           let percentage = 0;
           if (model === "first_touch") {
-            percentage = channel === "Paid Search" || channel === "Social Media" ? 
+            percentage = channelName === "Paid Search" || channelName === "Social Media" ? 
               20 + Math.random() * 15 : 5 + Math.random() * 10;
           } else if (model === "last_touch") {
-            percentage = channel === "Organic Search" || channel === "Direct" ? 
+            percentage = channelName === "Organic Search" || channelName === "Direct" ? 
               20 + Math.random() * 15 : 5 + Math.random() * 10;
           } else if (model === "linear") {
-            percentage = 100 / channels.length + (Math.random() * 5 - 2.5);
+            percentage = 100 / attributionChannels.length + (Math.random() * 5 - 2.5);
           } else if (model === "position_based") {
-            percentage = channel === "Paid Search" || channel === "Direct" ? 
+            percentage = channelName === "Paid Search" || channelName === "Direct" ? 
               15 + Math.random() * 10 : 10 + Math.random() * 10;
           } else if (model === "time_decay") {
-            percentage = channel === "Organic Search" || channel === "Email" ? 
+            percentage = channelName === "Organic Search" || channelName === "Email" ? 
               15 + Math.random() * 10 : 10 + Math.random() * 10;
           }
           
@@ -109,9 +108,9 @@ const ChannelDetailsPage = () => {
         });
         
         return {
-          channel,
+          channel: channelName,
           ...modelData,
-          color: getChannelColor(channel)
+          color: getChannelColor(channelName)
         };
       });
       
