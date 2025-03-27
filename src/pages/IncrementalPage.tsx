@@ -16,7 +16,7 @@ import {
   generateMarginalReturnsData
 } from "@/data/mediaGroupData";
 
-// Import the new components
+// Import the components
 import { KeyMetricsSection } from "@/components/dashboard/KeyMetricsSection";
 import { WaterfallSection } from "@/components/dashboard/WaterfallSection";
 import { TimeSeriesSection } from "@/components/dashboard/TimeSeriesSection";
@@ -95,7 +95,7 @@ const IncrementalPage = () => {
       {/* Waterfall Chart */}
       <WaterfallSection data={waterfallData} loading={loading} />
 
-      {/* Time Series Chart */}
+      {/* Enhanced Time Series Chart */}
       <TimeSeriesSection data={timeSeriesData} loading={loading} />
 
       {/* Media Type Analysis */}

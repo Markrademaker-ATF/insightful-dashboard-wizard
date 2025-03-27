@@ -1,11 +1,21 @@
 
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Info, Calendar, TrendingUp } from "lucide-react";
+import { Info, Calendar, TrendingUp, ChevronDown, Download } from "lucide-react";
 import { TimeSeriesChart } from "@/components/dashboard/TimeSeriesChart";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface TimeSeriesSectionProps {
   data: any[];
@@ -17,7 +27,8 @@ export function TimeSeriesSection({ data, loading }: TimeSeriesSectionProps) {
   const [showRollingAverage, setShowRollingAverage] = useState(false);
   const [showBrush, setShowBrush] = useState(false);
   const [showComparison, setShowComparison] = useState(false);
-
+  const [chartView, setChartView] = useState("combined");
+  
   // Calculate ROAS for each data point
   const enhancedData = React.useMemo(() => {
     return data.map(item => ({
@@ -76,7 +87,7 @@ export function TimeSeriesSection({ data, loading }: TimeSeriesSectionProps) {
           </CardDescription>
         </div>
         
-        <div className="flex flex-col sm:flex-row gap-4">
+        <div className="flex flex-col sm:flex-row items-end gap-4">
           <Select
             value={timeGranularity}
             onValueChange={setTimeGranularity}
@@ -91,13 +102,41 @@ export function TimeSeriesSection({ data, loading }: TimeSeriesSectionProps) {
               <SelectItem value="lastYear">Last Year</SelectItem>
             </SelectContent>
           </Select>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm" className="gap-1">
+                Export <ChevronDown className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>Export Options</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>
+                <Download className="h-4 w-4 mr-2" /> Export as PNG
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Download className="h-4 w-4 mr-2" /> Export as CSV
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </CardHeader>
       <CardContent>
+        <Tabs defaultValue="combined" value={chartView} onValueChange={setChartView} className="mb-4">
+          <TabsList className="grid w-full max-w-md grid-cols-3">
+            <TabsTrigger value="combined">Combined View</TabsTrigger>
+            <TabsTrigger value="separated">Separated View</TabsTrigger>
+            <TabsTrigger value="roas">ROAS Focus</TabsTrigger>
+          </TabsList>
+        </Tabs>
+
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4">
           <div className="flex items-center text-sm text-muted-foreground">
             <Info className="h-4 w-4 mr-2 text-primary" /> 
-            Layered view shows revenue and cost trends with ROAS as scatter points
+            {chartView === "combined" && "Layered view shows revenue and cost trends with ROAS as scatter points"}
+            {chartView === "separated" && "Split view shows individual metrics for clearer comparison"}
+            {chartView === "roas" && "ROAS focus view helps identify efficiency trends over time"}
           </div>
           
           <div className="flex flex-col sm:flex-row gap-4">
@@ -134,26 +173,68 @@ export function TimeSeriesSection({ data, loading }: TimeSeriesSectionProps) {
           </div>
         </div>
         
-        <TimeSeriesChart
-          data={filteredData}
-          series={[
-            { dataKey: "cost", color: "#ea384c", label: "Marketing Cost", type: "area" },
-            { dataKey: "revenue", color: "#0EA5E9", label: "Total Revenue", type: "area" },
-            { dataKey: "roas", color: "#9b87f5", label: "ROAS", type: "scatter" }
-          ]}
-          loading={loading}
-          height={400}
-          stacked={false}
-          showBrush={showBrush}
-          showRollingAverage={showRollingAverage}
-          comparisonPeriod={comparisonPeriod}
-          roasScatterVisible={true}
-        />
+        <div className="rounded-lg overflow-hidden border bg-background">
+          <TabsContent value="combined" className="mt-0">
+            <TimeSeriesChart
+              data={filteredData}
+              series={[
+                { dataKey: "cost", color: "#ea384c", label: "Marketing Cost", type: "area" },
+                { dataKey: "revenue", color: "#0EA5E9", label: "Total Revenue", type: "area" },
+                { dataKey: "roas", color: "#9b87f5", label: "ROAS", type: "scatter" }
+              ]}
+              loading={loading}
+              height={400}
+              stacked={false}
+              showBrush={showBrush}
+              showRollingAverage={showRollingAverage}
+              comparisonPeriod={comparisonPeriod}
+              roasScatterVisible={true}
+            />
+          </TabsContent>
+
+          <TabsContent value="separated" className="mt-0">
+            <TimeSeriesChart
+              data={filteredData}
+              series={[
+                { dataKey: "revenue", color: "#0EA5E9", label: "Total Revenue", type: "line" },
+                { dataKey: "cost", color: "#ea384c", label: "Marketing Cost", type: "line" },
+              ]}
+              loading={loading}
+              height={400}
+              stacked={false}
+              showBrush={showBrush}
+              showRollingAverage={showRollingAverage}
+              comparisonPeriod={comparisonPeriod}
+              roasScatterVisible={false}
+              chartType="separated"
+            />
+          </TabsContent>
+
+          <TabsContent value="roas" className="mt-0">
+            <TimeSeriesChart
+              data={filteredData}
+              series={[
+                { dataKey: "roas", color: "#9b87f5", label: "ROAS", type: "line" }
+              ]}
+              loading={loading}
+              height={400}
+              stacked={false}
+              showBrush={showBrush}
+              showRollingAverage={showRollingAverage}
+              comparisonPeriod={comparisonPeriod}
+              roasScatterVisible={false}
+              chartType="roas"
+              showAverageLines={true}
+            />
+          </TabsContent>
+        </div>
         
         <div className="mt-4 text-sm text-muted-foreground">
           <p className="flex items-center gap-2">
             <Info className="h-4 w-4 text-primary" /> 
-            This chart shows revenue and marketing costs over time, with ROAS (Return on Ad Spend) plotted as scatter points.
+            {chartView === "combined" && "This chart shows revenue and marketing costs over time, with ROAS (Return on Ad Spend) plotted as scatter points."}
+            {chartView === "separated" && "This chart separates revenue and cost for clearer trend analysis without visual interference."}
+            {chartView === "roas" && "This chart focuses on ROAS trends to help identify periods of highest marketing efficiency."}
             {showComparison && " The highlighted area represents a comparison period for analysis."}
           </p>
         </div>
