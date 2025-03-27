@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
   ResponsiveContainer,
@@ -247,6 +248,11 @@ export function EnhancedWaterfallChart({
   
   // Get color for a bar
   const getBarColor = (item: any) => {
+    // Use different colors for positive vs negative values
+    if (item.value > 0) {
+      return "#33C3F0"; // Sky Blue for positive values
+    }
+    
     if (item.parentCategory) {
       // For child items, use channel colors
       const channelName = item.name.toLowerCase().replace(/\s+/g, '');
@@ -259,11 +265,11 @@ export function EnhancedWaterfallChart({
   
   // Custom label component for bars
   const renderCustomBarLabel = (props: any) => {
-    const { x, y, width, height, value, index } = props;
+    const { x, y, width, value, index } = props;
     const item = chartData[index];
     
-    // Only show label if bar is large enough
-    if (height < 15) return null;
+    // Only show label for bars wider than a threshold
+    if (width < 40) return null;
     
     // For "Remaining" item, show total value
     const displayText = item.name === "Remaining" 
@@ -273,12 +279,12 @@ export function EnhancedWaterfallChart({
     return (
       <text
         x={x + width / 2}
-        y={y + height / 2}
-        fill="#fff"
+        y={y + 15}
+        fill="#000"
         textAnchor="middle"
         dominantBaseline="middle"
-        fontSize={12}
-        fontWeight="bold"
+        fontSize={11}
+        fontWeight="medium"
       >
         {displayText}
       </text>
@@ -287,21 +293,42 @@ export function EnhancedWaterfallChart({
   
   return (
     <div className={cn("w-full", className)}>
+      <div className="mb-4 flex justify-end">
+        <div className="flex items-center space-x-4 text-sm">
+          <div className="flex items-center">
+            <span className="inline-block w-3 h-3 bg-[#33C3F0] mr-2 rounded-sm"></span>
+            <span>Total</span>
+          </div>
+          <div className="flex items-center">
+            <span className="inline-block w-3 h-3 bg-[#9b87f5] mr-2 rounded-sm"></span>
+            <span>Baseline</span>
+          </div>
+          <div className="flex items-center">
+            <span className="inline-block w-3 h-3 bg-[#0EA5E9] mr-2 rounded-sm"></span>
+            <span>Non-Paid</span>
+          </div>
+          <div className="flex items-center">
+            <span className="inline-block w-3 h-3 bg-[#6E59A5] mr-2 rounded-sm"></span>
+            <span>Organic</span>
+          </div>
+          <div className="flex items-center">
+            <span className="inline-block w-3 h-3 bg-[#F97316] mr-2 rounded-sm"></span>
+            <span>Paid</span>
+          </div>
+        </div>
+      </div>
       <div style={{ height }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={chartData}
-            margin={{ top: 20, right: 30, left: 40, bottom: 5 }}
+            margin={{ top: 20, right: 30, left: 100, bottom: 5 }}
             barGap={0}
-            layout="vertical"
+            layout="horizontal" // Changed to horizontal layout
           >
-            <XAxis
-              type="number"
-              tickFormatter={(value) => `$${Math.abs(value).toLocaleString()}`}
-            />
-            <YAxis
+            <YAxis 
               type="category"
               dataKey="name"
+              width={100}
               tick={({ x, y, payload, index }) => {
                 const item = chartData[index];
                 
@@ -342,10 +369,13 @@ export function EnhancedWaterfallChart({
                   </g>
                 );
               }}
-              width={150}
+            />
+            <XAxis 
+              type="number"
+              tickFormatter={(value) => `$${Math.abs(value).toLocaleString()}`}
             />
             <Tooltip content={<CustomTooltip />} />
-            <ReferenceLine x={0} stroke="#000" />
+            <ReferenceLine y={0} stroke="#000" />
             <Bar
               dataKey="value"
               fill="#8884d8"
@@ -355,6 +385,7 @@ export function EnhancedWaterfallChart({
                   toggleCategory(data.category);
                 }
               }}
+              minPointSize={3}
             >
               <LabelList dataKey="value" content={renderCustomBarLabel} />
               {chartData.map((entry, index) => (

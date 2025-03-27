@@ -56,7 +56,7 @@ export function PerformanceBreakdownSection({ data, loading }: PerformanceBreakd
     <Card className="mb-8">
       <CardHeader className="flex flex-row items-center justify-between">
         <div>
-          <CardTitle>Performance Breakdown</CardTitle>
+          <CardTitle>Waterfall Chart</CardTitle>
           <CardDescription>Contribution to revenue by media type</CardDescription>
         </div>
         <div className="flex items-center gap-2">
