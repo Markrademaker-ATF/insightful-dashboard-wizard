@@ -1,257 +1,242 @@
 
 import React, { useState } from "react";
-import {
-  ScatterChart,
-  Scatter,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  ZAxis,
-  Legend,
-  ReferenceLine
-} from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ZAxis, Legend } from "recharts";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Download, RefreshCw } from "lucide-react";
 
 type MetricScatterPlotProps = {
   data: any[];
   loading: boolean;
 };
 
-export function MetricScatterPlot({ data, loading }: MetricScatterPlotProps) {
+export const MetricScatterPlot = ({ data, loading }: MetricScatterPlotProps) => {
   const [xMetric, setXMetric] = useState("cost");
   const [yMetric, setYMetric] = useState("revenue");
-  
+  const [zMetric, setZMetric] = useState("roas");
+
   if (loading) {
-    return <Skeleton className="w-full h-[350px]" />;
+    return (
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-md">Scatter Plot Analysis</CardTitle>
+          <CardDescription>Loading data...</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Skeleton className="h-[400px] w-full" />
+        </CardContent>
+      </Card>
+    );
   }
-  
-  const metricOptions = [
-    { value: "revenue", label: "Revenue" },
-    { value: "cost", label: "Cost" },
-    { value: "roas", label: "ROAS" },
-    { value: "conversion", label: "Conversion Rate" },
-    { value: "cpa", label: "CPA" },
-  ];
-  
-  // Format data for scatter plot
-  const scatterData = data.map(item => ({
-    name: item.name,
-    x: item[xMetric],
-    y: item[yMetric],
-    z: item.roas // Size based on ROAS
+
+  // Format data for the scatter plot
+  const scatterData = data.map((channel) => ({
+    name: channel.name,
+    x: channel[xMetric],
+    y: channel[yMetric],
+    z: channel[zMetric],
+    color: channel.color,
   }));
-  
-  // Calculate trend line (simple linear regression)
-  const n = scatterData.length;
-  const sumX = scatterData.reduce((a, b) => a + b.x, 0);
-  const sumY = scatterData.reduce((a, b) => a + b.y, 0);
-  const sumXY = scatterData.reduce((a, b) => a + b.x * b.y, 0);
-  const sumX2 = scatterData.reduce((a, b) => a + b.x * b.x, 0);
-  
-  const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
-  const intercept = (sumY - slope * sumX) / n;
-  
-  // Calculate correlation coefficient
-  const sumY2 = scatterData.reduce((a, b) => a + b.y * b.y, 0);
-  const numerator = n * sumXY - sumX * sumY;
-  const denominator = Math.sqrt((n * sumX2 - sumX * sumX) * (n * sumY2 - sumY * sumY));
-  const correlation = denominator === 0 ? 0 : numerator / denominator;
-  
-  // Create regression line data
-  const minX = Math.min(...scatterData.map(item => item.x));
-  const maxX = Math.max(...scatterData.map(item => item.x));
-  const regressionData = [
-    { x: minX, y: minX * slope + intercept },
-    { x: maxX, y: maxX * slope + intercept }
-  ];
-  
-  // Format tick values based on metric type
-  const formatXAxis = (value: number) => {
-    if (xMetric === 'revenue' || xMetric === 'cost') {
-      return `$${(value / 1000).toFixed(0)}k`;
-    } else if (xMetric === 'roas') {
-      return `${value.toFixed(1)}x`;
-    } else if (xMetric === 'conversion') {
-      return `${value.toFixed(1)}%`;
-    } else if (xMetric === 'cpa') {
-      return `$${value}`;
-    }
-    return value;
+
+  // Format metric labels for display
+  const metricLabels = {
+    revenue: "Revenue ($)",
+    cost: "Cost ($)",
+    roas: "ROAS",
+    conversion: "Conversion Rate (%)",
+    ctr: "CTR (%)",
+    cpa: "CPA ($)",
+    impressions: "Impressions",
+    clicks: "Clicks",
   };
-  
-  const formatYAxis = (value: number) => {
-    if (yMetric === 'revenue' || yMetric === 'cost') {
-      return `$${(value / 1000).toFixed(0)}k`;
-    } else if (yMetric === 'roas') {
-      return `${value.toFixed(1)}x`;
-    } else if (yMetric === 'conversion') {
-      return `${value.toFixed(1)}%`;
-    } else if (yMetric === 'cpa') {
-      return `$${value}`;
+
+  // Format values for display
+  const formatValue = (value: number, metric: string): string => {
+    switch (metric) {
+      case "revenue":
+      case "cost":
+      case "cpa":
+        return `$${value.toLocaleString()}`;
+      case "conversion":
+      case "ctr":
+        return `${value.toFixed(2)}%`;
+      case "roas":
+        return `${value.toFixed(2)}x`;
+      default:
+        return value.toLocaleString();
     }
-    return value;
   };
-  
-  // Tooltip formatter
-  const tooltipFormatter = (value: number, name: string) => {
-    if (name === 'x') {
-      name = metricOptions.find(m => m.value === xMetric)?.label || xMetric;
-      if (xMetric === 'revenue' || xMetric === 'cost') {
-        return [`$${value.toLocaleString()}`, name];
-      } else if (xMetric === 'roas') {
-        return [`${value.toFixed(2)}x`, name];
-      } else if (xMetric === 'conversion') {
-        return [`${value.toFixed(2)}%`, name];
-      }
-    } else if (name === 'y') {
-      name = metricOptions.find(m => m.value === yMetric)?.label || yMetric;
-      if (yMetric === 'revenue' || yMetric === 'cost') {
-        return [`$${value.toLocaleString()}`, name];
-      } else if (yMetric === 'roas') {
-        return [`${value.toFixed(2)}x`, name];
-      } else if (yMetric === 'conversion') {
-        return [`${value.toFixed(2)}%`, name];
-      }
-    } else if (name === 'z') {
-      return [`${value.toFixed(2)}x`, 'ROAS (bubble size)'];
+
+  // Custom tooltip formatter
+  const CustomTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      return (
+        <div className="bg-background border border-border p-3 rounded-md shadow-md">
+          <p className="font-medium text-sm mb-1">{data.name}</p>
+          <p className="text-xs text-foreground">
+            {metricLabels[xMetric as keyof typeof metricLabels]}: {formatValue(data.x, xMetric)}
+          </p>
+          <p className="text-xs text-foreground">
+            {metricLabels[yMetric as keyof typeof metricLabels]}: {formatValue(data.y, yMetric)}
+          </p>
+          <p className="text-xs text-foreground">
+            {metricLabels[zMetric as keyof typeof metricLabels]}: {formatValue(data.z, zMetric)}
+          </p>
+        </div>
+      );
     }
-    return [value, name];
+    return null;
   };
-  
+
+  // Determine axis domains with padding
+  const xMin = Math.min(...scatterData.map((d) => d.x)) * 0.8;
+  const xMax = Math.max(...scatterData.map((d) => d.x)) * 1.2;
+  const yMin = Math.min(...scatterData.map((d) => d.y)) * 0.8;
+  const yMax = Math.max(...scatterData.map((d) => d.y)) * 1.2;
+
+  // Function to format axis values based on metric type
+  const formatAxisValue = (value: number, metric: string): string => {
+    switch (metric) {
+      case "revenue":
+      case "cost":
+      case "cpa":
+        if (value >= 1000000) return `$${(value / 1000000).toFixed(1)}M`;
+        if (value >= 1000) return `$${(value / 1000).toFixed(1)}K`;
+        return `$${value}`;
+      case "conversion":
+      case "ctr":
+        return `${value.toFixed(1)}%`;
+      case "roas":
+        return `${value.toFixed(1)}x`;
+      default:
+        if (value >= 1000000) return `${(value / 1000000).toFixed(1)}M`;
+        if (value >= 1000) return `${(value / 1000).toFixed(1)}K`;
+        return value.toString();
+    }
+  };
+
   return (
     <Card>
       <CardHeader className="pb-2">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+        <div className="flex flex-col lg:flex-row justify-between lg:items-center gap-4">
           <div>
-            <CardTitle className="text-md">Scatter Analysis</CardTitle>
+            <CardTitle className="text-md">Scatter Plot Analysis</CardTitle>
             <CardDescription>
-              Relationship between metrics (bubble size = ROAS)
+              Compare metrics to identify patterns and outliers
             </CardDescription>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Select value={xMetric} onValueChange={setXMetric}>
-              <SelectTrigger className="w-[140px]">
-                <SelectValue placeholder="X Axis" />
-              </SelectTrigger>
-              <SelectContent>
-                {metricOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select value={yMetric} onValueChange={setYMetric}>
-              <SelectTrigger className="w-[140px]">
-                <SelectValue placeholder="Y Axis" />
-              </SelectTrigger>
-              <SelectContent>
-                {metricOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="grid grid-cols-3 gap-2 w-full lg:w-auto">
+              <div>
+                <Select defaultValue={xMetric} onValueChange={setXMetric}>
+                  <SelectTrigger className="w-[100px] h-8">
+                    <SelectValue placeholder="X Axis" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="cost">Cost</SelectItem>
+                    <SelectItem value="revenue">Revenue</SelectItem>
+                    <SelectItem value="conversion">Conversion</SelectItem>
+                    <SelectItem value="roas">ROAS</SelectItem>
+                    <SelectItem value="ctr">CTR</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Select defaultValue={yMetric} onValueChange={setYMetric}>
+                  <SelectTrigger className="w-[100px] h-8">
+                    <SelectValue placeholder="Y Axis" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="revenue">Revenue</SelectItem>
+                    <SelectItem value="cost">Cost</SelectItem>
+                    <SelectItem value="conversion">Conversion</SelectItem>
+                    <SelectItem value="roas">ROAS</SelectItem>
+                    <SelectItem value="ctr">CTR</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Select defaultValue={zMetric} onValueChange={setZMetric}>
+                  <SelectTrigger className="w-[100px] h-8">
+                    <SelectValue placeholder="Size" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="roas">ROAS</SelectItem>
+                    <SelectItem value="revenue">Revenue</SelectItem>
+                    <SelectItem value="cost">Cost</SelectItem>
+                    <SelectItem value="conversion">Conversion</SelectItem>
+                    <SelectItem value="impressions">Impressions</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" className="h-8">
+                <RefreshCw className="h-3 w-3 mr-1" />
+                Reset
+              </Button>
+              <Button variant="outline" size="sm" className="h-8">
+                <Download className="h-3 w-3 mr-1" />
+                Export
+              </Button>
+            </div>
           </div>
         </div>
       </CardHeader>
       <CardContent>
-        <div className="mb-2 text-xs text-muted-foreground">
-          <span className="font-medium">Correlation:</span> {correlation.toFixed(2)} 
-          <span className="ml-2">
-            ({Math.abs(correlation) > 0.7 
-              ? 'Strong' 
-              : Math.abs(correlation) > 0.3 
-                ? 'Moderate' 
-                : 'Weak'} 
-            {correlation > 0 ? 'positive' : 'negative'} relationship)
-          </span>
-        </div>
-        
-        <div style={{ height: 350 }} className="mt-4">
+        <div className="h-[400px] w-full">
           <ResponsiveContainer width="100%" height="100%">
             <ScatterChart
-              margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+              margin={{
+                top: 20,
+                right: 20,
+                bottom: 20,
+                left: 40,
+              }}
             >
-              <CartesianGrid />
-              <XAxis 
-                type="number" 
-                dataKey="x" 
-                name="x"
-                tickFormatter={formatXAxis} 
-                label={{ 
-                  value: metricOptions.find(m => m.value === xMetric)?.label, 
-                  position: 'insideBottom', 
-                  offset: -5 
-                }}
+              <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
+              <XAxis
+                type="number"
+                dataKey="x"
+                name={metricLabels[xMetric as keyof typeof metricLabels]}
+                domain={[xMin, xMax]}
+                tickFormatter={(value) => formatAxisValue(value, xMetric)}
               />
-              <YAxis 
-                type="number" 
-                dataKey="y" 
-                name="y"
-                tickFormatter={formatYAxis}
-                label={{ 
-                  value: metricOptions.find(m => m.value === yMetric)?.label, 
-                  angle: -90, 
-                  position: 'insideLeft' 
-                }}
+              <YAxis
+                type="number"
+                dataKey="y"
+                name={metricLabels[yMetric as keyof typeof metricLabels]}
+                domain={[yMin, yMax]}
+                tickFormatter={(value) => formatAxisValue(value, yMetric)}
               />
-              <ZAxis 
-                type="number" 
-                dataKey="z" 
-                range={[50, 400]} 
-                name="z" 
+              <ZAxis
+                type="number"
+                dataKey="z"
+                range={[50, 500]}
+                name={metricLabels[zMetric as keyof typeof metricLabels]}
               />
-              <Tooltip 
-                cursor={{ strokeDasharray: '3 3' }}
-                formatter={tooltipFormatter}
-                labelFormatter={(label) => scatterData[label as number]?.name || ''}
-              />
+              <Tooltip content={<CustomTooltip />} />
               <Legend />
-              <Scatter 
-                name="Channels" 
-                data={scatterData} 
-                fill="#4361ee"
-                line={{ stroke: '#ea384c', strokeWidth: 2, strokeDasharray: '5 5' }}
-                lineType="fitting"
+              <Scatter
+                name={`${metricLabels[xMetric as keyof typeof metricLabels]} vs ${
+                  metricLabels[yMetric as keyof typeof metricLabels]
+                }`}
+                data={scatterData}
+                fill="#8884d8"
               />
             </ScatterChart>
           </ResponsiveContainer>
         </div>
-        
-        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="text-xs text-muted-foreground">
-            <h4 className="text-sm font-medium mb-1">Interpretation</h4>
-            <p>
-              {correlation > 0.7
-                ? `There is a strong positive relationship between ${metricOptions.find(m => m.value === xMetric)?.label} and ${metricOptions.find(m => m.value === yMetric)?.label}.`
-                : correlation < -0.7
-                ? `There is a strong negative relationship between ${metricOptions.find(m => m.value === xMetric)?.label} and ${metricOptions.find(m => m.value === yMetric)?.label}.`
-                : correlation > 0.3
-                ? `There is a moderate positive relationship between ${metricOptions.find(m => m.value === xMetric)?.label} and ${metricOptions.find(m => m.value === yMetric)?.label}.`
-                : correlation < -0.3
-                ? `There is a moderate negative relationship between ${metricOptions.find(m => m.value === xMetric)?.label} and ${metricOptions.find(m => m.value === yMetric)?.label}.`
-                : `There is a weak relationship between ${metricOptions.find(m => m.value === xMetric)?.label} and ${metricOptions.find(m => m.value === yMetric)?.label}.`
-              }
-            </p>
-          </div>
-          <div className="text-xs text-muted-foreground">
-            <h4 className="text-sm font-medium mb-1">Formula</h4>
-            <p>
-              {metricOptions.find(m => m.value === yMetric)?.label} = 
-              {slope >= 0 ? ' ' : ' -'}
-              {Math.abs(slope).toFixed(2)} × {metricOptions.find(m => m.value === xMetric)?.label}
-              {intercept >= 0 ? ' + ' : ' - '}
-              {Math.abs(intercept).toFixed(2)}
-            </p>
-          </div>
+        <div className="mt-3 text-xs text-muted-foreground">
+          <p>
+            <strong>Note:</strong> Bubble size represents {metricLabels[zMetric as keyof typeof metricLabels]}. 
+            Hover over data points to see detailed metrics for each channel.
+          </p>
         </div>
       </CardContent>
     </Card>
   );
-}
+};

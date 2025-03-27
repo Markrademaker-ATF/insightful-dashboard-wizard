@@ -1,18 +1,18 @@
 
 import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
-import { ChannelBreakdownChart } from "@/components/dashboard/ChannelBreakdownChart";
-import { PerformanceChart } from "@/components/dashboard/PerformanceChart";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { GitCompare, Download, Share2, ChevronDown, InfoIcon, FileBarChart } from "lucide-react";
-import {
-  generateChannelData,
-  generatePerformanceData,
-  channelColors,
-} from "@/data/mockData";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Download, Filter, BarChart, PieChart, LineChart as LineChartIcon, GitCompare, FileBarChart, InfoIcon, Share2 } from "lucide-react";
+import { ChannelPerformanceTable } from "@/components/channels/ChannelPerformanceTable";
+import { ChannelBreakdownChart } from "@/components/channels/ChannelBreakdownChart";
+import { ChannelTrendsChart } from "@/components/channels/ChannelTrendsChart";
+import { ChannelComparisonChart } from "@/components/channels/ChannelComparisonChart";
 import { ChannelMetricsCards } from "@/components/channels/ChannelMetricsCards";
+import { generateChannelData, generatePerformanceData, channelColors } from "@/data/mockData";
+import { PerformanceChart } from "@/components/dashboard/PerformanceChart";
 import { CorrelationMatrix } from "@/components/channels/CorrelationMatrix";
 import { MetricDistributionChart } from "@/components/channels/MetricDistributionChart";
 import { MetricScatterPlot } from "@/components/channels/MetricScatterPlot";
@@ -201,26 +201,25 @@ const MetricsPage = () => {
           defaultValue="correlation"
           value={edaTab}
           onValueChange={setEdaTab}
-          className="w-full mb-6"
         >
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-3 mb-6">
             <TabsTrigger value="correlation">Correlation Analysis</TabsTrigger>
             <TabsTrigger value="distribution">Distribution Analysis</TabsTrigger>
             <TabsTrigger value="scatter">Scatter Analysis</TabsTrigger>
           </TabsList>
+          
+          <TabsContent value="correlation">
+            <CorrelationMatrix data={channelData} loading={loading} />
+          </TabsContent>
+          
+          <TabsContent value="distribution">
+            <MetricDistributionChart data={channelData} loading={loading} />
+          </TabsContent>
+          
+          <TabsContent value="scatter">
+            <MetricScatterPlot data={channelData} loading={loading} />
+          </TabsContent>
         </Tabs>
-
-        <TabsContent value="correlation" className="m-0">
-          <CorrelationMatrix data={channelData} loading={loading} />
-        </TabsContent>
-        
-        <TabsContent value="distribution" className="m-0">
-          <MetricDistributionChart data={channelData} loading={loading} />
-        </TabsContent>
-        
-        <TabsContent value="scatter" className="m-0">
-          <MetricScatterPlot data={channelData} loading={loading} />
-        </TabsContent>
       </div>
 
       {/* Correlation Analysis */}
