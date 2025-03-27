@@ -1,11 +1,10 @@
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { AnalyticsOverview } from "@/components/dashboard/AnalyticsOverview";
 import { Helmet } from "react-helmet";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { SectionNav } from "@/components/dashboard/SectionNav";
-import { ChevronRight } from "lucide-react";
 
 const journeySections = [
   { id: "roi", title: "ROI Summary" },
@@ -36,16 +35,16 @@ const Index = () => {
         />
         
         <Card className="inline-flex items-center px-4 py-2 bg-accent/50 border-none">
-          <span className="text-sm font-medium text-primary mr-3">Your analytics journey</span>
+          <span className="text-sm font-medium text-primary mr-3">Analytics Journey Progress</span>
           <Progress value={progress} className="w-24 h-2" />
         </Card>
       </div>
 
       <Card className="mb-8 border-l-4 border-l-primary">
         <CardContent className="pt-6">
-          <h2 className="text-xl font-semibold mb-3">Your 7-Step Analytics Journey</h2>
+          <h2 className="text-xl font-semibold mb-3">Marketing Performance Insights</h2>
           <p className="text-muted-foreground mb-4">
-            Follow this guided path to understand your marketing performance, from high-level metrics to optimization opportunities
+            Dive deep into your marketing strategy with a comprehensive analytics journey. Uncover insights from ROI metrics to channel optimization.
           </p>
           
           <div className="p-4 bg-accent/30 rounded-lg">
