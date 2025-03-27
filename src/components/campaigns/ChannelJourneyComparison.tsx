@@ -46,12 +46,12 @@ export const ChannelJourneyComparison: React.FC<ChannelJourneyComparisonProps> =
     );
   }
 
-  // Journey stage labels
+  // Journey stage labels with associated colors
   const journeyStages = [
-    { id: "awareness", label: "Beginning of Path", description: "First touch awareness building channels" },
-    { id: "consideration", label: "Middle of Path", description: "Research and consideration touchpoints" },
-    { id: "conversion", label: "Near Conversion", description: "Decision-making and purchase intent" },
-    { id: "advocacy", label: "Post-Conversion", description: "Loyalty and advocacy building" }
+    { id: "awareness", label: "Beginning of Path", description: "First touch awareness building channels", color: "#4cc9f0" },
+    { id: "consideration", label: "Middle of Path", description: "Research and consideration touchpoints", color: "#3a0ca3" },
+    { id: "conversion", label: "Near Conversion", description: "Decision-making and purchase intent", color: "#7209b7" },
+    { id: "advocacy", label: "Post-Conversion", description: "Loyalty and advocacy building", color: "#f72585" }
   ];
   
   // Helper to get color intensity based on percentage
@@ -123,7 +123,11 @@ export const ChannelJourneyComparison: React.FC<ChannelJourneyComparisonProps> =
                 <div className="col-span-3 px-2 font-medium text-sm">Channel</div>
                 <div className="col-span-6 grid grid-cols-4 gap-1 px-2">
                   {journeyStages.map((stage) => (
-                    <div key={stage.id} className="text-center font-medium text-sm">
+                    <div 
+                      key={stage.id} 
+                      className="text-center font-medium text-sm"
+                      style={{ color: stage.color }}
+                    >
                       {stage.label}
                       <div className="text-xs text-muted-foreground">{stage.description}</div>
                     </div>
@@ -157,10 +161,13 @@ export const ChannelJourneyComparison: React.FC<ChannelJourneyComparisonProps> =
                         {Object.entries(channel.journeyContribution).map(([stage, percentage], i) => {
                           // Ensure all percentages have a value (even if 0%)
                           const displayPercentage = percentage || 0;
+                          const stageColor = journeyStages[i]?.color || "#4361ee";
+                          
                           return (
                             <div key={stage} className="flex justify-center p-1">
                               <div 
-                                className={`h-8 w-8 rounded-md flex items-center justify-center ${channelColor} ${getColorIntensity(displayPercentage)}`}
+                                className={`h-8 w-8 rounded-md flex items-center justify-center ${getColorIntensity(displayPercentage)}`}
+                                style={{ backgroundColor: displayPercentage > 0 ? stageColor : "#f1f1f1" }}
                                 title={`${displayPercentage}% contribution at ${journeyStages[i]?.label}`}
                               >
                                 <span className="text-xs font-medium text-white">
@@ -184,22 +191,16 @@ export const ChannelJourneyComparison: React.FC<ChannelJourneyComparisonProps> =
 
               {/* Legend */}
               <div className="mt-8 flex justify-between items-center">
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-1">
-                    <div className="w-4 h-4 bg-gray-100 opacity-30 rounded-sm"></div>
-                    <span className="text-xs text-muted-foreground">0%</span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    {[10, 20, 30, 40, 50].map((value, i) => (
-                      <div key={i} className="flex items-center gap-1">
-                        <div className={`w-4 h-4 bg-primary ${getColorIntensity(value)} rounded-sm`}></div>
-                        <span className="text-xs text-muted-foreground">
-                          {`${value}%`}
-                          {value === 50 ? "+" : ""}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
+                <div className="flex items-center gap-6">
+                  {journeyStages.map((stage) => (
+                    <div key={stage.id} className="flex items-center gap-2">
+                      <div 
+                        className="w-4 h-4 rounded-sm"
+                        style={{ backgroundColor: stage.color }}
+                      ></div>
+                      <span className="text-xs" style={{ color: stage.color }}>{stage.label}</span>
+                    </div>
+                  ))}
                 </div>
                 <div className="text-xs text-muted-foreground max-w-[200px] text-right">
                   % reflects the overall weighting of a channel at a particular position in the path
@@ -222,26 +223,38 @@ export const ChannelJourneyComparison: React.FC<ChannelJourneyComparisonProps> =
                 const topChannels = topChannelsByStage[stage.id] || [];
                 
                 return (
-                  <div key={stage.id} className="border rounded-lg p-4">
-                    <div className="font-medium mb-2">{stage.label}</div>
+                  <div 
+                    key={stage.id} 
+                    className="border rounded-lg p-4"
+                    style={{ borderColor: `${stage.color}40` }}
+                  >
+                    <div className="font-medium mb-2" style={{ color: stage.color }}>{stage.label}</div>
                     <div className="text-xs text-muted-foreground mb-3">{stage.description}</div>
                     
                     <div className="space-y-3">
                       <div className="text-xs font-medium">Top Performing Channels:</div>
                       {topChannels.map((channel, idx) => {
                         const channelColor = channel.id in channelColors
-                          ? `bg-[${channelColors[channel.id as keyof typeof channelColors]}]`
-                          : channel.colorClass;
+                          ? channelColors[channel.id as keyof typeof channelColors]
+                          : "#4361ee";
                         
                         const contribution = channel.journeyContribution[stage.id as keyof typeof channel.journeyContribution];
                         
                         return (
                           <div key={idx} className="flex items-center gap-2">
-                            <div className={`w-2 h-2 rounded-full ${channelColor}`}></div>
+                            <div 
+                              className="w-2 h-2 rounded-full" 
+                              style={{ backgroundColor: channelColor }}
+                            ></div>
                             <div className="text-xs flex-1">
                               {channelNames[channel.id as keyof typeof channelNames] || channel.name}
                             </div>
-                            <div className="text-xs font-medium">{contribution}%</div>
+                            <div 
+                              className="text-xs font-medium"
+                              style={{ color: stage.color }}
+                            >
+                              {contribution}%
+                            </div>
                           </div>
                         );
                       })}
@@ -264,8 +277,8 @@ export const ChannelJourneyComparison: React.FC<ChannelJourneyComparisonProps> =
             </h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="border rounded-lg p-4">
-                <div className="font-medium mb-2">Channel Optimization</div>
+              <div className="border rounded-lg p-4" style={{ borderColor: "#4cc9f040" }}>
+                <div className="font-medium mb-2" style={{ color: "#4cc9f0" }}>Channel Optimization</div>
                 <ul className="text-sm space-y-2">
                   <li className="flex items-start gap-2">
                     <div className="min-w-2 h-2 rounded-full bg-primary mt-1.5"></div>
@@ -288,19 +301,19 @@ export const ChannelJourneyComparison: React.FC<ChannelJourneyComparisonProps> =
                 </ul>
               </div>
               
-              <div className="border rounded-lg p-4">
-                <div className="font-medium mb-2">Budget Allocation</div>
+              <div className="border rounded-lg p-4" style={{ borderColor: "#7209b740" }}>
+                <div className="font-medium mb-2" style={{ color: "#7209b7" }}>Budget Allocation</div>
                 <ul className="text-sm space-y-2">
                   <li className="flex items-start gap-2">
                     <div className="min-w-2 h-2 rounded-full bg-primary mt-1.5"></div>
                     <span>
-                      Increase investment in channels with >30% contribution at crucial stages.
+                      Increase investment in channels with &gt;30% contribution at crucial stages.
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
                     <div className="min-w-2 h-2 rounded-full bg-primary mt-1.5"></div>
                     <span>
-                      Re-evaluate low-performing channels with <10% contribution across all stages.
+                      Re-evaluate low-performing channels with &lt;10% contribution across all stages.
                     </span>
                   </li>
                   <li className="flex items-start gap-2">
