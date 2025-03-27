@@ -123,111 +123,111 @@ export function TimeSeriesSection({ data, loading }: TimeSeriesSectionProps) {
         </div>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue="combined" value={chartView} onValueChange={setChartView} className="mb-4">
+        <Tabs value={chartView} onValueChange={setChartView} defaultValue="combined" className="mb-4">
           <TabsList className="grid w-full max-w-md grid-cols-3">
             <TabsTrigger value="combined">Combined View</TabsTrigger>
             <TabsTrigger value="separated">Separated View</TabsTrigger>
             <TabsTrigger value="roas">ROAS Focus</TabsTrigger>
           </TabsList>
-        </Tabs>
 
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4">
-          <div className="flex items-center text-sm text-muted-foreground">
-            <Info className="h-4 w-4 mr-2 text-primary" /> 
-            {chartView === "combined" && "Layered view shows revenue and cost trends with ROAS as scatter points"}
-            {chartView === "separated" && "Split view shows individual metrics for clearer comparison"}
-            {chartView === "roas" && "ROAS focus view helps identify efficiency trends over time"}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4">
+            <div className="flex items-center text-sm text-muted-foreground">
+              <Info className="h-4 w-4 mr-2 text-primary" /> 
+              {chartView === "combined" && "Layered view shows revenue and cost trends with ROAS as scatter points"}
+              {chartView === "separated" && "Split view shows individual metrics for clearer comparison"}
+              {chartView === "roas" && "ROAS focus view helps identify efficiency trends over time"}
+            </div>
+            
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex items-center space-x-2">
+                <Switch 
+                  id="rolling-average" 
+                  checked={showRollingAverage}
+                  onCheckedChange={setShowRollingAverage}
+                />
+                <Label htmlFor="rolling-average" className="flex items-center gap-1">
+                  <TrendingUp className="h-4 w-4" /> Rolling Average
+                </Label>
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <Switch 
+                  id="zoom-brush" 
+                  checked={showBrush}
+                  onCheckedChange={setShowBrush}
+                />
+                <Label htmlFor="zoom-brush" className="flex items-center gap-1">
+                  <Calendar className="h-4 w-4" /> Time Zoom
+                </Label>
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <Switch 
+                  id="comparison-period" 
+                  checked={showComparison}
+                  onCheckedChange={setShowComparison}
+                />
+                <Label htmlFor="comparison-period">Compare Period</Label>
+              </div>
+            </div>
           </div>
           
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="flex items-center space-x-2">
-              <Switch 
-                id="rolling-average" 
-                checked={showRollingAverage}
-                onCheckedChange={setShowRollingAverage}
+          <div className="rounded-lg overflow-hidden border bg-background">
+            <TabsContent value="combined" className="mt-0">
+              <TimeSeriesChart
+                data={filteredData}
+                series={[
+                  { dataKey: "cost", color: "#ea384c", label: "Marketing Cost", type: "area" },
+                  { dataKey: "revenue", color: "#0EA5E9", label: "Total Revenue", type: "area" },
+                  { dataKey: "roas", color: "#9b87f5", label: "ROAS", type: "scatter" }
+                ]}
+                loading={loading}
+                height={400}
+                stacked={false}
+                showBrush={showBrush}
+                showRollingAverage={showRollingAverage}
+                comparisonPeriod={comparisonPeriod}
+                roasScatterVisible={true}
               />
-              <Label htmlFor="rolling-average" className="flex items-center gap-1">
-                <TrendingUp className="h-4 w-4" /> Rolling Average
-              </Label>
-            </div>
-            
-            <div className="flex items-center space-x-2">
-              <Switch 
-                id="zoom-brush" 
-                checked={showBrush}
-                onCheckedChange={setShowBrush}
+            </TabsContent>
+
+            <TabsContent value="separated" className="mt-0">
+              <TimeSeriesChart
+                data={filteredData}
+                series={[
+                  { dataKey: "revenue", color: "#0EA5E9", label: "Total Revenue", type: "line" },
+                  { dataKey: "cost", color: "#ea384c", label: "Marketing Cost", type: "line" },
+                ]}
+                loading={loading}
+                height={400}
+                stacked={false}
+                showBrush={showBrush}
+                showRollingAverage={showRollingAverage}
+                comparisonPeriod={comparisonPeriod}
+                roasScatterVisible={false}
+                chartType="separated"
               />
-              <Label htmlFor="zoom-brush" className="flex items-center gap-1">
-                <Calendar className="h-4 w-4" /> Time Zoom
-              </Label>
-            </div>
-            
-            <div className="flex items-center space-x-2">
-              <Switch 
-                id="comparison-period" 
-                checked={showComparison}
-                onCheckedChange={setShowComparison}
+            </TabsContent>
+
+            <TabsContent value="roas" className="mt-0">
+              <TimeSeriesChart
+                data={filteredData}
+                series={[
+                  { dataKey: "roas", color: "#9b87f5", label: "ROAS", type: "line" }
+                ]}
+                loading={loading}
+                height={400}
+                stacked={false}
+                showBrush={showBrush}
+                showRollingAverage={showRollingAverage}
+                comparisonPeriod={comparisonPeriod}
+                roasScatterVisible={false}
+                chartType="roas"
+                showAverageLines={true}
               />
-              <Label htmlFor="comparison-period">Compare Period</Label>
-            </div>
+            </TabsContent>
           </div>
-        </div>
-        
-        <div className="rounded-lg overflow-hidden border bg-background">
-          <TabsContent value="combined" className="mt-0">
-            <TimeSeriesChart
-              data={filteredData}
-              series={[
-                { dataKey: "cost", color: "#ea384c", label: "Marketing Cost", type: "area" },
-                { dataKey: "revenue", color: "#0EA5E9", label: "Total Revenue", type: "area" },
-                { dataKey: "roas", color: "#9b87f5", label: "ROAS", type: "scatter" }
-              ]}
-              loading={loading}
-              height={400}
-              stacked={false}
-              showBrush={showBrush}
-              showRollingAverage={showRollingAverage}
-              comparisonPeriod={comparisonPeriod}
-              roasScatterVisible={true}
-            />
-          </TabsContent>
-
-          <TabsContent value="separated" className="mt-0">
-            <TimeSeriesChart
-              data={filteredData}
-              series={[
-                { dataKey: "revenue", color: "#0EA5E9", label: "Total Revenue", type: "line" },
-                { dataKey: "cost", color: "#ea384c", label: "Marketing Cost", type: "line" },
-              ]}
-              loading={loading}
-              height={400}
-              stacked={false}
-              showBrush={showBrush}
-              showRollingAverage={showRollingAverage}
-              comparisonPeriod={comparisonPeriod}
-              roasScatterVisible={false}
-              chartType="separated"
-            />
-          </TabsContent>
-
-          <TabsContent value="roas" className="mt-0">
-            <TimeSeriesChart
-              data={filteredData}
-              series={[
-                { dataKey: "roas", color: "#9b87f5", label: "ROAS", type: "line" }
-              ]}
-              loading={loading}
-              height={400}
-              stacked={false}
-              showBrush={showBrush}
-              showRollingAverage={showRollingAverage}
-              comparisonPeriod={comparisonPeriod}
-              roasScatterVisible={false}
-              chartType="roas"
-              showAverageLines={true}
-            />
-          </TabsContent>
-        </div>
+        </Tabs>
         
         <div className="mt-4 text-sm text-muted-foreground">
           <p className="flex items-center gap-2">
