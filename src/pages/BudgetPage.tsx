@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { ChannelBreakdownChart } from "@/components/dashboard/ChannelBreakdownChart";
@@ -280,9 +279,9 @@ const BudgetPage = () => {
         </div>
       </div>
       
-      {/* Impact analysis section - Now the only section that was previously second in the grid */}
+      {/* Impact analysis section */}
       <div className="mb-8">
-        <Card>
+        <Card className="w-full">
           <CardHeader>
             <div className="flex items-center gap-2">
               <BarChart3 className="h-5 w-5 text-primary" />
@@ -293,7 +292,7 @@ const BudgetPage = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="h-[350px]">
+            <div className="h-[400px] w-full">
               {loading ? (
                 <div className="h-full w-full flex items-center justify-center">
                   <div className="h-32 w-32 bg-muted rounded animate-pulse"></div>
@@ -304,6 +303,7 @@ const BudgetPage = () => {
                     positive: { color: "#4ade80" },
                     negative: { color: "#f87171" }
                   }}
+                  className="w-full h-full"
                 >
                   <ChannelBreakdownChart
                     data={impactData.sort((a, b) => Math.abs(b.impactChange) - Math.abs(a.impactChange))}
@@ -315,7 +315,7 @@ const BudgetPage = () => {
                       }
                     ]}
                     xAxisKey="name"
-                    height={350}
+                    height={400}
                   />
                 </ChartContainer>
               )}
