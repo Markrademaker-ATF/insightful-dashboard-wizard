@@ -30,6 +30,7 @@ export default function ChannelsPage() {
       // Simulate API call delay
       await new Promise((resolve) => setTimeout(resolve, 800));
       
+      // Generate data with incremental outcomes included
       const data = generateChannelData(timeframe);
       const trends = generateChannelTrendsData();
       
@@ -167,4 +168,3 @@ export default function ChannelsPage() {
     </div>
   );
 }
-

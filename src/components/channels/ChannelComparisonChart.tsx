@@ -31,6 +31,7 @@ export function ChannelComparisonChart({ data, loading }: ChannelComparisonChart
   const metrics = [
     { value: "revenue", label: "Revenue" },
     { value: "cost", label: "Cost" },
+    { value: "incremental", label: "Incremental Outcome" },
     { value: "roas", label: "ROAS" },
     { value: "conversion", label: "Conversion Rate" },
     { value: "cpa", label: "CPA" },
@@ -42,7 +43,7 @@ export function ChannelComparisonChart({ data, loading }: ChannelComparisonChart
     : data;
 
   const formatValue = (value: number, metricType: string) => {
-    if (metricType === "revenue" || metricType === "cost") {
+    if (metricType === "revenue" || metricType === "cost" || metricType === "incremental") {
       return `$${value.toLocaleString()}`;
     } else if (metricType === "roas") {
       return `${value}x`;
@@ -111,7 +112,7 @@ export function ChannelComparisonChart({ data, loading }: ChannelComparisonChart
           <XAxis dataKey="name" />
           <YAxis
             tickFormatter={(value) =>
-              metric === "revenue" || metric === "cost" || metric === "cpa"
+              metric === "revenue" || metric === "cost" || metric === "cpa" || metric === "incremental"
                 ? `$${value}`
                 : metric === "conversion"
                 ? `${value}%`

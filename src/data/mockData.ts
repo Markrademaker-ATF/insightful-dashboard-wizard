@@ -158,6 +158,7 @@ export const generateChannelData = (period = "Q2") => {
     const periodMultiplier = period === "Q1" ? 0.8 : period === "Q3" ? 1.2 : 1;
     const revenue = faker.number.int({ min: 80000, max: 350000 }) * periodMultiplier;
     const cost = faker.number.int({ min: 20000, max: 120000 }) * periodMultiplier;
+    const incremental = Math.round(revenue * faker.number.float({ min: 0.5, max: 0.85 }) - cost * 0.8); // Generate realistic incremental outcomes
     const roas = +(revenue / cost).toFixed(2);
     const impressions = faker.number.int({ min: 500000, max: 3000000 });
     const clicks = faker.number.int({ min: 10000, max: 100000 });
@@ -173,6 +174,7 @@ export const generateChannelData = (period = "Q2") => {
       color: channelColors[channel as keyof typeof channelColors],
       revenue,
       cost,
+      incremental,
       roas,
       impressions,
       clicks,
