@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useSearchParams, useLocation } from "react-router-dom";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -353,7 +354,49 @@ const ChannelDetailsPage = () => {
         </Tabs>
       </PageHeader>
 
-      {/* Main Tabs for Campaign Overview and Campaign Detailed */}
+      {/* Campaign Overview Section - Key Metrics */}
+      <Card className="mb-6 overflow-hidden border-border/40 shadow-sm">
+        <div className="h-1 bg-gradient-to-r from-primary/80 to-primary/40"></div>
+        <CardHeader className="pb-3">
+          <CardTitle>Campaign Overview</CardTitle>
+          <CardDescription>Key performance metrics across all marketing campaigns</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {loading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <Skeleton className="h-28 w-full" />
+              <Skeleton className="h-28 w-full" />
+              <Skeleton className="h-28 w-full" />
+              <Skeleton className="h-28 w-full" />
+            </div>
+          ) : (
+            <KeyMetricsGrid
+              totalRevenue={totalRevenue}
+              totalCost={totalRevenue * 0.4}
+              totalRoas={2.5}
+              totalConversions={totalConversions}
+              revenueChange={5.2}
+              costChange={3.1}
+              roasChange={2.1}
+              conversionChange={4.3}
+              loading={loading}
+            />
+          )}
+        </CardContent>
+      </Card>
+
+      {/* ROAS vs Cost and Incremental Outcome Chart */}
+      <div className="mb-6">
+        <RoasComparisonChart 
+          channelData={generateChannelData("Q2").map(channel => ({
+            ...channel,
+            incremental: Math.round(channel.revenue - channel.cost)
+          }))} 
+          loading={loading} 
+        />
+      </div>
+      
+      {/* Main Tabs for Campaign Overview and Campaign Detailed - moved here below the metrics */}
       <Tabs defaultValue="overview" value={mainTab} onValueChange={setMainTab} className="mb-6">
         <TabsList className="w-full md:w-auto bg-white shadow-sm">
           <TabsTrigger value="overview" className="data-[state=active]:shadow-sm">
@@ -366,48 +409,6 @@ const ChannelDetailsPage = () => {
         
         {/* Campaign Overview Tab Content */}
         <TabsContent value="overview" className="space-y-8 mt-6">
-          {/* Campaign Overview Section */}
-          <Card className="mb-6 overflow-hidden border-border/40 shadow-sm">
-            <div className="h-1 bg-gradient-to-r from-primary/80 to-primary/40"></div>
-            <CardHeader className="pb-3">
-              <CardTitle>Campaign Overview</CardTitle>
-              <CardDescription>Key performance metrics across all marketing campaigns</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {loading ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  <Skeleton className="h-28 w-full" />
-                  <Skeleton className="h-28 w-full" />
-                  <Skeleton className="h-28 w-full" />
-                  <Skeleton className="h-28 w-full" />
-                </div>
-              ) : (
-                <KeyMetricsGrid
-                  totalRevenue={totalRevenue}
-                  totalCost={totalRevenue * 0.4}
-                  totalRoas={2.5}
-                  totalConversions={totalConversions}
-                  revenueChange={5.2}
-                  costChange={3.1}
-                  roasChange={2.1}
-                  conversionChange={4.3}
-                  loading={loading}
-                />
-              )}
-            </CardContent>
-          </Card>
-
-          {/* ROAS vs Cost and Incremental Outcome Chart - New Section */}
-          <div className="mb-6">
-            <RoasComparisonChart 
-              channelData={generateChannelData("Q2").map(channel => ({
-                ...channel,
-                incremental: Math.round(channel.revenue - channel.cost)
-              }))} 
-              loading={loading} 
-            />
-          </div>
-
           {/* Data-Driven Attribution Section */}
           <Card className="mb-6 overflow-hidden shadow-sm border-border/40">
             <div className="h-1 bg-gradient-to-r from-[#4361ee] to-[#7209b7]"></div>
