@@ -1,4 +1,3 @@
-
 import React from "react";
 import { 
   LineChart, 
@@ -187,9 +186,8 @@ export function ChannelSaturationCurve({
                   strokeWidth={3}
                   shape="circle"
                   name="Current Spend"
-                  size={200}  // Using size instead of symbolSize
-                >
-                </Scatter>
+                  r={10}  // Explicitly set radius
+                />
                 
                 {/* New point marker - Enhanced visibility */}
                 <Scatter
@@ -200,9 +198,8 @@ export function ChannelSaturationCurve({
                   strokeWidth={3}
                   shape="diamond"
                   name="New Spend"
-                  size={200}  // Using size instead of symbolSize
-                >
-                </Scatter>
+                  r={10}  // Explicitly set radius
+                />
                 
                 {/* Max saturation point marker - Enhanced visibility */}
                 <Scatter
@@ -213,9 +210,8 @@ export function ChannelSaturationCurve({
                   strokeWidth={3}
                   shape="star"
                   name="Max Saturation"
-                  size={200}  // Using size instead of symbolSize
-                >
-                </Scatter>
+                  r={10}  // Explicitly set radius
+                />
                 
                 {/* Reference lines for key points */}
                 <ReferenceLine x={currentPoint.spend} yAxisId="left" stroke="#FF8C00" strokeDasharray="3 3" />
