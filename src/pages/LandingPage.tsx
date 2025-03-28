@@ -2,7 +2,7 @@
 import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Play, ChevronRight } from "lucide-react";
+import { ArrowRight, ExternalLink } from "lucide-react";
 import { Helmet } from "react-helmet";
 
 const LandingPage = () => {
@@ -167,10 +167,13 @@ const LandingPage = () => {
               </Link>
             </Button>
             <Button 
+              asChild
               variant="outline" 
               className="bg-transparent hover:bg-white/10 rounded-full px-8 py-6 text-white border-white w-full md:w-auto"
             >
-              <Play className="mr-2 h-5 w-5" /> Watch demo
+              <a href="https://artefact.com" target="_blank" rel="noopener noreferrer">
+                Visit Artefact.com <ExternalLink className="ml-2 h-5 w-5" />
+              </a>
             </Button>
           </div>
 
