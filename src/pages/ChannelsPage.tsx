@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,6 +14,7 @@ import { ChannelMetricsOverview } from "@/components/channels/ChannelMetricsOver
 import { generateChannelData, generateChannelTrendsData, channelColors, channelNames } from "@/data/mockData";
 import { FilterExportControls } from "@/components/channels/FilterExportControls";
 import { ChannelDetailView } from "@/components/channels/ChannelDetailView";
+import { RoasComparisonChart } from "@/components/channels/RoasComparisonChart";
 
 export default function ChannelsPage() {
   const [activeTab, setActiveTab] = useState("performance");
@@ -82,10 +84,7 @@ export default function ChannelsPage() {
         </PageHeader>
       </div>
 
-      {/* Add Channel Metrics Overview before the Channel Metrics Cards */}
       <ChannelMetricsOverview data={channelData} loading={loading} />
-
-      {/* Removed the ChannelMetricsCards component */}
 
       {/* Channel Filter Section */}
       <Card className="mb-4">
@@ -153,7 +152,9 @@ export default function ChannelsPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <RoasComparisonChart channelData={channelData} loading={loading} />
+            
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-6">
               <TabsList className="w-full md:w-auto">
                 <TabsTrigger value="performance" className="flex items-center gap-1">
                   <BarChart className="h-4 w-4" /> Performance
@@ -187,3 +188,4 @@ export default function ChannelsPage() {
     </div>
   );
 }
+
