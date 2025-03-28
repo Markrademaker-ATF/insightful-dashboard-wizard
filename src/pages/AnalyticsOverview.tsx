@@ -25,7 +25,7 @@ import {
   FileBarChart
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { ChannelSaturationCurve } from "@/components/channels/ChannelSaturationCurve";
+// Note: We're removing the ChannelSaturationCurve import since we won't need it anymore
 import { AnalyticsOverview } from "@/components/dashboard/AnalyticsOverview";
 
 const journeySections = [
@@ -184,15 +184,6 @@ const Index = () => {
       </div>
       
       {/* Saturation Curve Analysis - Enhanced */}
-      <div className="animate-fade-in" style={{ animationDelay: "300ms" }}>
-        <ChannelSaturationCurve 
-          channelId="social" 
-          channelName="Social Media" 
-          color="#4f46e5"
-          activeScenario="bau"  // Default to "business as usual" scenario
-          customBudgets={defaultCustomBudgets}
-        />
-      </div>
       
       {/* Help & Resources Section */}
       <div className="bg-gradient-to-br from-emerald-50/30 to-teal-50/30 rounded-2xl p-8 border border-emerald-100/50 shadow-md animate-fade-in" style={{ animationDelay: "400ms" }}>
