@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -17,7 +18,7 @@ import { TimeSeriesSection } from "@/components/dashboard/TimeSeriesSection";
 import { SectionNav } from "@/components/dashboard/SectionNav";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, BarChart, LineChart, PieChart, Activity, Zap, LightbulbIcon, Target } from "lucide-react";
+import { ArrowRight, BarChart, LineChart, PieChart, Activity, Zap, LightbulbIcon, Target, Download, Filter } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export function AnalyticsOverview() {
@@ -231,20 +232,30 @@ export function AnalyticsOverview() {
     <div className="animate-fade-in space-y-6">
       <PageHeader 
         title="Analytics Overview" 
-        description="Your marketing performance journey starts here"
+        description="Your marketing performance journey starts here with comprehensive insights and data visualization tools to make informed decisions."
       >
-        <Tabs 
-          defaultValue="30d" 
-          value={timeframe} 
-          onValueChange={setTimeframe}
-          className="w-[240px]"
-        >
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="7d">7D</TabsTrigger>
-            <TabsTrigger value="30d">30D</TabsTrigger>
-            <TabsTrigger value="90d">90D</TabsTrigger>
-          </TabsList>
-        </Tabs>
+        <div className="flex flex-wrap gap-2">
+          <Button size="sm" variant="outline" className="gap-1">
+            <Download className="h-4 w-4" />
+            Export
+          </Button>
+          <Button size="sm" variant="outline" className="gap-1">
+            <Filter className="h-4 w-4" />
+            Filter
+          </Button>
+          <Tabs 
+            defaultValue="30d" 
+            value={timeframe} 
+            onValueChange={setTimeframe}
+            className="w-[240px]"
+          >
+            <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="7d">7D</TabsTrigger>
+              <TabsTrigger value="30d">30D</TabsTrigger>
+              <TabsTrigger value="90d">90D</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
       </PageHeader>
       
       {/* Performance Insights Section - Transformed from a box to a more sleek design */}
