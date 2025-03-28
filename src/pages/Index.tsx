@@ -1,11 +1,10 @@
-
 import React, { useState } from "react";
 import { AnalyticsOverview } from "@/components/dashboard/AnalyticsOverview";
 import { Helmet } from "react-helmet";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { SectionNav } from "@/components/dashboard/SectionNav";
-import { ChevronRight, Lightbulb } from "lucide-react";
+import { ChevronRight, Lightbulb, Target } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const journeySections = [
@@ -61,57 +60,60 @@ const Index = () => {
         </div>
       </Card>
 
-      <Card className="mb-8 border-l-4 border-l-primary">
-        <CardContent className="pt-6">
-          <h2 className="text-xl font-semibold mb-3">Marketing Performance Insights</h2>
-          <p className="text-muted-foreground mb-4">
-            Dive deep into your marketing strategy with a comprehensive analytics journey. Uncover insights from ROI metrics to channel optimization.
-          </p>
-          
-          <div className="p-4 bg-accent/30 rounded-lg space-y-6">
-            <div className="text-sm">
-              <p className="font-medium mb-3">Your Analytics Journey Path:</p>
-              <ol className="space-y-3 list-decimal list-inside">
-                <li className="font-medium text-primary">
-                  <span>ROI Summary</span>
-                  <p className="ml-6 text-muted-foreground font-normal">Begin with a high-level overview of your overall marketing return on investment</p>
-                </li>
-                <li>
-                  <span>Revenue Trends</span>
-                  <p className="ml-6 text-muted-foreground font-normal">Analyze revenue patterns and growth trajectories over time</p>
-                </li>
-                <li>
-                  <span>Channel Performance</span>
-                  <p className="ml-6 text-muted-foreground font-normal">Compare effectiveness across different marketing channels</p>
-                </li>
-                <li>
-                  <span>Attribution</span>
-                  <p className="ml-6 text-muted-foreground font-normal">Understand which touchpoints drive conversions in the customer journey</p>
-                </li>
-                <li>
-                  <span>Optimization</span>
-                  <p className="ml-6 text-muted-foreground font-normal">Discover opportunities to improve campaign efficiency and effectiveness</p>
-                </li>
-                <li>
-                  <span>Forecasting</span>
-                  <p className="ml-6 text-muted-foreground font-normal">Project future performance based on historical data and trends</p>
-                </li>
-                <li>
-                  <span>Insights</span>
-                  <p className="ml-6 text-muted-foreground font-normal">Extract actionable recommendations to enhance marketing strategy</p>
-                </li>
-              </ol>
-            </div>
-            
-            <SectionNav 
-              sections={journeySections}
-              activeSection={activeSection}
-              onSectionChange={setActiveSection}
-            />
+      {/* Marketing Performance Insights - Redesigned */}
+      <div className="bg-gradient-to-br from-blue-50 to-white/50 rounded-2xl p-8 space-y-6 mb-8 animate-fade-in">
+        <div className="flex items-center gap-6">
+          <div className="p-4 rounded-full bg-blue-100/70">
+            <Target className="h-8 w-8 text-blue-700" />
           </div>
-        </CardContent>
-      </Card>
+          <div>
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">Marketing Performance Insights</h2>
+            <p className="text-muted-foreground">
+              Dive deep into your marketing strategy with a comprehensive analytics journey. 
+              Uncover insights from ROI metrics to channel optimization.
+            </p>
+          </div>
+        </div>
+        
+        <div className="space-y-4">
+          <h3 className="text-lg font-semibold text-gray-700">Your Analytics Journey Path:</h3>
+          <ol className="space-y-3 pl-6 border-l-2 border-blue-200">
+            {journeySections.map((section, index) => (
+              <li 
+                key={section.id} 
+                className={`pl-4 -ml-[3px] border-l-2 transition-colors duration-300 ${
+                  activeSection === section.id 
+                    ? 'border-blue-500 text-blue-700' 
+                    : 'border-transparent text-muted-foreground hover:border-blue-300'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-sm font-medium">{section.title}</span>
+                  {index === 0 && (
+                    <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">
+                      Current Step
+                    </span>
+                  )}
+                </div>
+                {index === 0 && (
+                  <p className="text-sm mt-1">
+                    Begin with a high-level overview of your overall marketing return on investment
+                  </p>
+                )}
+              </li>
+            ))}
+          </ol>
+        </div>
+        
+        <div className="flex justify-between items-center mt-6">
+          <p className="text-sm text-muted-foreground">
+            Progress through your analytics journey
+          </p>
+          <Progress value={progress} className="w-48 h-2" />
+        </div>
+      </div>
 
+      {/* Rest of the existing code remains the same */}
       <AnalyticsOverview />
     </>
   );
