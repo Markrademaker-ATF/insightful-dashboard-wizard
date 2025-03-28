@@ -69,8 +69,8 @@ const navItems: NavItem[] = [
         icon: Radio,
       },
       {
-        title: "Campaign Analysis",
-        href: "/channel-details",
+        title: "Campaign Analysis", // Updated title
+        href: "/campaign", // Updated href
         icon: BarChart3,
       },
       {
