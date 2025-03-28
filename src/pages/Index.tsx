@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { AnalyticsOverview } from "@/components/dashboard/AnalyticsOverview";
 import { Helmet } from "react-helmet";
@@ -23,7 +22,9 @@ import {
   LineChart,
   AreaChart,
   Users,
-  Layers
+  Layers,
+  HelpCircle,
+  FileBarChart
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ChannelSaturationCurve } from "@/components/channels/ChannelSaturationCurve";
@@ -189,11 +190,71 @@ const Index = () => {
       
       {/* Saturation Curve Analysis - Enhanced */}
       <div className="animate-fade-in" style={{ animationDelay: "300ms" }}>
-        <ChannelSaturationCurve />
+        <ChannelSaturationCurve 
+          channelId="social" 
+          channelName="Social Media" 
+          color="#4f46e5" 
+        />
+      </div>
+      
+      {/* Help & Resources Section */}
+      <div className="bg-gradient-to-br from-emerald-50/30 to-teal-50/30 rounded-2xl p-8 border border-emerald-100/50 shadow-md animate-fade-in" style={{ animationDelay: "400ms" }}>
+        <h2 className="text-2xl font-semibold text-gray-800 mb-6">Help & Resources</h2>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Pages Guide */}
+          <Link to="/guide" className="flex flex-col gap-4 p-6 rounded-xl bg-white/80 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+            <div className="p-3 rounded-full bg-blue-50 w-fit">
+              <Layers className="h-5 w-5 text-blue-600" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-gray-800 mb-1">Pages Guide</h3>
+              <p className="text-sm text-muted-foreground">
+                Explore available pages and understand their functions
+              </p>
+            </div>
+          </Link>
+          
+          {/* Metrics Guide */}
+          <Link to="/metrics" className="flex flex-col gap-4 p-6 rounded-xl bg-white/80 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+            <div className="p-3 rounded-full bg-green-50 w-fit">
+              <FileBarChart className="h-5 w-5 text-green-600" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-gray-800 mb-1">Metrics Guide</h3>
+              <p className="text-sm text-muted-foreground">
+                Learn about the key metrics and how to interpret them
+              </p>
+            </div>
+          </Link>
+          
+          {/* FAQ */}
+          <Link to="/methodologies" className="flex flex-col gap-4 p-6 rounded-xl bg-white/80 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+            <div className="p-3 rounded-full bg-purple-50 w-fit">
+              <HelpCircle className="h-5 w-5 text-purple-600" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-gray-800 mb-1">FAQ</h3>
+              <p className="text-sm text-muted-foreground">
+                Find answers to commonly asked questions about analytics
+              </p>
+            </div>
+          </Link>
+        </div>
+        
+        <div className="mt-6 text-center">
+          <Link
+            to="/methodologies"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:from-emerald-600 hover:to-teal-600 transition-all duration-300 shadow-md"
+          >
+            <Lightbulb className="h-4 w-4" />
+            <span>Learn Analytics Methodologies</span>
+          </Link>
+        </div>
       </div>
       
       {/* Features Section */}
-      <div className="bg-gradient-to-br from-indigo-50/30 to-white rounded-2xl p-8 border border-indigo-100/50 shadow-md animate-fade-in" style={{ animationDelay: "400ms" }}>
+      <div className="bg-gradient-to-br from-indigo-50/30 to-white rounded-2xl p-8 border border-indigo-100/50 shadow-md animate-fade-in" style={{ animationDelay: "500ms" }}>
         <h2 className="text-2xl font-semibold text-gray-800 mb-6">Comprehensive Analytics Features</h2>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
