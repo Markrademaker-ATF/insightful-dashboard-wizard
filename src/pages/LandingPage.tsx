@@ -1,19 +1,137 @@
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Play, ChevronRight } from "lucide-react";
 import { Helmet } from "react-helmet";
 
 const LandingPage = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    
+    // Set canvas dimensions
+    const setCanvasDimensions = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    
+    setCanvasDimensions();
+    window.addEventListener('resize', setCanvasDimensions);
+    
+    // Create particle class
+    class Particle {
+      x: number;
+      y: number;
+      size: number;
+      speedX: number;
+      speedY: number;
+      color: string;
+      
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 3 + 1;
+        this.speedX = Math.random() * 1 - 0.5;
+        this.speedY = Math.random() * 1 - 0.5;
+        
+        // Purple/blue color palette with opacity
+        const hue = Math.floor(Math.random() * 40) + 240; // Blue to purple hues
+        const saturation = Math.floor(Math.random() * 30) + 70; // High saturation
+        const lightness = Math.floor(Math.random() * 30) + 50; // Medium lightness
+        const alpha = Math.random() * 0.5 + 0.1; // Low opacity
+        
+        this.color = `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`;
+      }
+      
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        
+        // Wrap around screen edges
+        if (this.x > canvas.width) this.x = 0;
+        else if (this.x < 0) this.x = canvas.width;
+        
+        if (this.y > canvas.height) this.y = 0;
+        else if (this.y < 0) this.y = canvas.height;
+      }
+      
+      draw() {
+        if (!ctx) return;
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+    
+    // Create particle array
+    const particleCount = Math.min(150, Math.floor((canvas.width * canvas.height) / 15000));
+    const particles: Particle[] = [];
+    
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(new Particle());
+    }
+    
+    // Animation function
+    const animate = () => {
+      // Clear canvas with semi-transparent background for trail effect
+      ctx.fillStyle = 'rgba(16, 16, 39, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // Update and draw particles
+      particles.forEach(particle => {
+        particle.update();
+        particle.draw();
+      });
+      
+      // Connect particles with lines if they are close enough
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          
+          if (distance < 100) {
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(155, 135, 245, ${0.1 * (1 - distance / 100)})`; // Purple with distance-based opacity
+            ctx.lineWidth = 0.5;
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+      
+      requestAnimationFrame(animate);
+    };
+    
+    animate();
+    
+    return () => {
+      window.removeEventListener('resize', setCanvasDimensions);
+    };
+  }, []);
+  
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col relative overflow-hidden">
       <Helmet>
         <title>Artefact - AI is about people</title>
       </Helmet>
       
+      {/* Dynamic Background Canvas */}
+      <canvas 
+        ref={canvasRef} 
+        className="absolute top-0 left-0 w-full h-full -z-10"
+      />
+      
       {/* Header */}
-      <header className="bg-gradient-to-r from-blue-900 to-purple-800 text-white py-6 px-6 md:px-10">
+      <header className="bg-transparent text-white py-6 px-6 md:px-10 relative z-10">
         <div className="container mx-auto">
           <div className="flex items-center space-x-2">
             <h1 className="text-2xl md:text-3xl font-bold">ARTEFACT</h1>
@@ -23,7 +141,7 @@ const LandingPage = () => {
       </header>
       
       {/* Hero Section */}
-      <main className="flex-grow bg-gradient-to-br from-blue-900 via-purple-800 to-purple-700 text-white">
+      <main className="flex-grow text-white relative z-10">
         <div className="container mx-auto px-6 py-20 md:py-32">
           <div className="max-w-4xl mx-auto text-center mb-12">
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
@@ -99,7 +217,7 @@ const LandingPage = () => {
       </main>
       
       {/* Footer */}
-      <footer className="bg-gradient-to-r from-blue-900 to-purple-800 text-white py-6 px-6">
+      <footer className="bg-transparent text-white py-6 px-6 relative z-10">
         <div className="container mx-auto text-center">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="flex items-center space-x-2">
