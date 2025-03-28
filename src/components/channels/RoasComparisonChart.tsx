@@ -114,6 +114,11 @@ export function RoasComparisonChart({ channelData, loading }: RoasComparisonChar
                 fill="rgb(74, 222, 128, 0.7)" 
                 name="Incremental Outcome"
                 barSize={20}
+                label={{
+                  position: 'top',
+                  formatter: (value: number) => `$${value.toLocaleString()}`,
+                  style: { fontSize: 10, fill: '#059669', fontWeight: 'bold' }
+                }}
               />
               <RechartsPrimitive.Scatter 
                 dataKey="roas" 
