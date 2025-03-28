@@ -1,6 +1,4 @@
-
 import React, { useState, useEffect } from "react";
-import { AnalyticsOverview } from "@/components/dashboard/AnalyticsOverview";
 import { Helmet } from "react-helmet";
 import { 
   Card, 
@@ -9,7 +7,6 @@ import {
   CardTitle, 
   CardDescription 
 } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { SectionNav } from "@/components/dashboard/SectionNav";
 import { 
   ChevronRight, 
@@ -29,6 +26,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ChannelSaturationCurve } from "@/components/channels/ChannelSaturationCurve";
+import { AnalyticsOverview } from "@/components/dashboard/AnalyticsOverview";
 
 const journeySections = [
   { id: "roi", title: "ROI Summary" },
@@ -64,19 +62,8 @@ const Index = () => {
         <title>Analytics Dashboard - Artefact</title>
       </Helmet>
       
-      {/* Header Section with Progress */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between animate-fade-in">
-        <div className="mb-4 md:mb-0"></div> {/* Empty div to maintain layout */}
-        
-        <Card className="flex items-center px-4 py-2 bg-accent/50 border-none soft-shadow w-full md:w-auto hover:bg-accent/70 transition-all">
-          <div className="flex flex-col mr-4">
-            <span className="text-sm font-medium text-primary">Analytics Journey</span>
-            <span className="text-xs text-muted-foreground">{Math.round(progress)}% Complete</span>
-          </div>
-          <Progress value={progress} className="w-24 h-2 bg-gray-200" />
-        </Card>
-      </div>
-
+      {/* Remove the header section with progress */}
+      
       {/* Hero Section with gradient background */}
       <div className="bg-gradient-to-br from-blue-50 via-indigo-50/40 to-purple-50/30 rounded-2xl p-8 border border-indigo-100/50 shadow-lg animate-fade-in" style={{ animationDelay: "100ms" }}>
         <div className="flex flex-col md:flex-row items-center gap-6 mb-6">
