@@ -65,20 +65,20 @@ const CustomDot = (props: any) => {
 
 export function ChannelSaturationCurve() {
   return (
-    <Card className="col-span-2">
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-md font-medium">
-          Channel Saturation Curve
+    <Card className="overflow-hidden border-indigo-100/50 shadow-md">
+      <CardHeader className="flex flex-row items-center justify-between pb-2 bg-gradient-to-r from-indigo-50/50 to-white">
+        <CardTitle className="text-xl font-semibold text-gray-800">
+          Channel Saturation Analysis
         </CardTitle>
-        <div className="flex items-center text-muted-foreground hover:text-primary cursor-pointer">
+        <div className="flex items-center text-primary hover:text-primary/80 cursor-pointer transition-colors">
           <Info className="h-4 w-4 mr-1" />
-          <span className="text-xs">About this chart</span>
+          <span className="text-xs font-medium">About this chart</span>
         </div>
       </CardHeader>
-      <CardContent>
-        <div className="text-sm text-muted-foreground mb-4">
-          This curve shows the relationship between marketing spend and revenue, 
-          helping identify the optimal investment level before diminishing returns.
+      <CardContent className="p-6">
+        <div className="text-sm text-muted-foreground mb-4 bg-blue-50/30 p-3 rounded-lg border border-blue-100/50">
+          <p>This curve illustrates the relationship between marketing spend and revenue generation, 
+          helping identify the optimal investment level before diminishing returns occur.</p>
         </div>
         
         <div className="h-80">
@@ -100,33 +100,59 @@ export function ChannelSaturationCurve() {
               <Tooltip 
                 formatter={(value) => [`$${Number(value).toLocaleString()}`, 'Revenue']}
                 labelFormatter={(value) => `Spend: $${Number(value).toLocaleString()}`}
+                contentStyle={{
+                  backgroundColor: "rgba(255, 255, 255, 0.95)",
+                  borderRadius: "0.5rem",
+                  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
+                  border: "1px solid rgba(139, 92, 246, 0.2)",
+                }}
               />
-              <Legend />
+              <Legend 
+                formatter={(value) => <span className="text-sm font-medium">Channel Revenue</span>}
+              />
               <ReferenceLine 
                 x={optimalSpendPoint} 
                 stroke="#8b5cf6" 
                 strokeDasharray="3 3" 
-                label={{ value: 'Optimal Spend', position: 'top', fill: '#8b5cf6' }} 
+                label={{ 
+                  value: 'Optimal Spend', 
+                  position: 'top', 
+                  fill: '#8b5cf6',
+                  fontSize: 12,
+                  fontWeight: 500
+                }} 
               />
               <Line 
                 type="monotone" 
                 dataKey="revenue" 
-                stroke="#8b5cf6" 
-                strokeWidth={2}
+                name="Revenue"
+                stroke="url(#colorGradient)" 
+                strokeWidth={3}
                 activeDot={{ r: 8 }}
                 dot={<CustomDot />}
               />
+              <defs>
+                <linearGradient id="colorGradient" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stopColor="#8b5cf6" />
+                  <stop offset="100%" stopColor="#c4b5fd" />
+                </linearGradient>
+              </defs>
             </LineChart>
           </ResponsiveContainer>
         </div>
         
-        <div className="mt-4 p-3 bg-primary/5 rounded-lg border border-primary/10">
-          <h4 className="text-sm font-medium mb-1">Insight</h4>
-          <p className="text-xs text-muted-foreground">
-            The optimal marketing spend appears to be around ${optimalSpendPoint.toLocaleString()}, 
-            after which additional investment yields diminishing returns. Consider reallocating 
-            budget beyond this point to other channels.
-          </p>
+        <div className="mt-6 p-4 bg-gradient-to-r from-primary/5 to-white rounded-lg border border-primary/10 flex items-start gap-3">
+          <div className="p-2 bg-primary/10 rounded-full mt-0.5">
+            <Info className="h-4 w-4 text-primary" /> 
+          </div>
+          <div>
+            <h4 className="text-sm font-medium text-gray-800 mb-1">Strategic Insight</h4>
+            <p className="text-sm text-muted-foreground">
+              The optimal marketing spend appears to be around ${optimalSpendPoint.toLocaleString()}, 
+              after which additional investment yields diminishing returns. Consider reallocating 
+              budget beyond this point to other channels with higher growth potential.
+            </p>
+          </div>
         </div>
       </CardContent>
     </Card>
