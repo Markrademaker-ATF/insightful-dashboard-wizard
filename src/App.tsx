@@ -20,6 +20,7 @@ import SettingsPage from "./pages/SettingsPage";
 import MethodologiesPage from "./pages/MethodologiesPage";
 import FAQPage from "./pages/FAQPage";
 import MetricsGuidePage from "./pages/MetricsGuidePage";
+import GettingStartedPage from "./pages/GettingStartedPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -46,6 +47,7 @@ const App = () => (
             <Route path="/faq" element={<FAQPage />} />
             <Route path="/metrics-guide" element={<MetricsGuidePage />} />
             <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/getting-started" element={<GettingStartedPage />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
