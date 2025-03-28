@@ -33,6 +33,7 @@ import {
 import { cn } from "@/lib/utils";
 import { ScenarioSelector } from "@/components/budget/ScenarioSelector";
 import { ScenarioDetails } from "@/components/budget/ScenarioDetails";
+import { ChannelSaturationCurvePanel } from "@/components/budget/ChannelSaturationCurvePanel";
 import { toast } from "sonner";
 
 const BudgetPage = () => {
@@ -243,6 +244,12 @@ const BudgetPage = () => {
           comparisonData={comparisonData}
         />
       </div>
+
+      {/* Channel Saturation Curves - NEW SECTION */}
+      <ChannelSaturationCurvePanel
+        activeScenario={activeScenario}
+        customBudgets={customBudgets}
+      />
 
       {/* Budget allocation charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
