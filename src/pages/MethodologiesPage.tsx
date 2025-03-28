@@ -187,12 +187,26 @@ const MethodologiesPage = () => {
         </CardContent>
       </Card>
       
-      {/* Methodology Selector and Details */}
-      <MethodologySelector 
-        activeMethodology={activeMethodology} 
-        setActiveMethodology={setActiveMethodology} 
-      />
+      {/* Technical Methodology Selector - Now as a separate section with appealing design */}
+      <div className="mb-8">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold">
+            <span>2</span>
+          </div>
+          <h2 className="text-2xl font-semibold">Technical Deep Dive</h2>
+        </div>
+        
+        <p className="text-muted-foreground mb-6">
+          Explore the technical foundations behind each measurement methodology to understand how they work and when to apply them.
+        </p>
+        
+        <MethodologySelector 
+          activeMethodology={activeMethodology} 
+          setActiveMethodology={setActiveMethodology} 
+        />
+      </div>
       
+      {/* Methodology Details Display */}
       {activeMethodology && <MethodologyDetails methodology={activeMethodology} />}
     </>
   );
