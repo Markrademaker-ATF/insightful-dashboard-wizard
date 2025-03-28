@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -19,6 +18,13 @@ interface ChannelDetailViewProps {
 
 export function ChannelDetailView({ channelData, trendsData, loading }: ChannelDetailViewProps) {
   const [activeDetailTab, setActiveDetailTab] = useState("overview");
+  
+  // Add default values for custom budgets needed by ChannelSaturationCurve
+  const defaultCustomBudgets = {
+    "bau": { [channelData?.id || 'default']: channelData?.cost || 10000 },
+    "cost-savings": { [channelData?.id || 'default']: (channelData?.cost || 10000) * 0.9 },
+    "revenue-uplift": { [channelData?.id || 'default']: (channelData?.cost || 10000) * 1.2 }
+  };
   
   if (loading) {
     return <Skeleton className="w-full h-[500px]" />;
@@ -247,6 +253,8 @@ export function ChannelDetailView({ channelData, trendsData, loading }: ChannelD
                   channelId={channelData.id}
                   channelName={channelData.name}
                   color={channelColor}
+                  activeScenario="bau"  // Default to "business as usual" scenario
+                  customBudgets={defaultCustomBudgets}
                 />
               </div>
               

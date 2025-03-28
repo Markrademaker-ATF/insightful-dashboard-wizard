@@ -56,6 +56,13 @@ const Index = () => {
     return () => clearTimeout(timer);
   }, [journeyProgress]);
   
+  // Add default values for saturation curve props
+  const defaultCustomBudgets = {
+    "bau": { "social": 15000, "search": 20000, "display": 10000, "video": 5000 },
+    "cost-savings": { "social": 13500, "search": 18000, "display": 9000, "video": 4500 },
+    "revenue-uplift": { "social": 18000, "search": 24000, "display": 12000, "video": 6000 }
+  };
+  
   return (
     <div className="space-y-8">
       <Helmet>
@@ -181,7 +188,9 @@ const Index = () => {
         <ChannelSaturationCurve 
           channelId="social" 
           channelName="Social Media" 
-          color="#4f46e5" 
+          color="#4f46e5"
+          activeScenario="bau"  // Default to "business as usual" scenario
+          customBudgets={defaultCustomBudgets}
         />
       </div>
       

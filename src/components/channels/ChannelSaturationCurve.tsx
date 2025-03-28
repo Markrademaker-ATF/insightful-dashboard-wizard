@@ -215,10 +215,10 @@ export function ChannelSaturationCurve({
                 >
                 </Scatter>
                 
-                {/* Reference lines for key points */}
-                <ReferenceLine x={currentPoint.spend} stroke="#FF8C00" strokeDasharray="3 3" />
-                <ReferenceLine x={newPoint.spend} stroke="#4CAF50" strokeDasharray="3 3" />
-                <ReferenceLine x={maxSaturationPoint.spend} stroke="#9C27B0" strokeDasharray="3 3" />
+                {/* Reference lines for key points - FIX: Add yAxisId="left" to all ReferenceLines */}
+                <ReferenceLine x={currentPoint.spend} yAxisId="left" stroke="#FF8C00" strokeDasharray="3 3" />
+                <ReferenceLine x={newPoint.spend} yAxisId="left" stroke="#4CAF50" strokeDasharray="3 3" />
+                <ReferenceLine x={maxSaturationPoint.spend} yAxisId="left" stroke="#9C27B0" strokeDasharray="3 3" />
               </LineChart>
             </ResponsiveContainer>
           </div>
