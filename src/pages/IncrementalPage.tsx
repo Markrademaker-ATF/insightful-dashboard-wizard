@@ -82,6 +82,13 @@ const IncrementalPage = () => {
     ? mediaGroupData[mediaGroupData.length - 1] 
     : { paid: 0, organic: 0, nonPaid: 0, baseline: 0, total: 0 };
 
+  // Adding console log to debug Sankey data
+  React.useEffect(() => {
+    if (!loading) {
+      console.log("Sankey Data:", sankeyData);
+    }
+  }, [sankeyData, loading]);
+
   return (
     <div className="animate-fade-in">
       <PageHeader
@@ -103,7 +110,7 @@ const IncrementalPage = () => {
       {/* Waterfall Chart Section */}
       <WaterfallSection data={waterfallData} loading={loading} />
 
-      {/* NEW: Media Flow Sankey Diagram Section */}
+      {/* Media Flow Sankey Diagram Section - moving it above the Media Type Analysis for better flow */}
       <MediaFlowSection data={sankeyData} loading={loading} />
 
       {/* Media Type Analysis */}

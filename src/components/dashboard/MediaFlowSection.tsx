@@ -10,6 +10,13 @@ interface MediaFlowSectionProps {
 }
 
 export function MediaFlowSection({ data, loading }: MediaFlowSectionProps) {
+  // Add validation check for the data structure
+  const isValidData = data && 
+                      data.nodes && 
+                      Array.isArray(data.nodes) && 
+                      data.links && 
+                      Array.isArray(data.links);
+
   return (
     <Card className="mb-8">
       <CardHeader>
@@ -20,7 +27,7 @@ export function MediaFlowSection({ data, loading }: MediaFlowSectionProps) {
       </CardHeader>
       <CardContent>
         <SankeyDiagram
-          data={data}
+          data={isValidData ? data : { nodes: [], links: [] }}
           loading={loading}
           height={350}
         />
