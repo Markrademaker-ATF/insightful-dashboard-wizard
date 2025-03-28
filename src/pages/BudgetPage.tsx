@@ -245,12 +245,6 @@ const BudgetPage = () => {
         />
       </div>
 
-      {/* Channel Saturation Curves - NEW SECTION */}
-      <ChannelSaturationCurvePanel
-        activeScenario={activeScenario}
-        customBudgets={customBudgets}
-      />
-
       {/* Budget allocation charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         <div className="dashboard-card">
@@ -330,6 +324,12 @@ const BudgetPage = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Channel Saturation Curves - MOVED LOWER IN THE PAGE */}
+      <ChannelSaturationCurvePanel
+        activeScenario={activeScenario}
+        customBudgets={customBudgets}
+      />
       
       {/* Scenario comparison table */}
       <Card className="mb-8">

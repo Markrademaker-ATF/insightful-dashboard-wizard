@@ -19,8 +19,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Info } from "lucide-react";
 
 // Generate saturation curve data for a channel
-const generateSaturationData = (channelId: string) => {
-  // We'll create points of a curve that demonstrates diminishing returns
+const generateSaturationData = (channelId: string, activeScenario: string, customBudgets: Record<string, Record<string, number>>) => {
+  // We'll create points of a curve that demonstrates diminishing returns with a hill shape
   const points = [];
   const baseSpend = channelId === "search" ? 20000 : 
                    channelId === "social" ? 15000 : 
@@ -36,24 +36,45 @@ const generateSaturationData = (channelId: string) => {
   
   // Current spend point (for the marker)
   const currentSpend = baseSpend * 1.3;
-  const currentRoas = calculateRoas(currentSpend, maxRoas, saturationPoint);
-  const currentRevenue = currentSpend * currentRoas;
   
-  // Points for the curve
-  for (let spend = 0; spend <= baseSpend * 3; spend += baseSpend / 10) {
+  // New spend point based on the active scenario
+  const newSpend = customBudgets[activeScenario]?.[channelId] || currentSpend;
+  
+  // Calculate maximum saturation point (where marginal returns become negative)
+  const maxSaturationSpend = saturationPoint * 1.5;
+  
+  // Calculate ROAS/outcomes for key points
+  const currentRoas = calculateRoas(currentSpend, maxRoas, saturationPoint);
+  const newRoas = calculateRoas(newSpend, maxRoas, saturationPoint);
+  const maxSaturationRoas = calculateRoas(maxSaturationSpend, maxRoas, saturationPoint);
+  
+  const currentRevenue = currentSpend * currentRoas;
+  const newRevenue = newSpend * newRoas;
+  const maxSaturationRevenue = maxSaturationSpend * maxSaturationRoas;
+  
+  // Points for the curve - create a hill shape curve
+  for (let spend = 0; spend <= baseSpend * 3.5; spend += baseSpend / 15) {
     const roas = calculateRoas(spend, maxRoas, saturationPoint);
+    const incrementalOutcome = calculateIncrementalOutcome(spend, maxRoas, saturationPoint);
+    
     points.push({
       spend,
       roas,
+      incrementalOutcome,
       revenue: spend * roas,
-      // Mark the current point
+      // Mark the points
       isCurrent: Math.abs(spend - currentSpend) < baseSpend / 20,
-      // Mark the saturation point
-      isSaturation: Math.abs(spend - saturationPoint) < baseSpend / 20
+      isNew: Math.abs(spend - newSpend) < baseSpend / 20,
+      isMaxSaturation: Math.abs(spend - maxSaturationSpend) < baseSpend / 20
     });
   }
   
-  return { points, currentPoint: { roas: currentRoas, spend: currentSpend, revenue: currentRevenue } };
+  return { 
+    points, 
+    currentPoint: { roas: currentRoas, spend: currentSpend, revenue: currentRevenue, incrementalOutcome: calculateIncrementalOutcome(currentSpend, maxRoas, saturationPoint) },
+    newPoint: { roas: newRoas, spend: newSpend, revenue: newRevenue, incrementalOutcome: calculateIncrementalOutcome(newSpend, maxRoas, saturationPoint) },
+    maxSaturationPoint: { roas: maxSaturationRoas, spend: maxSaturationSpend, revenue: maxSaturationRevenue, incrementalOutcome: calculateIncrementalOutcome(maxSaturationSpend, maxRoas, saturationPoint) }
+  };
 };
 
 // Helper function to calculate ROAS with diminishing returns
@@ -63,34 +84,34 @@ const calculateRoas = (spend: number, maxRoas: number, saturationPoint: number) 
   return maxRoas * Math.exp(-Math.pow(spend - (saturationPoint * 0.5), 2) / (2 * Math.pow(saturationPoint, 2))) + 1;
 };
 
-// Generate marginal ROAS data 
-const generateMarginalData = (points: any[]) => {
-  return points.map((point, index, array) => {
-    if (index === 0) return { ...point, marginalRoas: point.roas };
-    
-    const prevPoint = array[index - 1];
-    const revenueChange = point.revenue - prevPoint.revenue;
-    const spendChange = point.spend - prevPoint.spend;
-    
-    // Calculate marginal ROAS - the return on the additional spend
-    const marginalRoas = spendChange > 0 ? revenueChange / spendChange : 0;
-    
-    return {
-      ...point,
-      marginalRoas
-    };
-  });
+// Helper function to calculate incremental outcome (hill shape)
+const calculateIncrementalOutcome = (spend: number, maxRoas: number, saturationPoint: number) => {
+  if (spend === 0) return 0;
+  
+  // Create a hill-shaped curve that peaks at the saturation point and then declines
+  const hill = Math.exp(-Math.pow(spend - saturationPoint, 2) / (2 * Math.pow(saturationPoint * 0.6, 2)));
+  return hill * maxRoas * 20000; // Scale the outcome for visualization
 };
 
 // Custom tooltip component
 const CustomTooltip = ({ active, payload, label }: TooltipProps<string | number, string>) => {
   if (active && payload && payload.length) {
+    const data = payload[0]?.payload;
+    const isSpecialPoint = data?.isCurrent || data?.isNew || data?.isMaxSaturation;
+    
     return (
       <div className="bg-white p-3 border rounded-md shadow-md">
-        <p className="font-medium">Spend: ${payload[0]?.payload?.spend?.toLocaleString()}</p>
-        <p>Average ROAS: {payload[0]?.payload?.roas?.toFixed(2)}x</p>
-        <p>Marginal ROAS: {payload[0]?.payload?.marginalRoas?.toFixed(2)}x</p>
-        <p>Revenue: ${payload[0]?.payload?.revenue?.toLocaleString()}</p>
+        <p className="font-medium">Ad Spend: ${data?.spend?.toLocaleString()}</p>
+        <p>Incremental Outcome: ${data?.incrementalOutcome?.toLocaleString()}</p>
+        <p>ROAS: {data?.roas?.toFixed(2)}x</p>
+        <p>Revenue: ${data?.revenue?.toLocaleString()}</p>
+        {isSpecialPoint && (
+          <p className="font-bold mt-1 text-primary">
+            {data?.isCurrent ? "Current Spend Point" : 
+             data?.isNew ? "New Recommended Spend" : 
+             "Maximum Saturation Point"}
+          </p>
+        )}
       </div>
     );
   }
@@ -101,15 +122,19 @@ type ChannelSaturationCurveProps = {
   channelId: string;
   channelName: string;
   color: string;
+  activeScenario: string;
+  customBudgets: Record<string, Record<string, number>>;
 };
 
-export function ChannelSaturationCurve({ channelId, channelName, color }: ChannelSaturationCurveProps) {
+export function ChannelSaturationCurve({ 
+  channelId, 
+  channelName, 
+  color,
+  activeScenario,
+  customBudgets
+}: ChannelSaturationCurveProps) {
   // Generate data for the curve
-  const { points, currentPoint } = generateSaturationData(channelId);
-  const data = generateMarginalData(points);
-  
-  // Find the point where marginal ROAS drops below 1.0 (unprofitable)
-  const optimalSpendPoint = data.find(point => point.marginalRoas < 1);
+  const { points, currentPoint, newPoint, maxSaturationPoint } = generateSaturationData(channelId, activeScenario, customBudgets);
   
   return (
     <div className="space-y-6">
@@ -119,57 +144,46 @@ export function ChannelSaturationCurve({ channelId, channelName, color }: Channe
           <div className="mb-4">
             <h3 className="text-lg font-medium mb-2">{channelName} Saturation Curve</h3>
             <p className="text-sm text-muted-foreground">
-              Shows how ROAS changes as spend increases, with average and marginal returns
+              Shows how incremental outcomes change as ad spending increases, highlighting key points
             </p>
           </div>
           
           <div className="h-[400px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart
-                data={data}
+                data={points}
                 margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis 
                   dataKey="spend" 
                   tickFormatter={(value) => `$${(value/1000).toFixed(0)}k`}
-                  label={{ value: 'Media Spend ($)', position: 'insideBottomRight', offset: -10 }}
+                  label={{ value: 'Ad Spend ($)', position: 'insideBottomRight', offset: -10 }}
                 />
                 <YAxis 
                   yAxisId="left"
-                  label={{ value: 'ROAS (x)', angle: -90, position: 'insideLeft' }}
+                  label={{ value: 'Incremental Outcome ($)', angle: -90, position: 'insideLeft' }}
+                  tickFormatter={(value) => `$${(value/1000).toFixed(0)}k`}
                 />
                 <Tooltip content={<CustomTooltip />} />
                 
-                {/* Average ROAS Line */}
+                {/* Hill-shaped Incremental Outcome Line */}
                 <Line
                   yAxisId="left"
                   type="monotone"
-                  dataKey="roas"
-                  name="Average ROAS"
+                  dataKey="incrementalOutcome"
+                  name="Incremental Outcome"
                   stroke={color}
                   strokeWidth={3}
                   dot={false}
                   activeDot={{ r: 8 }}
                 />
                 
-                {/* Marginal ROAS Line */}
-                <Line
-                  yAxisId="left"
-                  type="monotone"
-                  dataKey="marginalRoas"
-                  name="Marginal ROAS"
-                  stroke="#888888"
-                  strokeDasharray="5 5"
-                  strokeWidth={2}
-                  dot={false}
-                />
-                
                 {/* Current point marker */}
                 <Scatter
                   yAxisId="left"
-                  data={[{ spend: currentPoint.spend, roas: currentPoint.roas }]}
-                  fill={color}
+                  data={[{ spend: currentPoint.spend, incrementalOutcome: currentPoint.incrementalOutcome }]}
+                  fill="#FF8C00"  // Orange color
                   stroke="#FFFFFF"
                   strokeWidth={2}
                   shape="circle"
@@ -177,41 +191,54 @@ export function ChannelSaturationCurve({ channelId, channelName, color }: Channe
                 >
                 </Scatter>
                 
-                {/* Optimal spend point marker (where marginal ROAS crosses 1.0) */}
-                {optimalSpendPoint && (
-                  <Scatter
-                    yAxisId="left"
-                    data={[{ spend: optimalSpendPoint.spend, roas: optimalSpendPoint.roas }]}
-                    fill="#000000"
-                    stroke="#FFFFFF"
-                    strokeWidth={2}
-                    shape="circle"
-                    name="Optimal Spend"
-                  >
-                  </Scatter>
-                )}
+                {/* New point marker */}
+                <Scatter
+                  yAxisId="left"
+                  data={[{ spend: newPoint.spend, incrementalOutcome: newPoint.incrementalOutcome }]}
+                  fill="#4CAF50"  // Green color
+                  stroke="#FFFFFF"
+                  strokeWidth={2}
+                  shape="diamond"
+                  name="New Spend"
+                >
+                </Scatter>
                 
-                {/* Reference line for ROAS = 1.0 */}
-                <ReferenceLine y={1} yAxisId="left" stroke="red" strokeDasharray="3 3" />
+                {/* Max saturation point marker */}
+                <Scatter
+                  yAxisId="left"
+                  data={[{ spend: maxSaturationPoint.spend, incrementalOutcome: maxSaturationPoint.incrementalOutcome }]}
+                  fill="#9C27B0"  // Purple color
+                  stroke="#FFFFFF"
+                  strokeWidth={2}
+                  shape="star"
+                  name="Max Saturation"
+                >
+                </Scatter>
                 
-                {/* Reference area for unprofitable zone */}
-                <ReferenceArea yAxisId="left" y1={0} y2={1} stroke="none" fill="rgba(255, 0, 0, 0.05)" />
+                {/* Reference lines for key points */}
+                <ReferenceLine x={currentPoint.spend} stroke="#FF8C00" strokeDasharray="3 3" />
+                <ReferenceLine x={newPoint.spend} stroke="#4CAF50" strokeDasharray="3 3" />
+                <ReferenceLine x={maxSaturationPoint.spend} stroke="#9C27B0" strokeDasharray="3 3" />
               </LineChart>
             </ResponsiveContainer>
           </div>
           
-          <div className="mt-4 flex gap-6 text-sm">
+          <div className="mt-4 flex flex-wrap gap-6 text-sm">
             <div className="flex items-center gap-2">
               <div className="h-3 w-3 rounded-full" style={{ backgroundColor: color }}></div>
-              <span>Average ROAS</span>
+              <span>Incremental Outcome</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="h-3 w-3 rounded-full bg-gray-500"></div>
-              <span>Marginal ROAS</span>
+              <div className="h-3 w-3 rounded-full bg-orange-500"></div>
+              <span>Current Spend (${currentPoint.spend.toLocaleString()})</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="h-3 w-3 rounded-full border-2 border-white" style={{ backgroundColor: color }}></div>
-              <span>Current Spend</span>
+              <div className="h-3 w-3 rounded-full bg-green-500"></div>
+              <span>New Spend (${newPoint.spend.toLocaleString()})</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="h-3 w-3 rounded-full bg-purple-600"></div>
+              <span>Maximum Saturation (${maxSaturationPoint.spend.toLocaleString()})</span>
             </div>
           </div>
         </CardContent>
@@ -227,18 +254,22 @@ export function ChannelSaturationCurve({ channelId, channelName, color }: Channe
             <div>
               <h3 className="text-md font-medium mb-1">Saturation Analysis Insights</h3>
               <ul className="space-y-2 text-sm">
-                <li>Current ROAS is <span className="font-medium">{currentPoint.roas.toFixed(2)}x</span> at a spend of <span className="font-medium">${currentPoint.spend.toLocaleString()}</span></li>
+                <li>Current spend: <span className="font-medium">${currentPoint.spend.toLocaleString()}</span> with outcome of <span className="font-medium">${currentPoint.incrementalOutcome.toLocaleString()}</span></li>
                 <li>
-                  {optimalSpendPoint 
-                    ? `Optimal spend is around $${optimalSpendPoint.spend.toLocaleString()} before marginal returns become unprofitable`
-                    : `This channel has not yet reached the point of unprofitable marginal returns`
+                  {newPoint.spend > currentPoint.spend 
+                    ? `Increasing spend to $${newPoint.spend.toLocaleString()} would increase outcomes by ${((newPoint.incrementalOutcome - currentPoint.incrementalOutcome) / currentPoint.incrementalOutcome * 100).toFixed(1)}%`
+                    : `Decreasing spend to $${newPoint.spend.toLocaleString()} would decrease outcomes by ${((currentPoint.incrementalOutcome - newPoint.incrementalOutcome) / currentPoint.incrementalOutcome * 100).toFixed(1)}%`
                   }
                 </li>
                 <li>
-                  {currentPoint.spend < (optimalSpendPoint?.spend || Infinity)
-                    ? `There is room to increase spend by approximately $${((optimalSpendPoint?.spend || currentPoint.spend * 1.5) - currentPoint.spend).toLocaleString()}`
-                    : `Consider optimizing or reducing spend as you've exceeded the optimal efficiency point`
-                  }
+                  Maximum saturation point at <span className="font-medium">${maxSaturationPoint.spend.toLocaleString()}</span> where incremental returns start declining
+                </li>
+                <li className="font-medium">
+                  {newPoint.spend < maxSaturationPoint.spend && newPoint.spend > currentPoint.spend
+                    ? "Recommendation: Continue increasing spend up to optimization point"
+                    : newPoint.spend > maxSaturationPoint.spend
+                    ? "Recommendation: Consider reducing spend to improve efficiency"
+                    : "The recommended spend appears to be optimized for your goals"}
                 </li>
               </ul>
             </div>

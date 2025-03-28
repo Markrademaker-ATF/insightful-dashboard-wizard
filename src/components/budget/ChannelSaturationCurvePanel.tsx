@@ -50,6 +50,8 @@ export function ChannelSaturationCurvePanel({
                 channelId={channel.id} 
                 channelName={channel.name} 
                 color={channel.color} 
+                activeScenario={activeScenario}
+                customBudgets={customBudgets}
               />
             </TabsContent>
           ))}
