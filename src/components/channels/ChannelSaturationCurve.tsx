@@ -1,160 +1,250 @@
 
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine } from "recharts";
+import { 
+  LineChart, 
+  Line, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer,
+  Scatter,
+  ScatterChart,
+  ReferenceArea,
+  ReferenceLine,
+  TooltipProps
+} from "recharts";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent } from "@/components/ui/card";
 import { Info } from "lucide-react";
 
-// Sample data for the saturation curve
-const saturationData = [
-  { spend: 0, revenue: 0 },
-  { spend: 10000, revenue: 25000 },
-  { spend: 20000, revenue: 45000 },
-  { spend: 30000, revenue: 60000 },
-  { spend: 40000, revenue: 72000 },
-  { spend: 50000, revenue: 82000 },
-  { spend: 60000, revenue: 90000 },
-  { spend: 70000, revenue: 96000 },
-  { spend: 80000, revenue: 100000 },
-  { spend: 90000, revenue: 103000 },
-  { spend: 100000, revenue: 105000 },
-];
-
-// Calculate ROAS for each data point
-const dataWithRoas = saturationData.map(point => ({
-  ...point,
-  roas: point.spend > 0 ? point.revenue / point.spend : 0
-}));
-
-// Find optimal spend point (where ROAS starts to decline significantly)
-const optimalSpendPoint = dataWithRoas.reduce((optimal, point, index, array) => {
-  if (index > 0 && point.roas < array[index - 1].roas * 0.9) {
-    return optimal || array[index - 1].spend;
-  }
-  return optimal;
-}, null) || 60000;
-
-// Custom dot component for the line chart
-const CustomDot = (props: any) => {
-  const { cx, cy, payload } = props;
+// Generate saturation curve data for a channel
+const generateSaturationData = (channelId: string) => {
+  // We'll create points of a curve that demonstrates diminishing returns
+  const points = [];
+  const baseSpend = channelId === "search" ? 20000 : 
+                   channelId === "social" ? 15000 : 
+                   channelId === "display" ? 10000 : 5000;
   
-  // Highlight the optimal point
-  if (payload.spend === optimalSpendPoint) {
-    return (
-      <circle 
-        cx={cx} 
-        cy={cy} 
-        r={6} 
-        fill="#8b5cf6" 
-        stroke="white" 
-        strokeWidth={2} 
-      />
-    );
+  const maxRoas = channelId === "search" ? 4.5 : 
+                 channelId === "social" ? 3.8 : 
+                 channelId === "display" ? 3.2 : 2.8;
+                 
+  const saturationPoint = channelId === "search" ? 35000 : 
+                         channelId === "social" ? 25000 : 
+                         channelId === "display" ? 18000 : 12000;
+  
+  // Current spend point (for the marker)
+  const currentSpend = baseSpend * 1.3;
+  const currentRoas = calculateRoas(currentSpend, maxRoas, saturationPoint);
+  const currentRevenue = currentSpend * currentRoas;
+  
+  // Points for the curve
+  for (let spend = 0; spend <= baseSpend * 3; spend += baseSpend / 10) {
+    const roas = calculateRoas(spend, maxRoas, saturationPoint);
+    points.push({
+      spend,
+      roas,
+      revenue: spend * roas,
+      // Mark the current point
+      isCurrent: Math.abs(spend - currentSpend) < baseSpend / 20,
+      // Mark the saturation point
+      isSaturation: Math.abs(spend - saturationPoint) < baseSpend / 20
+    });
   }
   
-  // Regular dots
-  return (
-    <circle 
-      cx={cx} 
-      cy={cy} 
-      r={4} 
-      fill="#8b5cf6" 
-      opacity={0.8} 
-    />
-  );
+  return { points, currentPoint: { roas: currentRoas, spend: currentSpend, revenue: currentRevenue } };
 };
 
-export function ChannelSaturationCurve() {
+// Helper function to calculate ROAS with diminishing returns
+const calculateRoas = (spend: number, maxRoas: number, saturationPoint: number) => {
+  if (spend === 0) return 0;
+  // Diminishing returns formula
+  return maxRoas * Math.exp(-Math.pow(spend - (saturationPoint * 0.5), 2) / (2 * Math.pow(saturationPoint, 2))) + 1;
+};
+
+// Generate marginal ROAS data 
+const generateMarginalData = (points: any[]) => {
+  return points.map((point, index, array) => {
+    if (index === 0) return { ...point, marginalRoas: point.roas };
+    
+    const prevPoint = array[index - 1];
+    const revenueChange = point.revenue - prevPoint.revenue;
+    const spendChange = point.spend - prevPoint.spend;
+    
+    // Calculate marginal ROAS - the return on the additional spend
+    const marginalRoas = spendChange > 0 ? revenueChange / spendChange : 0;
+    
+    return {
+      ...point,
+      marginalRoas
+    };
+  });
+};
+
+// Custom tooltip component
+const CustomTooltip = ({ active, payload, label }: TooltipProps<string | number, string>) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-white p-3 border rounded-md shadow-md">
+        <p className="font-medium">Spend: ${payload[0]?.payload?.spend?.toLocaleString()}</p>
+        <p>Average ROAS: {payload[0]?.payload?.roas?.toFixed(2)}x</p>
+        <p>Marginal ROAS: {payload[0]?.payload?.marginalRoas?.toFixed(2)}x</p>
+        <p>Revenue: ${payload[0]?.payload?.revenue?.toLocaleString()}</p>
+      </div>
+    );
+  }
+  return null;
+};
+
+type ChannelSaturationCurveProps = {
+  channelId: string;
+  channelName: string;
+  color: string;
+};
+
+export function ChannelSaturationCurve({ channelId, channelName, color }: ChannelSaturationCurveProps) {
+  // Generate data for the curve
+  const { points, currentPoint } = generateSaturationData(channelId);
+  const data = generateMarginalData(points);
+  
+  // Find the point where marginal ROAS drops below 1.0 (unprofitable)
+  const optimalSpendPoint = data.find(point => point.marginalRoas < 1);
+  
   return (
-    <Card className="overflow-hidden border-indigo-100/50 shadow-md">
-      <CardHeader className="flex flex-row items-center justify-between pb-2 bg-gradient-to-r from-indigo-50/50 to-white">
-        <CardTitle className="text-xl font-semibold text-gray-800">
-          Channel Saturation Analysis
-        </CardTitle>
-        <div className="flex items-center text-primary hover:text-primary/80 cursor-pointer transition-colors">
-          <Info className="h-4 w-4 mr-1" />
-          <span className="text-xs font-medium">About this chart</span>
-        </div>
-      </CardHeader>
-      <CardContent className="p-6">
-        <div className="text-sm text-muted-foreground mb-4 bg-blue-50/30 p-3 rounded-lg border border-blue-100/50">
-          <p>This curve illustrates the relationship between marketing spend and revenue generation, 
-          helping identify the optimal investment level before diminishing returns occur.</p>
-        </div>
-        
-        <div className="h-80">
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart
-              data={saturationData}
-              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
-              <XAxis 
-                dataKey="spend" 
-                tickFormatter={(value: number) => `$${value/1000}k`}
-                label={{ value: 'Marketing Spend', position: 'insideBottom', offset: -5 }}
-              />
-              <YAxis 
-                tickFormatter={(value: number) => `$${value/1000}k`}
-                label={{ value: 'Revenue', angle: -90, position: 'insideLeft' }}
-              />
-              <Tooltip 
-                formatter={(value: number) => [`$${Number(value).toLocaleString()}`, 'Revenue']}
-                labelFormatter={(value: number) => `Spend: $${Number(value).toLocaleString()}`}
-                contentStyle={{
-                  backgroundColor: "rgba(255, 255, 255, 0.95)",
-                  borderRadius: "0.5rem",
-                  boxShadow: "0 4px 12px rgba(0, 0, 0, 0.08)",
-                  border: "1px solid rgba(139, 92, 246, 0.2)",
-                }}
-              />
-              <Legend 
-                formatter={(value: string) => <span className="text-sm font-medium">Channel Revenue</span>}
-              />
-              <ReferenceLine 
-                x={optimalSpendPoint} 
-                stroke="#8b5cf6" 
-                strokeDasharray="3 3" 
-                label={{ 
-                  value: 'Optimal Spend', 
-                  position: 'top', 
-                  fill: '#8b5cf6',
-                  fontSize: 12,
-                  fontWeight: 500
-                }} 
-              />
-              <Line 
-                type="monotone" 
-                dataKey="revenue" 
-                name="Revenue"
-                stroke="url(#colorGradient)" 
-                strokeWidth={3}
-                activeDot={{ r: 8 }}
-                dot={<CustomDot />}
-              />
-              <defs>
-                <linearGradient id="colorGradient" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stopColor="#8b5cf6" />
-                  <stop offset="100%" stopColor="#c4b5fd" />
-                </linearGradient>
-              </defs>
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-        
-        <div className="mt-6 p-4 bg-gradient-to-r from-primary/5 to-white rounded-lg border border-primary/10 flex items-start gap-3">
-          <div className="p-2 bg-primary/10 rounded-full mt-0.5">
-            <Info className="h-4 w-4 text-primary" /> 
-          </div>
-          <div>
-            <h4 className="text-sm font-medium text-gray-800 mb-1">Strategic Insight</h4>
+    <div className="space-y-6">
+      {/* Main Chart */}
+      <Card>
+        <CardContent className="pt-6">
+          <div className="mb-4">
+            <h3 className="text-lg font-medium mb-2">{channelName} Saturation Curve</h3>
             <p className="text-sm text-muted-foreground">
-              The optimal marketing spend appears to be around ${optimalSpendPoint.toLocaleString()}, 
-              after which additional investment yields diminishing returns. Consider reallocating 
-              budget beyond this point to other channels with higher growth potential.
+              Shows how ROAS changes as spend increases, with average and marginal returns
             </p>
           </div>
-        </div>
-      </CardContent>
-    </Card>
+          
+          <div className="h-[400px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart
+                data={data}
+                margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis 
+                  dataKey="spend" 
+                  tickFormatter={(value) => `$${(value/1000).toFixed(0)}k`}
+                  label={{ value: 'Media Spend ($)', position: 'insideBottomRight', offset: -10 }}
+                />
+                <YAxis 
+                  yAxisId="left"
+                  label={{ value: 'ROAS (x)', angle: -90, position: 'insideLeft' }}
+                />
+                <Tooltip content={<CustomTooltip />} />
+                
+                {/* Average ROAS Line */}
+                <Line
+                  yAxisId="left"
+                  type="monotone"
+                  dataKey="roas"
+                  name="Average ROAS"
+                  stroke={color}
+                  strokeWidth={3}
+                  dot={false}
+                  activeDot={{ r: 8 }}
+                />
+                
+                {/* Marginal ROAS Line */}
+                <Line
+                  yAxisId="left"
+                  type="monotone"
+                  dataKey="marginalRoas"
+                  name="Marginal ROAS"
+                  stroke="#888888"
+                  strokeDasharray="5 5"
+                  strokeWidth={2}
+                  dot={false}
+                />
+                
+                {/* Current point marker */}
+                <Scatter
+                  yAxisId="left"
+                  data={[{ spend: currentPoint.spend, roas: currentPoint.roas }]}
+                  fill={color}
+                  stroke="#FFFFFF"
+                  strokeWidth={2}
+                  shape="circle"
+                  name="Current Spend"
+                >
+                </Scatter>
+                
+                {/* Optimal spend point marker (where marginal ROAS crosses 1.0) */}
+                {optimalSpendPoint && (
+                  <Scatter
+                    yAxisId="left"
+                    data={[{ spend: optimalSpendPoint.spend, roas: optimalSpendPoint.roas }]}
+                    fill="#000000"
+                    stroke="#FFFFFF"
+                    strokeWidth={2}
+                    shape="circle"
+                    name="Optimal Spend"
+                  >
+                  </Scatter>
+                )}
+                
+                {/* Reference line for ROAS = 1.0 */}
+                <ReferenceLine y={1} yAxisId="left" stroke="red" strokeDasharray="3 3" />
+                
+                {/* Reference area for unprofitable zone */}
+                <ReferenceArea yAxisId="left" y1={0} y2={1} stroke="none" fill="rgba(255, 0, 0, 0.05)" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+          
+          <div className="mt-4 flex gap-6 text-sm">
+            <div className="flex items-center gap-2">
+              <div className="h-3 w-3 rounded-full" style={{ backgroundColor: color }}></div>
+              <span>Average ROAS</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="h-3 w-3 rounded-full bg-gray-500"></div>
+              <span>Marginal ROAS</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="h-3 w-3 rounded-full border-2 border-white" style={{ backgroundColor: color }}></div>
+              <span>Current Spend</span>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+      
+      {/* Insights Card */}
+      <Card>
+        <CardContent className="pt-6">
+          <div className="flex gap-3 items-start">
+            <div className="p-2 rounded-full bg-blue-100/50">
+              <Info className="h-5 w-5 text-blue-600" />
+            </div>
+            <div>
+              <h3 className="text-md font-medium mb-1">Saturation Analysis Insights</h3>
+              <ul className="space-y-2 text-sm">
+                <li>Current ROAS is <span className="font-medium">{currentPoint.roas.toFixed(2)}x</span> at a spend of <span className="font-medium">${currentPoint.spend.toLocaleString()}</span></li>
+                <li>
+                  {optimalSpendPoint 
+                    ? `Optimal spend is around $${optimalSpendPoint.spend.toLocaleString()} before marginal returns become unprofitable`
+                    : `This channel has not yet reached the point of unprofitable marginal returns`
+                  }
+                </li>
+                <li>
+                  {currentPoint.spend < (optimalSpendPoint?.spend || Infinity)
+                    ? `There is room to increase spend by approximately $${((optimalSpendPoint?.spend || currentPoint.spend * 1.5) - currentPoint.spend).toLocaleString()}`
+                    : `Consider optimizing or reducing spend as you've exceeded the optimal efficiency point`
+                  }
+                </li>
+              </ul>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
