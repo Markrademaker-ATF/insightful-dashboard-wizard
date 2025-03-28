@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   BarChart,
@@ -76,27 +75,38 @@ export function EnhancedWaterfallChart({
     ];
   };
   
-  // Calculate running totals for waterfall positioning
+  // Calculate cumulative totals for waterfall positioning
   const calculateRunningTotal = (data: WaterfallDataItem[]): WaterfallDataItem[] => {
     let runningTotal = 0;
+    const result = [];
     
-    return data.map(item => {
-      if (item.isTotal) {
-        // For total item, set start to 0 and end to the total value
-        return { ...item, start: 0, end: item.value, displayValue: item.value };
-      } else {
-        // For regular items, set start to current running total
-        const start = runningTotal;
-        runningTotal += item.value;
-        
-        return { 
-          ...item, 
-          start, 
-          end: runningTotal,
-          displayValue: item.value
-        };
-      }
-    });
+    // Process all items except the total
+    const itemsWithoutTotal = data.filter(item => !item.isTotal);
+    const totalItem = data.find(item => item.isTotal);
+    
+    for (const item of itemsWithoutTotal) {
+      const start = runningTotal;
+      runningTotal += item.value;
+      
+      result.push({ 
+        ...item, 
+        start, 
+        end: runningTotal,
+        displayValue: item.value
+      });
+    }
+    
+    // Add the total as the last item if it exists
+    if (totalItem) {
+      result.push({
+        ...totalItem,
+        start: 0,
+        end: totalItem.value,
+        displayValue: totalItem.value
+      });
+    }
+    
+    return result;
   };
   
   const waterfallData = prepareWaterfallData();
@@ -128,6 +138,42 @@ export function EnhancedWaterfallChart({
     return null;
   };
   
+  // Define custom bars for the waterfall chart
+  const renderCustomBarShape = (props: any) => {
+    const { x, y, width, height, fill, payload } = props;
+    
+    // Special handling for the total bar
+    if (payload.isTotal) {
+      return (
+        <rect
+          x={x}
+          y={y}
+          width={width}
+          height={height}
+          fill={fill}
+          stroke={payload.fill}
+          strokeWidth={1}
+          rx={4}
+          ry={4}
+        />
+      );
+    }
+    
+    return (
+      <rect
+        x={x}
+        y={y}
+        width={width}
+        height={height}
+        fill={fill}
+        stroke={payload.fill}
+        strokeWidth={1}
+        rx={4}
+        ry={4}
+      />
+    );
+  };
+  
   // Custom label for bars
   const renderCustomBarLabel = (props: any) => {
     const { x, y, width, height, value, index } = props;
@@ -154,12 +200,27 @@ export function EnhancedWaterfallChart({
     );
   };
   
+  // Transform data for cumulative waterfall chart
+  const cumulativeChartData = chartData.map((item, index) => {
+    if (item.isTotal) return item;
+    
+    return {
+      ...item,
+      // For each bar, we'll calculate its visual position in the chart
+      y: index === 0 ? item.value : chartData.slice(0, index + 1).reduce((sum, current) => sum + current.value, 0),
+      // Keep the original value for tooltip and label
+      displayValue: item.value,
+      // Add all y values up to this point
+      cumulativeValue: chartData.slice(0, index + 1).reduce((sum, current) => sum + current.value, 0)
+    };
+  });
+  
   return (
     <div className={cn("w-full", className)}>
       <div style={{ height }}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
-            data={chartData}
+            data={cumulativeChartData}
             margin={{
               top: 20,
               right: 30,
@@ -214,22 +275,17 @@ export function EnhancedWaterfallChart({
               verticalAlign="top" 
               height={36}
             />
-            <Bar 
-              dataKey="end" 
-              stackId="a"
-              fill="rgba(0,0,0,0)"
-              stroke="rgba(0,0,0,0)"
-            />
+            {/* For non-total bars, use the cumulative value */}
             <Bar
-              dataKey="displayValue"
-              stackId="a"
-              radius={[4, 4, 0, 0]}
+              dataKey="cumulativeValue"
+              fill="transparent"
+              shape={renderCustomBarShape}
+              label={renderCustomBarLabel}
+              isAnimationActive={true}
               animationDuration={1500}
               animationEasing="ease-in-out"
-              filter="url(#shadow)"
             >
-              <Label content={renderCustomBarLabel} />
-              {chartData.map((entry, index) => (
+              {cumulativeChartData.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
                   fill={`url(#color${entry.isTotal ? 'total' : entry.name.toLowerCase().replace(/\s+/g, '')})`}
@@ -240,10 +296,34 @@ export function EnhancedWaterfallChart({
                       ? 'drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.15))'
                       : 'none',
                     cursor: 'pointer',
-                    transition: 'all 0.3s ease',
                   }}
                 />
               ))}
+            </Bar>
+            {/* Total bar is shown separately */}
+            <Bar
+              dataKey="value"
+              fill="transparent"
+              shape={renderCustomBarShape}
+              isAnimationActive={true}
+              animationDuration={1500}
+              animationEasing="ease-in-out"
+            >
+              {cumulativeChartData.map((entry, index) => {
+                if (!entry.isTotal) return null;
+                return (
+                  <Cell
+                    key={`total-cell-${index}`}
+                    fill={`url(#colortotal)`}
+                    stroke={entry.fill}
+                    strokeWidth={1}
+                    style={{
+                      filter: 'drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.15))',
+                      cursor: 'pointer',
+                    }}
+                  />
+                );
+              })}
             </Bar>
           </BarChart>
         </ResponsiveContainer>
@@ -251,7 +331,7 @@ export function EnhancedWaterfallChart({
       <div className="mt-4 text-sm text-muted-foreground">
         <p className="flex items-center gap-2">
           <Info className="h-4 w-4 text-primary" /> 
-          The waterfall chart shows how each media type contributes to the total revenue, starting with baseline and adding each additional component.
+          The waterfall chart shows how each media type contributes to the total revenue, with each bar building upon the previous ones to reach the final total.
         </p>
       </div>
     </div>

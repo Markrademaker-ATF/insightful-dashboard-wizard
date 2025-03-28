@@ -9,11 +9,11 @@ import { EnhancedWaterfallChart } from "./EnhancedWaterfallChart";
 
 // Define colors for each media type
 const mediaTypeColors = {
-  paid: "#4361ee",
-  organic: "#3a0ca3",
-  nonPaid: "#7209b7",
-  baseline: "#f72585",
-  total: "#000000"
+  paid: "#F97316",       // Bright Orange
+  organic: "#6E59A5",    // Tertiary Purple
+  nonPaid: "#0EA5E9",    // Ocean Blue
+  baseline: "#9b87f5",   // Primary Purple
+  total: "#33C3F0"       // Sky Blue
 };
 
 type PerformanceBreakdownSectionProps = {
@@ -43,12 +43,30 @@ export function PerformanceBreakdownSection({ data, loading }: PerformanceBreakd
     return waterfallData;
   };
 
+  // Calculate cumulative values for the table view
+  const prepareCumulativeData = () => {
+    const data = prepareWaterfallData();
+    let runningTotal = 0;
+    
+    return data.map(item => {
+      if (item.isTotal) {
+        return { ...item, cumulativeValue: item.value };
+      }
+      
+      runningTotal += item.value;
+      return { 
+        ...item, 
+        cumulativeValue: runningTotal
+      };
+    });
+  };
+
   return (
     <Card className="mb-8">
       <CardHeader className="flex flex-row items-center justify-between">
         <div>
           <CardTitle>Performance Breakdown</CardTitle>
-          <CardDescription>Contribution to revenue by media type</CardDescription>
+          <CardDescription>Cumulative contribution to revenue by media type</CardDescription>
         </div>
         <div className="flex items-center gap-2">
           <div className="flex border rounded-md">
@@ -91,7 +109,7 @@ export function PerformanceBreakdownSection({ data, loading }: PerformanceBreakd
                 />
               </div>
             ) : (
-              // Table view
+              // Table view showing cumulative values
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
@@ -103,12 +121,15 @@ export function PerformanceBreakdownSection({ data, loading }: PerformanceBreakd
                         Revenue Contribution
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Cumulative Value
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         % of Total
                       </th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {prepareWaterfallData().map((item, index) => {
+                    {prepareCumulativeData().map((item, index) => {
                       // Skip the total row for percentage calculation
                       const total = data[data.length - 1].total;
                       const percentage = item.isTotal ? 100 : (item.value / total) * 100;
@@ -129,6 +150,9 @@ export function PerformanceBreakdownSection({ data, loading }: PerformanceBreakd
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             ${item.value.toLocaleString()}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            ${item.cumulativeValue.toLocaleString()}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             {percentage.toFixed(1)}%
