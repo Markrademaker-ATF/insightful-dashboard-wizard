@@ -11,6 +11,8 @@ type MetricCardProps = {
   description?: string;
   loading?: boolean;
   className?: string;
+  onMetricClick?: () => void;
+  action?: React.ReactNode;
 };
 
 export function MetricCard({
@@ -21,16 +23,22 @@ export function MetricCard({
   description,
   loading = false,
   className,
+  onMetricClick,
+  action,
 }: MetricCardProps) {
   const isPositive = change && change > 0;
   const isNegative = change && change < 0;
   const changeText = change ? `${change > 0 ? "+" : ""}${change}%` : null;
   
   return (
-    <div className={cn("stats-card animate-fade-in", className)}>
+    <div 
+      className={cn("stats-card animate-fade-in", className, onMetricClick && "cursor-pointer")}
+      onClick={onMetricClick}
+    >
       <div className="flex items-start justify-between">
         <p className="text-sm font-medium text-muted-foreground">{title}</p>
         {icon && <div className="text-muted-foreground">{icon}</div>}
+        {action}
       </div>
       
       <div className="mt-1">

@@ -4,7 +4,7 @@ import { MetricCard } from "@/components/dashboard/MetricCard";
 import { Layers, DollarSign, Compass, CreditCard, Archive, ChevronDown, ChevronUp } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { channelColors } from "@/data/mockData";
+import { channelColors, channelNames } from "@/data/mockData";
 
 interface KeyMetricsSectionProps {
   loading: boolean;
@@ -17,24 +17,23 @@ interface KeyMetricsSectionProps {
   };
 }
 
-// Sample channel data for each media type
-// In a real app, this would come from your data source
+// Channel breakdown data
 const channelBreakdown = {
   paid: [
-    { name: "Google Ads", value: 382500, color: channelColors.google },
-    { name: "Facebook Ads", value: 245000, color: channelColors.facebook },
-    { name: "LinkedIn Ads", value: 175000, color: channelColors.linkedin },
-    { name: "Other Paid", value: 97500, color: channelColors.other }
+    { name: channelNames.google, value: 382500, color: channelColors.google },
+    { name: channelNames.facebook, value: 245000, color: channelColors.facebook },
+    { name: channelNames.youtube, value: 175000, color: channelColors.youtube },
+    { name: channelNames.tiktok, value: 97500, color: channelColors.tiktok }
   ],
   organic: [
-    { name: "SEO", value: 325000, color: channelColors.seo },
-    { name: "Organic Social", value: 180000, color: channelColors.social },
-    { name: "PR", value: 95000, color: channelColors.pr }
+    { name: channelNames.organicSearch, value: 325000, color: channelColors.organicSearch },
+    { name: channelNames.organicSocial, value: 180000, color: channelColors.organicSocial },
+    { name: channelNames.email, value: 95000, color: channelColors.email }
   ],
   nonPaid: [
-    { name: "Email", value: 215000, color: channelColors.email },
-    { name: "Referral", value: 145000, color: channelColors.referral },
-    { name: "Direct", value: 240000, color: channelColors.direct }
+    { name: channelNames.direct, value: 215000, color: channelColors.direct },
+    { name: channelNames.referral, value: 145000, color: channelColors.referral },
+    { name: channelNames.affiliate, value: 240000, color: channelColors.affiliate }
   ]
 };
 
@@ -59,11 +58,7 @@ export function KeyMetricsSection({ loading, latestPeriodData }: KeyMetricsSecti
     : "0";
 
   const toggleExpand = (metricName: string) => {
-    if (expandedMetric === metricName) {
-      setExpandedMetric(null);
-    } else {
-      setExpandedMetric(metricName);
-    }
+    setExpandedMetric(expandedMetric === metricName ? null : metricName);
   };
 
   return (
@@ -83,7 +78,7 @@ export function KeyMetricsSection({ loading, latestPeriodData }: KeyMetricsSecti
           icon={<DollarSign className="h-4 w-4" />}
           loading={loading}
           className="bg-gradient-to-br from-blue-50 to-blue-50/50 border-l-4 border-l-blue-400 lg:col-span-1 cursor-pointer hover:shadow-md transition-shadow"
-          onClick={() => toggleExpand("paid")}
+          onMetricClick={() => toggleExpand("paid")}
           action={
             <Button variant="ghost" size="icon" className="h-6 w-6">
               {expandedMetric === "paid" ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
@@ -97,7 +92,7 @@ export function KeyMetricsSection({ loading, latestPeriodData }: KeyMetricsSecti
           icon={<Compass className="h-4 w-4" />}
           loading={loading}
           className="bg-gradient-to-br from-green-50 to-green-50/50 border-l-4 border-l-green-400 lg:col-span-1 cursor-pointer hover:shadow-md transition-shadow"
-          onClick={() => toggleExpand("organic")}
+          onMetricClick={() => toggleExpand("organic")}
           action={
             <Button variant="ghost" size="icon" className="h-6 w-6">
               {expandedMetric === "organic" ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
@@ -111,7 +106,7 @@ export function KeyMetricsSection({ loading, latestPeriodData }: KeyMetricsSecti
           icon={<CreditCard className="h-4 w-4" />}
           loading={loading}
           className="bg-gradient-to-br from-purple-50 to-purple-50/50 border-l-4 border-l-purple-400 lg:col-span-1 cursor-pointer hover:shadow-md transition-shadow"
-          onClick={() => toggleExpand("nonPaid")}
+          onMetricClick={() => toggleExpand("nonPaid")}
           action={
             <Button variant="ghost" size="icon" className="h-6 w-6">
               {expandedMetric === "nonPaid" ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
