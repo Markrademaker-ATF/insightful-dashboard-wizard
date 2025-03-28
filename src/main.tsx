@@ -4,6 +4,6 @@ import App from './App.tsx'
 import './index.css'
 
 // Set document title for Artefact
-document.title = "Artefact Analytics Dashboard";
+document.title = "Artefact - Marketing Intelligence Platform";
 
 createRoot(document.getElementById("root")!).render(<App />);
