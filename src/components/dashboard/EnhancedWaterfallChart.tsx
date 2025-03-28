@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
   BarChart,
@@ -65,12 +66,13 @@ export function EnhancedWaterfallChart({
     // Take the latest data point
     const latestData = data[data.length - 1];
     
-    // Create waterfall data structure
+    // Create waterfall data structure - reverse the order to put incremental at top
+    // Baseline stays first but the order of other items is reversed
     return [
       { name: 'Baseline', value: latestData.baseline, fill: categoryColors.baseline, isTotal: false },
-      { name: 'Non-Paid Media', value: latestData.nonPaid, fill: categoryColors.nonPaid, isTotal: false },
-      { name: 'Organic Media', value: latestData.organic, fill: categoryColors.organic, isTotal: false },
       { name: 'Paid Media', value: latestData.paid, fill: categoryColors.paid, isTotal: false },
+      { name: 'Organic Media', value: latestData.organic, fill: categoryColors.organic, isTotal: false },
+      { name: 'Non-Paid Media', value: latestData.nonPaid, fill: categoryColors.nonPaid, isTotal: false },
       { name: 'Total', value: latestData.total, fill: categoryColors.total, isTotal: true }
     ];
   };

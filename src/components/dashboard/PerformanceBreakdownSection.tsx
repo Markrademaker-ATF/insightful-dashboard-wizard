@@ -31,12 +31,12 @@ export function PerformanceBreakdownSection({ data, loading }: PerformanceBreakd
     // Take the latest data point
     const latestData = data[data.length - 1];
     
-    // Prepare waterfall data
+    // Prepare waterfall data - note the order is changed to match the chart
     const waterfallData = [
       { name: 'Baseline', value: latestData.baseline, fill: mediaTypeColors.baseline, isTotal: false },
-      { name: 'Non-Paid Media', value: latestData.nonPaid, fill: mediaTypeColors.nonPaid, isTotal: false },
-      { name: 'Organic Media', value: latestData.organic, fill: mediaTypeColors.organic, isTotal: false },
       { name: 'Paid Media', value: latestData.paid, fill: mediaTypeColors.paid, isTotal: false },
+      { name: 'Organic Media', value: latestData.organic, fill: mediaTypeColors.organic, isTotal: false },
+      { name: 'Non-Paid Media', value: latestData.nonPaid, fill: mediaTypeColors.nonPaid, isTotal: false },
       { name: 'Total', value: latestData.total, fill: mediaTypeColors.total, isTotal: true }
     ];
     
