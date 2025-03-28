@@ -91,6 +91,27 @@ const navItems: NavItem[] = [
     icon: LineChart,
   },
   {
+    title: "Help & Resources",
+    icon: HelpCircle,
+    children: [
+      {
+        title: "Pages Guide",
+        href: "/guide",
+        icon: Layers,
+      },
+      {
+        title: "Metrics Guide",
+        href: "/metrics-guide",
+        icon: FileBarChart,
+      },
+      {
+        title: "FAQ",
+        href: "/faq",
+        icon: HelpCircle,
+      },
+    ]
+  },
+  {
     title: "Settings",
     href: "/settings",
     icon: Settings,
@@ -101,7 +122,8 @@ export function SidebarNav() {
   const location = useLocation();
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({
     "Overview": true,
-    "Analysis": true
+    "Analysis": true,
+    "Help & Resources": true
   });
   
   const toggleGroup = (groupTitle: string) => {

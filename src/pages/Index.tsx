@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { AnalyticsOverview } from "@/components/dashboard/AnalyticsOverview";
 import { Helmet } from "react-helmet";
@@ -216,7 +217,7 @@ const Index = () => {
           </Link>
           
           {/* Metrics Guide */}
-          <Link to="/metrics" className="flex flex-col gap-4 p-6 rounded-xl bg-white/80 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+          <Link to="/metrics-guide" className="flex flex-col gap-4 p-6 rounded-xl bg-white/80 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
             <div className="p-3 rounded-full bg-green-50 w-fit">
               <FileBarChart className="h-5 w-5 text-green-600" />
             </div>
@@ -229,7 +230,7 @@ const Index = () => {
           </Link>
           
           {/* FAQ */}
-          <Link to="/methodologies" className="flex flex-col gap-4 p-6 rounded-xl bg-white/80 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
+          <Link to="/faq" className="flex flex-col gap-4 p-6 rounded-xl bg-white/80 border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1">
             <div className="p-3 rounded-full bg-purple-50 w-fit">
               <HelpCircle className="h-5 w-5 text-purple-600" />
             </div>

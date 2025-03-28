@@ -16,6 +16,8 @@ import ABTestingPage from "./pages/ABTestingPage";
 import GuidePage from "./pages/GuidePage";
 import SettingsPage from "./pages/SettingsPage";
 import MethodologiesPage from "./pages/MethodologiesPage";
+import FAQPage from "./pages/FAQPage";
+import MetricsGuidePage from "./pages/MetricsGuidePage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -38,6 +40,8 @@ const App = () => (
             <Route path="/budget" element={<BudgetPage />} />
             <Route path="/ab-testing" element={<ABTestingPage />} />
             <Route path="/guide" element={<GuidePage />} />
+            <Route path="/faq" element={<FAQPage />} />
+            <Route path="/metrics-guide" element={<MetricsGuidePage />} />
             <Route path="/settings" element={<SettingsPage />} />
           </Route>
           <Route path="*" element={<NotFound />} />
