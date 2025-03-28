@@ -61,6 +61,19 @@ export function ChannelComparisonChart({ data, loading }: ChannelComparisonChart
     }
   };
 
+  // Get label color based on metric
+  const getLabelColor = (metricName: string) => {
+    if (metricName === "revenue" || metricName === "incremental") {
+      return "#059669"; // Green for revenue-related metrics
+    } else if (metricName === "cost") {
+      return "#6366f1"; // Indigo for cost-related metrics
+    }
+    return "#6366f1"; // Default color
+  };
+
+  // Determine if we should show labels on the bars
+  const shouldShowLabels = ["revenue", "incremental", "cost"].includes(metric);
+
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
@@ -88,7 +101,7 @@ export function ChannelComparisonChart({ data, loading }: ChannelComparisonChart
         <BarChart
           data={filteredData}
           margin={{
-            top: 5,
+            top: 20, // Increased top margin to accommodate labels
             right: 30,
             left: 20,
             bottom: 5,
@@ -110,6 +123,7 @@ export function ChannelComparisonChart({ data, loading }: ChannelComparisonChart
               formatValue(value as number, metric),
               metrics.find((m) => m.value === metric)?.label,
             ]}
+            cursor={{ fill: 'rgba(0, 0, 0, 0.05)' }}
           />
           <Legend />
           <Bar
@@ -117,6 +131,15 @@ export function ChannelComparisonChart({ data, loading }: ChannelComparisonChart
             fill="#4361ee"
             name={metrics.find((m) => m.value === metric)?.label}
             radius={[4, 4, 0, 0]}
+            label={shouldShowLabels ? {
+              position: 'top',
+              formatter: (value: number) => formatValue(value, metric),
+              style: { 
+                fontSize: 10, 
+                fill: getLabelColor(metric), 
+                fontWeight: 'bold' 
+              }
+            } : undefined}
           />
         </BarChart>
       </ResponsiveContainer>
