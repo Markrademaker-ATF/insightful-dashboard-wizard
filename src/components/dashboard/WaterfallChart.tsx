@@ -69,6 +69,29 @@ export function WaterfallChart({
             bottom: 5,
           }}
         >
+          <defs>
+            {chartData.map((entry, index) => (
+              <linearGradient
+                key={`gradient-${index}`}
+                id={`colorGradient${index}`}
+                x1="0"
+                y1="0"
+                x2="0"
+                y2="1"
+              >
+                <stop
+                  offset="5%"
+                  stopColor={entry.fill}
+                  stopOpacity={0.9}
+                />
+                <stop
+                  offset="95%"
+                  stopColor={entry.fill}
+                  stopOpacity={0.6}
+                />
+              </linearGradient>
+            ))}
+          </defs>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.05)" />
           <XAxis 
             dataKey="name" 
@@ -87,11 +110,16 @@ export function WaterfallChart({
               if (active && payload && payload.length) {
                 const data = payload[0].payload;
                 return (
-                  <div className="rounded-lg border border-border/50 bg-background px-3 py-2 text-sm shadow-xl">
-                    <p className="font-medium">{data.name}</p>
-                    <p className="text-muted-foreground pt-1">
+                  <div className="rounded-lg border border-border/50 bg-white/90 px-4 py-3 text-sm shadow-xl backdrop-blur-sm">
+                    <p className="font-medium text-gray-800">{data.name}</p>
+                    <p className="text-primary pt-1 font-medium">
                       {data.isTotal ? "Total" : "Contribution"}: ${Math.abs(data.value).toLocaleString()}
                     </p>
+                    {!data.isTotal && (
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Running total: ${data.end.toLocaleString()}
+                      </p>
+                    )}
                   </div>
                 );
               }
@@ -100,27 +128,22 @@ export function WaterfallChart({
           />
           <Bar 
             dataKey="value" 
-            fill="var(--fill-color)" 
-            radius={[4, 4, 0, 0]}
+            radius={[6, 6, 0, 0]}
             animationDuration={1500}
+            animationEasing="ease-in-out"
+            className="drop-shadow-sm"
           >
-            {chartData.map((entry, index) => (
-              <defs key={`cell-${index}`}>
-                <linearGradient id={`colorUv${index}`} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor={entry.fill} stopOpacity={0.8}/>
-                  <stop offset="95%" stopColor={entry.fill} stopOpacity={0.6}/>
-                </linearGradient>
-              </defs>
-            ))}
             {chartData.map((entry, index) => (
               <Cell 
                 key={`cell-${index}`} 
-                fill={entry.isTotal ? `url(#colorUv${index})` : entry.fill} 
-                style={{ "--fill-color": entry.fill } as React.CSSProperties} 
+                fill={entry.isTotal ? `url(#colorGradient${index})` : `url(#colorGradient${index})`}
+                stroke={entry.fill}
+                strokeWidth={1}
+                style={{ filter: entry.isTotal ? 'drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.1))' : 'none' }}
               />
             ))}
           </Bar>
-          <ReferenceLine y={0} stroke="rgba(0,0,0,0.3)" />
+          <ReferenceLine y={0} stroke="rgba(0,0,0,0.3)" strokeWidth={1.5} />
         </BarChart>
       </ResponsiveContainer>
     </div>

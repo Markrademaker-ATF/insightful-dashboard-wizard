@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Download, Filter, BarChart, PieChart, LineChart as LineChartIcon, GitCompare, FileBarChart, InfoIcon, Share2 } from "lucide-react";
+import { Download, Filter, BarChart, PieChart, LineChart as LineChartIcon, GitCompare, FileBarChart, InfoIcon, Share2, Sparkles, AlertCircle, ArrowUpRight } from "lucide-react";
 import { ChannelPerformanceTable } from "@/components/channels/ChannelPerformanceTable";
 import { ChannelBreakdownChart } from "@/components/channels/ChannelBreakdownChart";
 import { ChannelTrendsChart } from "@/components/channels/ChannelTrendsChart";
@@ -59,32 +59,38 @@ const MetricsPage = () => {
   };
 
   return (
-    <div className="animate-fade-in">
+    <div className="animate-fade-in space-y-8">
       <PageHeader
         title="Exploratory Data Analysis"
-        description="Analyze distributions, correlations, and patterns across metrics to gain deeper insights"
+        description="Discover hidden patterns, correlations, and insights across your marketing channels and metrics"
       >
         <div className="flex flex-wrap gap-2">
-          <Button variant="outline" size="sm" className="gap-1">
+          <Button variant="outline" size="sm" className="gap-1 hover:bg-primary/10 transition-colors">
             <Download className="h-4 w-4" />
             Export
           </Button>
         </div>
       </PageHeader>
 
-      {/* Key Metrics Overview */}
-      <div className="mb-8">
+      {/* Key Metrics Overview - Enhanced with animation */}
+      <div className="mb-8 grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="col-span-full">
+          <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+            <Sparkles className="h-5 w-5 text-primary animate-pulse" />
+            Key Metrics Overview
+          </h2>
+        </div>
         <ChannelMetricsCards data={channelData} loading={loading} />
       </div>
 
-      {/* Exploratory Data Analysis Section */}
-      <div className="dashboard-card mb-8">
+      {/* Exploratory Data Analysis Section - Enhanced with eda-card class */}
+      <div className="eda-card mb-8 p-6">
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-2">
             <FileBarChart className="h-5 w-5 text-primary" />
-            <h3 className="text-lg font-medium">Data Analysis</h3>
+            <h3 className="text-lg font-medium">Data Exploration</h3>
           </div>
-          <Button variant="outline" size="sm" className="gap-1">
+          <Button variant="outline" size="sm" className="gap-1 transition-all duration-300 hover:bg-primary/10">
             <InfoIcon className="h-4 w-4" /> 
             About EDA
           </Button>
@@ -95,45 +101,80 @@ const MetricsPage = () => {
           value={edaTab}
           onValueChange={setEdaTab}
         >
-          <TabsList className="grid w-full grid-cols-3 mb-6">
-            <TabsTrigger value="distribution">Distribution Analysis</TabsTrigger>
-            <TabsTrigger value="correlation">Correlation Analysis</TabsTrigger>
-            <TabsTrigger value="scatter">Scatter Analysis</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-3 mb-6 bg-muted/50 p-1">
+            <TabsTrigger value="distribution" className="data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all">
+              <BarChart className="h-4 w-4 mr-2" /> Distribution Analysis
+            </TabsTrigger>
+            <TabsTrigger value="correlation" className="data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all">
+              <GitCompare className="h-4 w-4 mr-2" /> Correlation Analysis
+            </TabsTrigger>
+            <TabsTrigger value="scatter" className="data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all">
+              <PieChart className="h-4 w-4 mr-2" /> Scatter Analysis
+            </TabsTrigger>
           </TabsList>
           
-          <TabsContent value="distribution">
-            <MetricDistributionChart data={channelData} loading={loading} />
-          </TabsContent>
-          
-          <TabsContent value="correlation">
-            <CorrelationMatrix data={channelData} loading={loading} />
-          </TabsContent>
-          
-          <TabsContent value="scatter">
-            <MetricScatterPlot data={channelData} loading={loading} />
-          </TabsContent>
+          <div className="bg-white/50 p-4 rounded-lg border border-white/30 shadow-sm">
+            <TabsContent value="distribution" className="mt-0">
+              <div className="mb-3 flex justify-between">
+                <h4 className="font-medium flex items-center text-primary">
+                  <BarChart className="h-4 w-4 mr-2" /> 
+                  Metric Distribution Across Channels
+                </h4>
+                <span className="text-xs text-muted-foreground bg-white/80 px-2 py-1 rounded-full border border-border/30">
+                  Showing data for {timeframe === "7d" ? "past week" : timeframe === "30d" ? "past month" : "past quarter"}
+                </span>
+              </div>
+              <MetricDistributionChart data={channelData} loading={loading} />
+            </TabsContent>
+            
+            <TabsContent value="correlation" className="mt-0">
+              <div className="mb-3 flex justify-between">
+                <h4 className="font-medium flex items-center text-primary">
+                  <GitCompare className="h-4 w-4 mr-2" /> 
+                  Metric Correlation Heatmap
+                </h4>
+                <span className="text-xs text-muted-foreground bg-white/80 px-2 py-1 rounded-full border border-border/30">
+                  {channelData.length} data points analyzed
+                </span>
+              </div>
+              <CorrelationMatrix data={channelData} loading={loading} />
+            </TabsContent>
+            
+            <TabsContent value="scatter" className="mt-0">
+              <div className="mb-3 flex justify-between">
+                <h4 className="font-medium flex items-center text-primary">
+                  <PieChart className="h-4 w-4 mr-2" /> 
+                  Metric Relationship Analysis
+                </h4>
+                <span className="text-xs text-muted-foreground bg-white/80 px-2 py-1 rounded-full border border-border/30">
+                  Interactive scatter visualization
+                </span>
+              </div>
+              <MetricScatterPlot data={channelData} loading={loading} />
+            </TabsContent>
+          </div>
         </Tabs>
       </div>
 
-      {/* Comparison controls */}
-      <div className="dashboard-card mb-8">
+      {/* Comparison controls - Enhanced with animated entries */}
+      <div className="eda-card mb-8 p-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 animate-entry" style={{ '--entry-delay': '0' } as React.CSSProperties}>
             <GitCompare className="h-5 w-5 text-primary" />
             <h3 className="text-lg font-medium">Metric Comparison</h3>
           </div>
 
-          <div className="flex flex-wrap gap-3">
+          <div className="flex flex-wrap gap-3 animate-entry" style={{ '--entry-delay': '1' } as React.CSSProperties}>
             <Tabs
               defaultValue="revenue-cost"
               value={compareMetrics}
               onValueChange={setCompareMetrics}
               className="w-[300px]"
             >
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="revenue-cost">Revenue vs. Cost</TabsTrigger>
-                <TabsTrigger value="revenue-conversion">Revenue vs. Conv.</TabsTrigger>
-                <TabsTrigger value="cost-roas">Cost vs. ROAS</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-3 bg-muted/50">
+                <TabsTrigger value="revenue-cost" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">Revenue vs. Cost</TabsTrigger>
+                <TabsTrigger value="revenue-conversion" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">Revenue vs. Conv.</TabsTrigger>
+                <TabsTrigger value="cost-roas" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">Cost vs. ROAS</TabsTrigger>
               </TabsList>
             </Tabs>
 
@@ -143,19 +184,22 @@ const MetricsPage = () => {
               onValueChange={setTimeframe}
               className="w-[240px]"
             >
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="7d">7D</TabsTrigger>
-                <TabsTrigger value="30d">30D</TabsTrigger>
-                <TabsTrigger value="90d">90D</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-3 bg-muted/50">
+                <TabsTrigger value="7d" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">7D</TabsTrigger>
+                <TabsTrigger value="30d" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">30D</TabsTrigger>
+                <TabsTrigger value="90d" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">90D</TabsTrigger>
               </TabsList>
             </Tabs>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <Card>
+          <Card className="animate-entry eda-gradient-bg" style={{ '--entry-delay': '2' } as React.CSSProperties}>
             <CardHeader className="pb-2">
-              <CardTitle className="text-md">By Channel</CardTitle>
+              <CardTitle className="text-md flex items-center gap-2">
+                <BarChart className="h-4 w-4 text-primary" />
+                By Channel
+              </CardTitle>
               <CardDescription>
                 Comparing {formatMetricName(metric1)} and {formatMetricName(metric2)} across channels
               </CardDescription>
@@ -182,9 +226,12 @@ const MetricsPage = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="animate-entry eda-gradient-bg" style={{ '--entry-delay': '3' } as React.CSSProperties}>
             <CardHeader className="pb-2">
-              <CardTitle className="text-md">Over Time</CardTitle>
+              <CardTitle className="text-md flex items-center gap-2">
+                <LineChartIcon className="h-4 w-4 text-primary" />
+                Over Time
+              </CardTitle>
               <CardDescription>
                 Comparing {formatMetricName(metric1)} and {formatMetricName(metric2)} trends
               </CardDescription>
@@ -226,27 +273,31 @@ const MetricsPage = () => {
         </div>
       </div>
 
-      {/* Correlation Analysis - NOW BELOW EDA */}
-      <div className="dashboard-card">
-        <div className="flex justify-between items-center mb-4">
+      {/* Correlation Analysis - Enhanced with improved card styling */}
+      <div className="eda-card p-6">
+        <div className="flex justify-between items-center mb-6">
           <div>
-            <h3 className="text-lg font-medium">Correlation Analysis</h3>
+            <h3 className="text-lg font-medium flex items-center gap-2">
+              <AlertCircle className="h-5 w-5 text-primary" />
+              Key Insights
+            </h3>
             <p className="text-sm text-muted-foreground">
-              Identifying relationships between metrics
+              Actionable findings from your marketing data
             </p>
           </div>
-          <Button variant="outline" size="sm" className="gap-1">
+          <Button variant="outline" size="sm" className="gap-1 hover:bg-primary/10 transition-colors">
             <Share2 className="h-4 w-4" /> Share insights
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Card>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card className="eda-metric-card animate-entry" style={{ '--entry-delay': '4' } as React.CSSProperties}>
             <CardHeader className="pb-2">
-              <CardTitle className="text-md">
+              <CardTitle className="text-md flex items-center gap-2">
+                <ArrowUpRight className="h-4 w-4 text-primary" />
                 {formatMetricName(metric1)} vs. {formatMetricName(metric2)}
               </CardTitle>
-              <CardDescription>Strong positive correlation (0.87)</CardDescription>
+              <CardDescription className="font-medium text-green-600">Strong positive correlation (0.87)</CardDescription>
             </CardHeader>
             <CardContent className="pt-2">
               <p className="text-sm text-muted-foreground">
@@ -257,10 +308,13 @@ const MetricsPage = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="eda-metric-card animate-entry" style={{ '--entry-delay': '5' } as React.CSSProperties}>
             <CardHeader className="pb-2">
-              <CardTitle className="text-md">Channel Efficiency</CardTitle>
-              <CardDescription>Ranking by {formatMetricName(metric1)}/{formatMetricName(metric2)} ratio</CardDescription>
+              <CardTitle className="text-md flex items-center gap-2">
+                <BarChart className="h-4 w-4 text-primary" />
+                Channel Efficiency
+              </CardTitle>
+              <CardDescription className="font-medium text-amber-600">Ranking by {formatMetricName(metric1)}/{formatMetricName(metric2)} ratio</CardDescription>
             </CardHeader>
             <CardContent className="pt-2">
               <p className="text-sm text-muted-foreground">
@@ -271,10 +325,13 @@ const MetricsPage = () => {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="eda-metric-card animate-entry" style={{ '--entry-delay': '6' } as React.CSSProperties}>
             <CardHeader className="pb-2">
-              <CardTitle className="text-md">Actionable Insight</CardTitle>
-              <CardDescription>Optimization opportunity</CardDescription>
+              <CardTitle className="text-md flex items-center gap-2">
+                <Sparkles className="h-4 w-4 text-primary" />
+                Actionable Insight
+              </CardTitle>
+              <CardDescription className="font-medium text-blue-600">Optimization opportunity</CardDescription>
             </CardHeader>
             <CardContent className="pt-2">
               <p className="text-sm text-muted-foreground">
