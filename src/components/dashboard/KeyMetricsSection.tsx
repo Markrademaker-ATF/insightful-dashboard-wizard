@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { MetricCard } from "@/components/dashboard/MetricCard";
 import { Layers, DollarSign, Compass, CreditCard, Archive, ChevronDown, ChevronUp } from "lucide-react";
@@ -40,22 +39,18 @@ const channelBreakdown = {
 export function KeyMetricsSection({ loading, latestPeriodData }: KeyMetricsSectionProps) {
   const [expandedMetric, setExpandedMetric] = useState<string | null>(null);
 
-  // Calculate percentages
-  const paidPct = latestPeriodData.total > 0 
-    ? ((latestPeriodData.paid / latestPeriodData.total) * 100).toFixed(1) 
-    : "0";
+  // Safely calculate percentages, ensuring they're always <= 100
+  const calculatePercentage = (value: number, total: number) => {
+    if (total <= 0) return "0";
+    const pct = Math.min((value / total) * 100, 100);
+    return pct.toFixed(1);
+  };
 
-  const organicPct = latestPeriodData.total > 0 
-    ? ((latestPeriodData.organic / latestPeriodData.total) * 100).toFixed(1) 
-    : "0";
-
-  const nonPaidPct = latestPeriodData.total > 0 
-    ? ((latestPeriodData.nonPaid / latestPeriodData.total) * 100).toFixed(1) 
-    : "0";
-
-  const baselinePct = latestPeriodData.total > 0 
-    ? ((latestPeriodData.baseline / latestPeriodData.total) * 100).toFixed(1) 
-    : "0";
+  // Calculate percentages using the safe method
+  const paidPct = calculatePercentage(latestPeriodData.paid, latestPeriodData.total);
+  const organicPct = calculatePercentage(latestPeriodData.organic, latestPeriodData.total);
+  const nonPaidPct = calculatePercentage(latestPeriodData.nonPaid, latestPeriodData.total);
+  const baselinePct = calculatePercentage(latestPeriodData.baseline, latestPeriodData.total);
 
   const toggleExpand = (metricName: string) => {
     setExpandedMetric(expandedMetric === metricName ? null : metricName);
