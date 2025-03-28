@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { BarChart, PieChart, LineChart as LineChartIcon, Filter, ArrowDown, ArrowUp } from "lucide-react";
+import { BarChart, PieChart, LineChart as LineChartIcon, Filter, ArrowDown, ArrowUp, Table as TableIcon } from "lucide-react";
 import { ChannelPerformanceTable } from "@/components/channels/ChannelPerformanceTable";
 import { ChannelBreakdownChart } from "@/components/channels/ChannelBreakdownChart";
 import { ChannelTrendsChart } from "@/components/channels/ChannelTrendsChart";
@@ -83,7 +83,7 @@ export default function ChannelsPage() {
 
       <ChannelMetricsOverview data={channelData} loading={loading} />
       
-      {/* Show regular analysis when a channel is selected */}
+      {/* Main Channel Analysis Card */}
       <Card>
         <CardHeader className="flex flex-row items-center">
           <div className="flex flex-col space-y-1.5">
@@ -130,41 +130,54 @@ export default function ChannelsPage() {
         </CardContent>
       </Card>
 
-      {/* Channel Filter Section */}
-      <Card className="mb-4">
-        <CardHeader className="pb-3">
+      {/* Channel Details Section */}
+      <Card>
+        <CardHeader>
           <div className="flex flex-row items-center justify-between">
-            <CardTitle className="text-lg">Channel Filter</CardTitle>
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                <TableIcon className="h-5 w-5" /> 
+                Channel Details
+              </CardTitle>
+              <CardDescription>
+                Select a specific channel to view detailed performance insights
+              </CardDescription>
+            </div>
           </div>
-          <CardDescription>
-            Select a specific channel to view detailed performance insights
-          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
-            {availableChannels.map((channel) => (
-              <Button
-                key={channel.id}
-                variant={selectedChannel === channel.id ? "default" : "outline"}
-                className="w-full justify-start"
-                onClick={() => handleChannelSelect(channel.id)}
-                style={{ borderColor: selectedChannel === channel.id ? "transparent" : channelColors[channel.id as keyof typeof channelColors] }}
-              >
-                {channel.name}
-              </Button>
-            ))}
+          {/* Channel Filter Section */}
+          <div className="mb-6 p-4 bg-muted/30 rounded-lg">
+            <h3 className="text-sm font-medium mb-3">Channel Filter</h3>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+              {availableChannels.map((channel) => (
+                <Button
+                  key={channel.id}
+                  variant={selectedChannel === channel.id ? "default" : "outline"}
+                  className="w-full justify-start"
+                  onClick={() => handleChannelSelect(channel.id)}
+                  style={{ borderColor: selectedChannel === channel.id ? "transparent" : channelColors[channel.id as keyof typeof channelColors] }}
+                >
+                  {channel.name}
+                </Button>
+              ))}
+            </div>
           </div>
+          
+          {/* Show Channel Detail View when a channel is selected */}
+          {selectedChannel && selectedChannelData ? (
+            <ChannelDetailView 
+              channelData={selectedChannelData} 
+              trendsData={trendsData}
+              loading={loading} 
+            />
+          ) : (
+            <div className="text-center py-8 text-muted-foreground">
+              Select a channel above to view detailed performance data
+            </div>
+          )}
         </CardContent>
       </Card>
-
-      {/* Show Channel Detail View when a channel is selected */}
-      {selectedChannel && selectedChannelData && (
-        <ChannelDetailView 
-          channelData={selectedChannelData} 
-          trendsData={trendsData}
-          loading={loading} 
-        />
-      )}
     </div>
   );
 }
