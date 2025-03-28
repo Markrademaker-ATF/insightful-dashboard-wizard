@@ -12,76 +12,91 @@ import {
   TrendingUp, 
   HelpCircle,
   CheckCircle,
-  ExternalLink
+  ExternalLink,
+  Sparkles,
+  BookOpen,
+  MessagesSquare,
+  Lightbulb,
+  ArrowRight,
+  BarChart4
 } from "lucide-react";
 
 const GuidePage = () => {
   return (
     <div className="animate-fade-in">
       <PageHeader
-        title="Home"
-        description="Welcome to your marketing analytics dashboard"
+        title="Marketing Analytics Guide"
+        description="Everything you need to know to master your marketing analytics dashboard"
       />
 
       <Tabs defaultValue="overview" className="dashboard-card">
-        <TabsList className="grid grid-cols-2 md:grid-cols-4 mb-6">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="pages">Pages Guide</TabsTrigger>
-          <TabsTrigger value="metrics">Metrics Guide</TabsTrigger>
-          <TabsTrigger value="faq">FAQ</TabsTrigger>
+        <TabsList className="grid grid-cols-2 md:grid-cols-4 mb-6 bg-white/70 backdrop-blur-sm">
+          <TabsTrigger value="overview" className="data-[state=active]:bg-primary/20">Overview</TabsTrigger>
+          <TabsTrigger value="pages" className="data-[state=active]:bg-primary/20">Pages Guide</TabsTrigger>
+          <TabsTrigger value="metrics" className="data-[state=active]:bg-primary/20">Metrics Guide</TabsTrigger>
+          <TabsTrigger value="faq" className="data-[state=active]:bg-primary/20">FAQ</TabsTrigger>
         </TabsList>
         
         <TabsContent value="overview" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Welcome to Your Marketing Analytics Dashboard</CardTitle>
-              <CardDescription>
-                A powerful tool for data-driven marketing decisions
-              </CardDescription>
+          <Card className="overflow-hidden border-0 shadow-md bg-gradient-to-br from-white to-indigo-50/50">
+            <CardHeader className="pb-2 border-b border-indigo-100/30">
+              <div className="flex items-center gap-3">
+                <div className="p-3 bg-primary/10 rounded-full">
+                  <BookOpen className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <CardTitle className="text-2xl font-semibold bg-gradient-to-r from-indigo-700 to-purple-600 bg-clip-text text-transparent">
+                    Welcome to Your Marketing Analytics Dashboard
+                  </CardTitle>
+                  <CardDescription className="text-base">
+                    A powerful tool for data-driven marketing decisions
+                  </CardDescription>
+                </div>
+              </div>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <p>
+            <CardContent className="p-6 space-y-5">
+              <p className="text-gray-600 text-balance">
                 This dashboard provides a comprehensive view of your marketing performance across all channels. 
                 It's designed to help you understand what's working, identify opportunities for optimization, 
                 and make data-driven decisions to improve your marketing ROI.
               </p>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div className="flex items-start gap-2">
-                  <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-4">
+                <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 border border-indigo-50">
+                  <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
                   <div>
-                    <h4 className="font-medium">Comprehensive Analytics</h4>
-                    <p className="text-sm text-muted-foreground">
+                    <h4 className="font-medium text-gray-800">Comprehensive Analytics</h4>
+                    <p className="text-sm text-gray-500">
                       Track performance across all marketing channels in one place
                     </p>
                   </div>
                 </div>
                 
-                <div className="flex items-start gap-2">
-                  <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
+                <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 border border-indigo-50">
+                  <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
                   <div>
-                    <h4 className="font-medium">Data Visualization</h4>
-                    <p className="text-sm text-muted-foreground">
+                    <h4 className="font-medium text-gray-800">Data Visualization</h4>
+                    <p className="text-sm text-gray-500">
                       Intuitive charts and graphs make complex data easy to understand
                     </p>
                   </div>
                 </div>
                 
-                <div className="flex items-start gap-2">
-                  <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
+                <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 border border-indigo-50">
+                  <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
                   <div>
-                    <h4 className="font-medium">Actionable Insights</h4>
-                    <p className="text-sm text-muted-foreground">
+                    <h4 className="font-medium text-gray-800">Actionable Insights</h4>
+                    <p className="text-sm text-gray-500">
                       Get recommendations for optimizing your marketing strategy
                     </p>
                   </div>
                 </div>
                 
-                <div className="flex items-start gap-2">
-                  <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
+                <div className="flex items-start gap-3 p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 border border-indigo-50">
+                  <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
                   <div>
-                    <h4 className="font-medium">Budget Optimization</h4>
-                    <p className="text-sm text-muted-foreground">
+                    <h4 className="font-medium text-gray-800">Budget Optimization</h4>
+                    <p className="text-sm text-gray-500">
                       Data-driven budget allocation recommendations to maximize ROI
                     </p>
                   </div>
@@ -91,63 +106,97 @@ const GuidePage = () => {
           </Card>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Getting Started</CardTitle>
+            <Card className="bg-gradient-to-b from-white to-indigo-50/30 border-0 shadow-md overflow-hidden">
+              <CardHeader className="border-b border-indigo-100/20">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-primary/10 rounded-full">
+                    <Lightbulb className="h-5 w-5 text-primary" />
+                  </div>
+                  <CardTitle>Getting Started</CardTitle>
+                </div>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-sm">
+              <CardContent className="space-y-4 p-6">
+                <p className="text-sm text-gray-600">
                   Navigate through the dashboard using the sidebar menu. Each section provides
                   different insights into your marketing performance:
                 </p>
                 
                 <ul className="space-y-3 text-sm">
-                  <li className="flex items-start gap-2">
-                    <LayoutDashboard className="h-4 w-4 text-primary mt-0.5" />
-                    <span><strong>Dashboard:</strong> A high-level overview of key metrics</span>
+                  <li className="flex items-start gap-3 p-3 bg-white rounded-lg hover:shadow-sm transition-all border border-indigo-50/50">
+                    <LayoutDashboard className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                    <div>
+                      <span className="font-semibold text-gray-800">Dashboard</span>
+                      <p className="text-gray-500 mt-1">A high-level overview of key metrics and performance indicators</p>
+                    </div>
                   </li>
-                  <li className="flex items-start gap-2">
-                    <BarChart3 className="h-4 w-4 text-primary mt-0.5" />
-                    <span><strong>Data Overview:</strong> Detailed data across all channels</span>
+                  <li className="flex items-start gap-3 p-3 bg-white rounded-lg hover:shadow-sm transition-all border border-indigo-50/50">
+                    <BarChart3 className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                    <div>
+                      <span className="font-semibold text-gray-800">Data Overview</span>
+                      <p className="text-gray-500 mt-1">Detailed data across all channels with filtering capabilities</p>
+                    </div>
                   </li>
-                  <li className="flex items-start gap-2">
-                    <Radio className="h-4 w-4 text-primary mt-0.5" />
-                    <span><strong>Channel Analysis:</strong> Performance by marketing channel</span>
+                  <li className="flex items-start gap-3 p-3 bg-white rounded-lg hover:shadow-sm transition-all border border-indigo-50/50">
+                    <Radio className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                    <div>
+                      <span className="font-semibold text-gray-800">Channel Analysis</span>
+                      <p className="text-gray-500 mt-1">Deep dive into performance metrics by marketing channel</p>
+                    </div>
                   </li>
-                  <li className="flex items-start gap-2">
-                    <TrendingUp className="h-4 w-4 text-primary mt-0.5" />
-                    <span><strong>Incremental Analysis:</strong> Measure true marketing impact</span>
+                  <li className="flex items-start gap-3 p-3 bg-white rounded-lg hover:shadow-sm transition-all border border-indigo-50/50">
+                    <TrendingUp className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                    <div>
+                      <span className="font-semibold text-gray-800">Incremental Analysis</span>
+                      <p className="text-gray-500 mt-1">Measure true marketing impact beyond baseline performance</p>
+                    </div>
                   </li>
                 </ul>
               </CardContent>
             </Card>
             
-            <Card>
-              <CardHeader>
-                <CardTitle>Key Features</CardTitle>
+            <Card className="bg-gradient-to-b from-white to-indigo-50/30 border-0 shadow-md overflow-hidden">
+              <CardHeader className="border-b border-indigo-100/20">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-primary/10 rounded-full">
+                    <Sparkles className="h-5 w-5 text-primary" />
+                  </div>
+                  <CardTitle>Key Features</CardTitle>
+                </div>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-sm">
+              <CardContent className="space-y-4 p-6">
+                <p className="text-sm text-gray-600">
                   The dashboard includes several powerful features to help you analyze and optimize 
                   your marketing performance:
                 </p>
                 
                 <ul className="space-y-3 text-sm">
-                  <li className="flex items-start gap-2">
-                    <GitCompare className="h-4 w-4 text-primary mt-0.5" />
-                    <span><strong>Metric Comparison:</strong> Compare different metrics side by side</span>
+                  <li className="flex items-start gap-3 p-3 bg-white rounded-lg hover:shadow-sm transition-all border border-indigo-50/50">
+                    <GitCompare className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                    <div>
+                      <span className="font-semibold text-gray-800">Metric Comparison</span>
+                      <p className="text-gray-500 mt-1">Compare different metrics side by side for better insights</p>
+                    </div>
                   </li>
-                  <li className="flex items-start gap-2">
-                    <TrendingUp className="h-4 w-4 text-primary mt-0.5" />
-                    <span><strong>Incremental Analysis:</strong> Measure true incremental impact</span>
+                  <li className="flex items-start gap-3 p-3 bg-white rounded-lg hover:shadow-sm transition-all border border-indigo-50/50">
+                    <TrendingUp className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                    <div>
+                      <span className="font-semibold text-gray-800">Incremental Analysis</span>
+                      <p className="text-gray-500 mt-1">Sophisticated models to measure true incremental impact</p>
+                    </div>
                   </li>
-                  <li className="flex items-start gap-2">
-                    <PieChart className="h-4 w-4 text-primary mt-0.5" />
-                    <span><strong>Budget Optimizer:</strong> Get data-driven budget recommendations</span>
+                  <li className="flex items-start gap-3 p-3 bg-white rounded-lg hover:shadow-sm transition-all border border-indigo-50/50">
+                    <PieChart className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                    <div>
+                      <span className="font-semibold text-gray-800">Budget Optimizer</span>
+                      <p className="text-gray-500 mt-1">AI-powered budget recommendations based on performance data</p>
+                    </div>
                   </li>
-                  <li className="flex items-start gap-2">
-                    <HelpCircle className="h-4 w-4 text-primary mt-0.5" />
-                    <span><strong>Interactive Help:</strong> Explanations and tips throughout</span>
+                  <li className="flex items-start gap-3 p-3 bg-white rounded-lg hover:shadow-sm transition-all border border-indigo-50/50">
+                    <HelpCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                    <div>
+                      <span className="font-semibold text-gray-800">Interactive Help</span>
+                      <p className="text-gray-500 mt-1">Contextual explanations and tips throughout the dashboard</p>
+                    </div>
                   </li>
                 </ul>
               </CardContent>
@@ -156,11 +205,14 @@ const GuidePage = () => {
         </TabsContent>
         
         <TabsContent value="pages" className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card className="bg-white shadow-md hover:shadow-lg transition-all border border-indigo-50 overflow-hidden group">
+              <div className="h-2 bg-gradient-to-r from-indigo-500 to-purple-500"></div>
               <CardHeader className="pb-2">
                 <div className="flex items-center gap-2">
-                  <LayoutDashboard className="h-5 w-5 text-primary" />
+                  <div className="p-2 bg-indigo-50 rounded-full group-hover:bg-indigo-100 transition-colors">
+                    <LayoutDashboard className="h-5 w-5 text-indigo-600" />
+                  </div>
                   <CardTitle>Dashboard</CardTitle>
                 </div>
                 <CardDescription>
@@ -168,30 +220,33 @@ const GuidePage = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-sm mb-3">
+                <p className="text-sm mb-3 text-gray-600">
                   The Dashboard page provides a high-level overview of your marketing performance with key metrics, trends, and insights.
                 </p>
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-600 mt-0.5" />
-                    <span>Review key performance metrics at a glance</span>
+                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <span className="text-gray-700">Review key performance metrics at a glance</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-600 mt-0.5" />
-                    <span>Track revenue trends across channels</span>
+                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <span className="text-gray-700">Track revenue trends across channels</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-600 mt-0.5" />
-                    <span>View budget allocation across channels</span>
+                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <span className="text-gray-700">View budget allocation across channels</span>
                   </li>
                 </ul>
               </CardContent>
             </Card>
             
-            <Card>
+            <Card className="bg-white shadow-md hover:shadow-lg transition-all border border-indigo-50 overflow-hidden group">
+              <div className="h-2 bg-gradient-to-r from-blue-500 to-cyan-400"></div>
               <CardHeader className="pb-2">
                 <div className="flex items-center gap-2">
-                  <BarChart3 className="h-5 w-5 text-primary" />
+                  <div className="p-2 bg-blue-50 rounded-full group-hover:bg-blue-100 transition-colors">
+                    <BarChart3 className="h-5 w-5 text-blue-600" />
+                  </div>
                   <CardTitle>Data Overview</CardTitle>
                 </div>
                 <CardDescription>
@@ -199,30 +254,33 @@ const GuidePage = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-sm mb-3">
+                <p className="text-sm mb-3 text-gray-600">
                   The Data Overview page provides detailed data for all marketing channels, allowing you to explore and analyze raw performance data.
                 </p>
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-600 mt-0.5" />
-                    <span>View detailed data in chart or table format</span>
+                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <span className="text-gray-700">View detailed data in chart or table format</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-600 mt-0.5" />
-                    <span>Export data for further analysis</span>
+                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <span className="text-gray-700">Export data for further analysis</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-600 mt-0.5" />
-                    <span>Filter data by timeframe</span>
+                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <span className="text-gray-700">Filter data by timeframe</span>
                   </li>
                 </ul>
               </CardContent>
             </Card>
             
-            <Card>
+            <Card className="bg-white shadow-md hover:shadow-lg transition-all border border-indigo-50 overflow-hidden group">
+              <div className="h-2 bg-gradient-to-r from-purple-500 to-pink-500"></div>
               <CardHeader className="pb-2">
                 <div className="flex items-center gap-2">
-                  <Radio className="h-5 w-5 text-primary" />
+                  <div className="p-2 bg-purple-50 rounded-full group-hover:bg-purple-100 transition-colors">
+                    <Radio className="h-5 w-5 text-purple-600" />
+                  </div>
                   <CardTitle>Channel Analysis</CardTitle>
                 </div>
                 <CardDescription>
@@ -230,30 +288,33 @@ const GuidePage = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-sm mb-3">
+                <p className="text-sm mb-3 text-gray-600">
                   The Channel Analysis page breaks down performance by marketing channel, allowing you to compare and analyze channel-specific metrics.
                 </p>
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-600 mt-0.5" />
-                    <span>Compare channel performance with interactive charts</span>
+                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <span className="text-gray-700">Compare channel performance with interactive charts</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-600 mt-0.5" />
-                    <span>View detailed metrics for each channel</span>
+                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <span className="text-gray-700">View detailed metrics for each channel</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-600 mt-0.5" />
-                    <span>Identify top and underperforming channels</span>
+                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <span className="text-gray-700">Identify top and underperforming channels</span>
                   </li>
                 </ul>
               </CardContent>
             </Card>
             
-            <Card>
+            <Card className="bg-white shadow-md hover:shadow-lg transition-all border border-indigo-50 overflow-hidden group">
+              <div className="h-2 bg-gradient-to-r from-green-500 to-emerald-400"></div>
               <CardHeader className="pb-2">
                 <div className="flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5 text-primary" />
+                  <div className="p-2 bg-green-50 rounded-full group-hover:bg-green-100 transition-colors">
+                    <TrendingUp className="h-5 w-5 text-green-600" />
+                  </div>
                   <CardTitle>Incremental Analysis</CardTitle>
                 </div>
                 <CardDescription>
@@ -261,30 +322,33 @@ const GuidePage = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-sm mb-3">
+                <p className="text-sm mb-3 text-gray-600">
                   The Incremental Analysis page helps you understand the true incremental impact of your marketing efforts beyond baseline performance.
                 </p>
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-600 mt-0.5" />
-                    <span>Separate baseline from incremental revenue</span>
+                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <span className="text-gray-700">Separate baseline from incremental revenue</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-600 mt-0.5" />
-                    <span>Identify channels with highest incremental impact</span>
+                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <span className="text-gray-700">Identify channels with highest incremental impact</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-600 mt-0.5" />
-                    <span>Make more informed budget allocation decisions</span>
+                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <span className="text-gray-700">Make more informed budget allocation decisions</span>
                   </li>
                 </ul>
               </CardContent>
             </Card>
             
-            <Card>
+            <Card className="bg-white shadow-md hover:shadow-lg transition-all border border-indigo-50 overflow-hidden group">
+              <div className="h-2 bg-gradient-to-r from-amber-500 to-yellow-400"></div>
               <CardHeader className="pb-2">
                 <div className="flex items-center gap-2">
-                  <PieChart className="h-5 w-5 text-primary" />
+                  <div className="p-2 bg-amber-50 rounded-full group-hover:bg-amber-100 transition-colors">
+                    <PieChart className="h-5 w-5 text-amber-600" />
+                  </div>
                   <CardTitle>Budget Optimizer</CardTitle>
                 </div>
                 <CardDescription>
@@ -292,30 +356,33 @@ const GuidePage = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-sm mb-3">
+                <p className="text-sm mb-3 text-gray-600">
                   The Budget Optimizer provides data-driven recommendations for allocating your marketing budget to maximize ROI.
                 </p>
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-600 mt-0.5" />
-                    <span>Compare current vs. recommended budget allocation</span>
+                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <span className="text-gray-700">Compare current vs. recommended budget allocation</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-600 mt-0.5" />
-                    <span>View projected impact of budget changes</span>
+                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <span className="text-gray-700">View projected impact of budget changes</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-600 mt-0.5" />
-                    <span>Apply recommendations with one click</span>
+                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <span className="text-gray-700">Apply recommendations with one click</span>
                   </li>
                 </ul>
               </CardContent>
             </Card>
             
-            <Card>
+            <Card className="bg-white shadow-md hover:shadow-lg transition-all border border-indigo-50 overflow-hidden group">
+              <div className="h-2 bg-gradient-to-r from-teal-500 to-cyan-400"></div>
               <CardHeader className="pb-2">
                 <div className="flex items-center gap-2">
-                  <GitCompare className="h-5 w-5 text-primary" />
+                  <div className="p-2 bg-teal-50 rounded-full group-hover:bg-teal-100 transition-colors">
+                    <GitCompare className="h-5 w-5 text-teal-600" />
+                  </div>
                   <CardTitle>Metric Comparison</CardTitle>
                 </div>
                 <CardDescription>
@@ -323,21 +390,21 @@ const GuidePage = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-sm mb-3">
+                <p className="text-sm mb-3 text-gray-600">
                   The Metric Comparison page allows you to compare different performance metrics side by side to identify correlations and patterns.
                 </p>
                 <ul className="space-y-2 text-sm">
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-600 mt-0.5" />
-                    <span>Compare different metrics across channels</span>
+                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <span className="text-gray-700">Compare different metrics across channels</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-600 mt-0.5" />
-                    <span>Identify correlations between metrics</span>
+                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <span className="text-gray-700">Identify correlations between metrics</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-600 mt-0.5" />
-                    <span>Get actionable insights from comparison data</span>
+                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <span className="text-gray-700">Get actionable insights from comparison data</span>
                   </li>
                 </ul>
               </CardContent>
@@ -346,101 +413,133 @@ const GuidePage = () => {
         </TabsContent>
         
         <TabsContent value="metrics" className="space-y-6">
-          <Card>
+          <Card className="bg-white border-0 shadow-md overflow-hidden">
+            <div className="h-2 bg-gradient-to-r from-violet-500 via-purple-500 to-indigo-500"></div>
             <CardHeader>
-              <CardTitle>Key Metrics Explained</CardTitle>
-              <CardDescription>
-                Understanding the metrics used throughout the dashboard
-              </CardDescription>
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-violet-50 rounded-full">
+                  <BarChart4 className="h-5 w-5 text-violet-600" />
+                </div>
+                <div>
+                  <CardTitle>Key Metrics Explained</CardTitle>
+                  <CardDescription>
+                    Understanding the metrics used throughout the dashboard
+                  </CardDescription>
+                </div>
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
-                <div>
-                  <h4 className="font-medium">Revenue</h4>
-                  <p className="text-sm text-muted-foreground mb-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                <div className="bg-white p-4 rounded-lg border border-indigo-50 hover:shadow-md transition-all">
+                  <h4 className="font-medium text-indigo-700 mb-2 flex items-center gap-2">
+                    <span className="p-1 bg-indigo-100 rounded text-xs text-indigo-600">01</span>
+                    Revenue
+                  </h4>
+                  <p className="text-sm text-gray-600 mb-2">
                     Total revenue attributed to marketing activities across all channels.
                   </p>
-                  <p className="text-sm text-muted-foreground">
-                    <strong>How to use it:</strong> Track overall marketing performance and compare
+                  <div className="text-sm bg-indigo-50/50 p-2 rounded border border-indigo-100/50">
+                    <strong className="text-gray-700">How to use it:</strong> Track overall marketing performance and compare
                     revenue contribution across channels.
-                  </p>
+                  </div>
                 </div>
                 
-                <div>
-                  <h4 className="font-medium">ROAS (Return on Ad Spend)</h4>
-                  <p className="text-sm text-muted-foreground mb-2">
+                <div className="bg-white p-4 rounded-lg border border-indigo-50 hover:shadow-md transition-all">
+                  <h4 className="font-medium text-indigo-700 mb-2 flex items-center gap-2">
+                    <span className="p-1 bg-indigo-100 rounded text-xs text-indigo-600">02</span>
+                    ROAS (Return on Ad Spend)
+                  </h4>
+                  <p className="text-sm text-gray-600 mb-2">
                     Revenue divided by cost, representing the return for each dollar spent.
                   </p>
-                  <p className="text-sm text-muted-foreground">
-                    <strong>How to use it:</strong> Evaluate efficiency of marketing spend and
+                  <div className="text-sm bg-indigo-50/50 p-2 rounded border border-indigo-100/50">
+                    <strong className="text-gray-700">How to use it:</strong> Evaluate efficiency of marketing spend and
                     identify channels with highest return.
-                  </p>
+                  </div>
                 </div>
                 
-                <div>
-                  <h4 className="font-medium">Conversion Rate</h4>
-                  <p className="text-sm text-muted-foreground mb-2">
+                <div className="bg-white p-4 rounded-lg border border-indigo-50 hover:shadow-md transition-all">
+                  <h4 className="font-medium text-indigo-700 mb-2 flex items-center gap-2">
+                    <span className="p-1 bg-indigo-100 rounded text-xs text-indigo-600">03</span>
+                    Conversion Rate
+                  </h4>
+                  <p className="text-sm text-gray-600 mb-2">
                     Percentage of users who complete a desired action (purchase, signup, etc.).
                   </p>
-                  <p className="text-sm text-muted-foreground">
-                    <strong>How to use it:</strong> Identify optimization opportunities to improve
+                  <div className="text-sm bg-indigo-50/50 p-2 rounded border border-indigo-100/50">
+                    <strong className="text-gray-700">How to use it:</strong> Identify optimization opportunities to improve
                     campaign effectiveness.
-                  </p>
+                  </div>
                 </div>
                 
-                <div>
-                  <h4 className="font-medium">CPA (Cost Per Acquisition)</h4>
-                  <p className="text-sm text-muted-foreground mb-2">
+                <div className="bg-white p-4 rounded-lg border border-indigo-50 hover:shadow-md transition-all">
+                  <h4 className="font-medium text-indigo-700 mb-2 flex items-center gap-2">
+                    <span className="p-1 bg-indigo-100 rounded text-xs text-indigo-600">04</span>
+                    CPA (Cost Per Acquisition)
+                  </h4>
+                  <p className="text-sm text-gray-600 mb-2">
                     Average cost to acquire a customer or conversion.
                   </p>
-                  <p className="text-sm text-muted-foreground">
-                    <strong>How to use it:</strong> Compare acquisition costs across channels
+                  <div className="text-sm bg-indigo-50/50 p-2 rounded border border-indigo-100/50">
+                    <strong className="text-gray-700">How to use it:</strong> Compare acquisition costs across channels
                     and optimize for efficiency.
-                  </p>
+                  </div>
                 </div>
                 
-                <div>
-                  <h4 className="font-medium">Incremental Revenue</h4>
-                  <p className="text-sm text-muted-foreground mb-2">
+                <div className="bg-white p-4 rounded-lg border border-indigo-50 hover:shadow-md transition-all">
+                  <h4 className="font-medium text-indigo-700 mb-2 flex items-center gap-2">
+                    <span className="p-1 bg-indigo-100 rounded text-xs text-indigo-600">05</span>
+                    Incremental Revenue
+                  </h4>
+                  <p className="text-sm text-gray-600 mb-2">
                     Revenue directly attributable to marketing efforts, excluding baseline.
                   </p>
-                  <p className="text-sm text-muted-foreground">
-                    <strong>How to use it:</strong> Measure true impact of marketing activities
+                  <div className="text-sm bg-indigo-50/50 p-2 rounded border border-indigo-100/50">
+                    <strong className="text-gray-700">How to use it:</strong> Measure true impact of marketing activities
                     beyond organic performance.
-                  </p>
+                  </div>
                 </div>
                 
-                <div>
-                  <h4 className="font-medium">Budget Allocation</h4>
-                  <p className="text-sm text-muted-foreground mb-2">
+                <div className="bg-white p-4 rounded-lg border border-indigo-50 hover:shadow-md transition-all">
+                  <h4 className="font-medium text-indigo-700 mb-2 flex items-center gap-2">
+                    <span className="p-1 bg-indigo-100 rounded text-xs text-indigo-600">06</span>
+                    Budget Allocation
+                  </h4>
+                  <p className="text-sm text-gray-600 mb-2">
                     Distribution of marketing budget across different channels.
                   </p>
-                  <p className="text-sm text-muted-foreground">
-                    <strong>How to use it:</strong> Optimize budget distribution based on
+                  <div className="text-sm bg-indigo-50/50 p-2 rounded border border-indigo-100/50">
+                    <strong className="text-gray-700">How to use it:</strong> Optimize budget distribution based on
                     performance and incremental impact.
-                  </p>
+                  </div>
                 </div>
                 
-                <div>
-                  <h4 className="font-medium">CTR (Click-Through Rate)</h4>
-                  <p className="text-sm text-muted-foreground mb-2">
+                <div className="bg-white p-4 rounded-lg border border-indigo-50 hover:shadow-md transition-all">
+                  <h4 className="font-medium text-indigo-700 mb-2 flex items-center gap-2">
+                    <span className="p-1 bg-indigo-100 rounded text-xs text-indigo-600">07</span>
+                    CTR (Click-Through Rate)
+                  </h4>
+                  <p className="text-sm text-gray-600 mb-2">
                     Percentage of impressions that result in clicks.
                   </p>
-                  <p className="text-sm text-muted-foreground">
-                    <strong>How to use it:</strong> Evaluate the effectiveness of ad creative
+                  <div className="text-sm bg-indigo-50/50 p-2 rounded border border-indigo-100/50">
+                    <strong className="text-gray-700">How to use it:</strong> Evaluate the effectiveness of ad creative
                     and targeting.
-                  </p>
+                  </div>
                 </div>
                 
-                <div>
-                  <h4 className="font-medium">ROI Impact</h4>
-                  <p className="text-sm text-muted-foreground mb-2">
+                <div className="bg-white p-4 rounded-lg border border-indigo-50 hover:shadow-md transition-all">
+                  <h4 className="font-medium text-indigo-700 mb-2 flex items-center gap-2">
+                    <span className="p-1 bg-indigo-100 rounded text-xs text-indigo-600">08</span>
+                    ROI Impact
+                  </h4>
+                  <p className="text-sm text-gray-600 mb-2">
                     Projected improvement in return on investment from recommended changes.
                   </p>
-                  <p className="text-sm text-muted-foreground">
-                    <strong>How to use it:</strong> Prioritize optimization opportunities based
+                  <div className="text-sm bg-indigo-50/50 p-2 rounded border border-indigo-100/50">
+                    <strong className="text-gray-700">How to use it:</strong> Prioritize optimization opportunities based
                     on potential impact.
-                  </p>
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -448,60 +547,96 @@ const GuidePage = () => {
         </TabsContent>
         
         <TabsContent value="faq" className="space-y-6">
-          <Card>
+          <Card className="bg-white border-0 shadow-md overflow-hidden">
+            <div className="h-2 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
             <CardHeader>
-              <CardTitle>Frequently Asked Questions</CardTitle>
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-blue-50 rounded-full">
+                  <MessagesSquare className="h-5 w-5 text-blue-600" />
+                </div>
+                <CardTitle>Frequently Asked Questions</CardTitle>
+              </div>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div>
-                <h4 className="font-medium mb-1">How is incremental revenue calculated?</h4>
-                <p className="text-sm text-muted-foreground">
+              <div className="bg-white p-5 rounded-lg border border-blue-50 hover:shadow-md transition-all">
+                <h4 className="font-medium text-gray-800 mb-2 flex items-center gap-2">
+                  <span className="p-1.5 bg-blue-100 rounded-full text-blue-600 flex items-center justify-center">
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </span>
+                  How is incremental revenue calculated?
+                </h4>
+                <p className="text-sm text-gray-600">
                   Incremental revenue is calculated using a combination of marketing mix modeling, 
                   holdout testing, and multi-touch attribution. This methodology isolates the impact 
                   of marketing activities from baseline revenue that would occur organically.
                 </p>
               </div>
               
-              <div>
-                <h4 className="font-medium mb-1">How often is data updated?</h4>
-                <p className="text-sm text-muted-foreground">
+              <div className="bg-white p-5 rounded-lg border border-blue-50 hover:shadow-md transition-all">
+                <h4 className="font-medium text-gray-800 mb-2 flex items-center gap-2">
+                  <span className="p-1.5 bg-blue-100 rounded-full text-blue-600 flex items-center justify-center">
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </span>
+                  How often is data updated?
+                </h4>
+                <p className="text-sm text-gray-600">
                   The dashboard data is refreshed daily with a 24-hour lag to ensure data completeness. 
                   Some metrics that require more complex processing (like incremental analysis) may have 
                   a 48-72 hour lag.
                 </p>
               </div>
               
-              <div>
-                <h4 className="font-medium mb-1">How are budget recommendations generated?</h4>
-                <p className="text-sm text-muted-foreground">
+              <div className="bg-white p-5 rounded-lg border border-blue-50 hover:shadow-md transition-all">
+                <h4 className="font-medium text-gray-800 mb-2 flex items-center gap-2">
+                  <span className="p-1.5 bg-blue-100 rounded-full text-blue-600 flex items-center justify-center">
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </span>
+                  How are budget recommendations generated?
+                </h4>
+                <p className="text-sm text-gray-600">
                   Budget recommendations are based on historical performance data, incremental analysis, 
                   and predictive modeling. The algorithm optimizes for maximum ROI while considering factors 
                   like seasonality, diminishing returns, and channel interactions.
                 </p>
               </div>
               
-              <div>
-                <h4 className="font-medium mb-1">Can I export data for further analysis?</h4>
-                <p className="text-sm text-muted-foreground">
+              <div className="bg-white p-5 rounded-lg border border-blue-50 hover:shadow-md transition-all">
+                <h4 className="font-medium text-gray-800 mb-2 flex items-center gap-2">
+                  <span className="p-1.5 bg-blue-100 rounded-full text-blue-600 flex items-center justify-center">
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </span>
+                  Can I export data for further analysis?
+                </h4>
+                <p className="text-sm text-gray-600">
                   Yes, you can export data from most dashboard pages using the Export button. Data can be 
                   exported in CSV or Excel format for further analysis in your preferred tools.
                 </p>
               </div>
               
-              <div>
-                <h4 className="font-medium mb-1">How can I customize the dashboard?</h4>
-                <p className="text-sm text-muted-foreground">
+              <div className="bg-white p-5 rounded-lg border border-blue-50 hover:shadow-md transition-all">
+                <h4 className="font-medium text-gray-800 mb-2 flex items-center gap-2">
+                  <span className="p-1.5 bg-blue-100 rounded-full text-blue-600 flex items-center justify-center">
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </span>
+                  How can I customize the dashboard?
+                </h4>
+                <p className="text-sm text-gray-600">
                   The dashboard offers several customization options. You can filter by date range, 
                   select different metrics for comparison, and customize views on most pages. Additional 
                   customization options are available in the Settings page.
                 </p>
               </div>
               
-              <div>
-                <h4 className="font-medium mb-1">Where can I get additional help?</h4>
-                <p className="text-sm text-muted-foreground flex items-center gap-2">
+              <div className="bg-white p-5 rounded-lg border border-blue-50 hover:shadow-md transition-all">
+                <h4 className="font-medium text-gray-800 mb-2 flex items-center gap-2">
+                  <span className="p-1.5 bg-blue-100 rounded-full text-blue-600 flex items-center justify-center">
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </span>
+                  Where can I get additional help?
+                </h4>
+                <p className="text-sm text-gray-600 flex items-center gap-2">
                   For additional help, please contact our support team or refer to the detailed documentation.
-                  <a href="#" className="text-primary inline-flex items-center hover:underline">
+                  <a href="#" className="text-primary inline-flex items-center hover:underline transition-colors">
                     View Documentation <ExternalLink className="h-3 w-3 ml-1" />
                   </a>
                 </p>

@@ -90,16 +90,16 @@ export function ChannelSaturationCurve() {
               <CartesianGrid strokeDasharray="3 3" opacity={0.2} />
               <XAxis 
                 dataKey="spend" 
-                tickFormatter={(value) => `$${value/1000}k`}
+                tickFormatter={(value: number) => `$${value/1000}k`}
                 label={{ value: 'Marketing Spend', position: 'insideBottom', offset: -5 }}
               />
               <YAxis 
-                tickFormatter={(value) => `$${value/1000}k`}
+                tickFormatter={(value: number) => `$${value/1000}k`}
                 label={{ value: 'Revenue', angle: -90, position: 'insideLeft' }}
               />
               <Tooltip 
-                formatter={(value) => [`$${Number(value).toLocaleString()}`, 'Revenue']}
-                labelFormatter={(value) => `Spend: $${Number(value).toLocaleString()}`}
+                formatter={(value: number) => [`$${Number(value).toLocaleString()}`, 'Revenue']}
+                labelFormatter={(value: number) => `Spend: $${Number(value).toLocaleString()}`}
                 contentStyle={{
                   backgroundColor: "rgba(255, 255, 255, 0.95)",
                   borderRadius: "0.5rem",
@@ -108,7 +108,7 @@ export function ChannelSaturationCurve() {
                 }}
               />
               <Legend 
-                formatter={(value) => <span className="text-sm font-medium">Channel Revenue</span>}
+                formatter={(value: string) => <span className="text-sm font-medium">Channel Revenue</span>}
               />
               <ReferenceLine 
                 x={optimalSpendPoint} 
