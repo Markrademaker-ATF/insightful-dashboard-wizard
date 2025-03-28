@@ -2,7 +2,7 @@
 import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ExternalLink, ChevronRight } from "lucide-react";
+import { ArrowRight, ExternalLink, ChevronRight, BarChart3, Users, Zap } from "lucide-react";
 import { Helmet } from "react-helmet";
 
 const LandingPage = () => {
@@ -215,6 +215,90 @@ const LandingPage = () => {
             <div className="absolute top-1/3 left-1/4 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl -z-10 animate-float"></div>
             <div className="absolute bottom-1/4 right-1/3 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl -z-10 animate-float" style={{animationDelay: "1.5s"}}></div>
             <div className="absolute top-2/3 left-1/2 w-72 h-72 bg-pink-500/20 rounded-full blur-3xl -z-10 animate-float" style={{animationDelay: "3s"}}></div>
+          </div>
+        </div>
+
+        {/* Marketing Analytics Solutions Section */}
+        <div className="container mx-auto px-6 py-16 md:py-24">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl font-bold mb-4">Advanced Marketing Analytics Solutions</h2>
+            <p className="text-xl text-white/80 max-w-3xl mx-auto">
+              Leverage our cutting-edge analytics methodologies to optimize your marketing strategy and maximize ROI
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {/* Marketing Mix Modelling */}
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-blue-400/30 rounded-2xl blur-xl transform group-hover:scale-105 transition-all duration-300 -z-10"></div>
+              <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-lg border border-white/10 h-full flex flex-col transform group-hover:translate-y-[-5px] transition-all duration-300">
+                <div className="p-3 rounded-full bg-blue-500/20 w-fit mb-6">
+                  <BarChart3 className="h-7 w-7 text-blue-400" />
+                </div>
+                <h3 className="text-2xl font-bold mb-3">Marketing Mix Modelling</h3>
+                <p className="mb-6 text-white/80 flex-grow">
+                  Optimize your marketing budget allocation with advanced statistical analysis to determine the impact of different marketing channels on your business outcomes.
+                </p>
+                <Button 
+                  asChild
+                  variant="outline" 
+                  className="mt-4 bg-blue-500/20 border border-blue-400/30 hover:bg-blue-500/40 transition-colors text-white w-full justify-between"
+                >
+                  <Link to="/channels">
+                    <span>Channel Analysis</span>
+                    <ChevronRight className="h-4 w-4" />
+                  </Link>
+                </Button>
+              </div>
+            </div>
+
+            {/* Multi-Touch Attribution */}
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-600/20 to-purple-400/30 rounded-2xl blur-xl transform group-hover:scale-105 transition-all duration-300 -z-10"></div>
+              <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-lg border border-white/10 h-full flex flex-col transform group-hover:translate-y-[-5px] transition-all duration-300">
+                <div className="p-3 rounded-full bg-purple-500/20 w-fit mb-6">
+                  <Users className="h-7 w-7 text-purple-400" />
+                </div>
+                <h3 className="text-2xl font-bold mb-3">Multi-Touch Attribution</h3>
+                <p className="mb-6 text-white/80 flex-grow">
+                  Understand the customer journey with precision by analyzing each touchpoint's contribution to conversion, helping you allocate budget to the most effective channels.
+                </p>
+                <Button 
+                  asChild
+                  variant="outline" 
+                  className="mt-4 bg-purple-500/20 border border-purple-400/30 hover:bg-purple-500/40 transition-colors text-white w-full justify-between"
+                >
+                  <Link to="/channel-details">
+                    <span>Campaign Analysis</span>
+                    <ChevronRight className="h-4 w-4" />
+                  </Link>
+                </Button>
+              </div>
+            </div>
+
+            {/* Incrementality Testing */}
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-br from-pink-600/20 to-pink-400/30 rounded-2xl blur-xl transform group-hover:scale-105 transition-all duration-300 -z-10"></div>
+              <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-lg border border-white/10 h-full flex flex-col transform group-hover:translate-y-[-5px] transition-all duration-300">
+                <div className="p-3 rounded-full bg-pink-500/20 w-fit mb-6">
+                  <Zap className="h-7 w-7 text-pink-400" />
+                </div>
+                <h3 className="text-2xl font-bold mb-3">Incrementality Testing</h3>
+                <p className="mb-6 text-white/80 flex-grow">
+                  Measure the true impact of your marketing efforts by conducting controlled experiments to determine how much value each channel adds compared to no marketing activity.
+                </p>
+                <Button 
+                  asChild
+                  variant="outline" 
+                  className="mt-4 bg-pink-500/20 border border-pink-400/30 hover:bg-pink-500/40 transition-colors text-white w-full justify-between"
+                >
+                  <Link to="/ab-testing">
+                    <span>A/B Testing</span>
+                    <ChevronRight className="h-4 w-4" />
+                  </Link>
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </main>
