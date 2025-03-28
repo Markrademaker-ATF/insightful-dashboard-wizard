@@ -1,4 +1,3 @@
-
 import React from "react";
 import { 
   LineChart, 
@@ -138,7 +137,6 @@ export function ChannelSaturationCurve({
   
   return (
     <div className="space-y-6">
-      {/* Main Chart */}
       <Card>
         <CardContent className="pt-6">
           <div className="mb-4">
@@ -179,43 +177,46 @@ export function ChannelSaturationCurve({
                   activeDot={{ r: 8 }}
                 />
                 
-                {/* Current point marker */}
+                {/* Current point marker - Enhanced visibility */}
                 <Scatter
                   yAxisId="left"
                   data={[{ spend: currentPoint.spend, incrementalOutcome: currentPoint.incrementalOutcome }]}
-                  fill="#FF8C00"  // Orange color
+                  fill="#FF8C00"  // Bright orange
                   stroke="#FFFFFF"
-                  strokeWidth={2}
+                  strokeWidth={3}
                   shape="circle"
                   name="Current Spend"
+                  symbolSize={20}  // Increased size
                 >
                 </Scatter>
                 
-                {/* New point marker */}
+                {/* New point marker - Enhanced visibility */}
                 <Scatter
                   yAxisId="left"
                   data={[{ spend: newPoint.spend, incrementalOutcome: newPoint.incrementalOutcome }]}
-                  fill="#4CAF50"  // Green color
+                  fill="#4CAF50"  // Bright green
                   stroke="#FFFFFF"
-                  strokeWidth={2}
+                  strokeWidth={3}
                   shape="diamond"
                   name="New Spend"
+                  symbolSize={20}  // Increased size
                 >
                 </Scatter>
                 
-                {/* Max saturation point marker */}
+                {/* Max saturation point marker - Enhanced visibility */}
                 <Scatter
                   yAxisId="left"
                   data={[{ spend: maxSaturationPoint.spend, incrementalOutcome: maxSaturationPoint.incrementalOutcome }]}
-                  fill="#9C27B0"  // Purple color
+                  fill="#9C27B0"  // Bright purple
                   stroke="#FFFFFF"
-                  strokeWidth={2}
+                  strokeWidth={3}
                   shape="star"
                   name="Max Saturation"
+                  symbolSize={20}  // Increased size
                 >
                 </Scatter>
                 
-                {/* Reference lines for key points - FIX: Add yAxisId="left" to all ReferenceLines */}
+                {/* Reference lines for key points */}
                 <ReferenceLine x={currentPoint.spend} yAxisId="left" stroke="#FF8C00" strokeDasharray="3 3" />
                 <ReferenceLine x={newPoint.spend} yAxisId="left" stroke="#4CAF50" strokeDasharray="3 3" />
                 <ReferenceLine x={maxSaturationPoint.spend} yAxisId="left" stroke="#9C27B0" strokeDasharray="3 3" />
