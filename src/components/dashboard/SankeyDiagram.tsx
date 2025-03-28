@@ -1,6 +1,6 @@
 
 import React from "react";
-import { ResponsiveContainer, Sankey, Tooltip, Rectangle, Layer } from "recharts";
+import { ResponsiveContainer, Sankey, Tooltip, Layer } from "recharts";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
@@ -60,10 +60,9 @@ export function SankeyDiagram({
           nodeWidth={20}
           nodePadding={50}
           link={{ 
-            stroke: "transparent",
-          }}
-          node={{
-            shape: <Rectangle fill="#0088fe" opacity={0.9} />,
+            stroke: "#d0d5dd", 
+            opacity: 0.6,
+            fill: "url(#gradient)" // Using gradient for links
           }}
           margin={{
             top: 20,
@@ -72,6 +71,12 @@ export function SankeyDiagram({
             left: 40,
           }}
         >
+          <defs>
+            <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#4361ee" stopOpacity={0.8}/>
+              <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0.8}/>
+            </linearGradient>
+          </defs>
           <Layer>
             <Tooltip
               content={({ active, payload }) => {

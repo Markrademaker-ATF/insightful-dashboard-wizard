@@ -130,8 +130,8 @@ export function generateSankeyData() {
   
   // Create nodes array for Sankey diagram
   const nodes = [
-    ...mediaCategories,
-    ...channels
+    ...mediaCategories.map(cat => ({ name: cat.name, fill: cat.fill })),
+    ...channels.map(channel => ({ name: channel.name, fill: channel.fill }))
   ];
   
   // Create links array for Sankey diagram
