@@ -10,15 +10,45 @@ import {
   TooltipTrigger 
 } from "@/components/ui/tooltip";
 import { mediaGroupColors } from "./MediaGroupBreakdownChart";
+import { ChannelDropdown } from "./ChannelDropdown";
+
+export interface ChannelOption {
+  value: string;
+  label: string;
+  color?: string;
+  group: string;
+}
 
 type MediaTypeSelectorProps = {
   activeType: string;
   onTypeChange: (type: string) => void;
+  activeChannel?: string;
+  onChannelChange?: (channel: string) => void;
+  channelOptions?: ChannelOption[];
 };
 
-export function MediaTypeSelector({ activeType, onTypeChange }: MediaTypeSelectorProps) {
+export function MediaTypeSelector({
+  activeType,
+  onTypeChange,
+  activeChannel = "all",
+  onChannelChange,
+  channelOptions = []
+}: MediaTypeSelectorProps) {
+  // Filter channels by the currently active media type
+  const filteredChannels = channelOptions.filter(
+    channel => activeType === "all" || channel.group === activeType
+  );
+
+  const handleMediaTypeChange = (type: string) => {
+    onTypeChange(type);
+    // Reset channel selection when media type changes
+    if (onChannelChange) {
+      onChannelChange("all");
+    }
+  };
+
   return (
-    <div className="flex flex-col space-y-2">
+    <div className="space-y-4">
       <div className="flex items-center gap-2">
         <h3 className="text-lg font-medium">Media Type Analysis</h3>
         <TooltipProvider>
@@ -38,7 +68,7 @@ export function MediaTypeSelector({ activeType, onTypeChange }: MediaTypeSelecto
       <Tabs
         defaultValue="all"
         value={activeType}
-        onValueChange={onTypeChange}
+        onValueChange={handleMediaTypeChange}
         className="w-full"
       >
         <TabsList className="grid w-full grid-cols-5">
@@ -59,6 +89,20 @@ export function MediaTypeSelector({ activeType, onTypeChange }: MediaTypeSelecto
           </TabsTrigger>
         </TabsList>
       </Tabs>
+
+      {/* Channel dropdown selector */}
+      {filteredChannels.length > 0 && onChannelChange && (
+        <div className="pt-2">
+          <div className="text-sm text-muted-foreground mb-2">Select Channel</div>
+          <ChannelDropdown
+            channels={filteredChannels}
+            value={activeChannel}
+            onChange={onChannelChange}
+            placeholder="Select a channel"
+            disabled={activeType === "all"}
+          />
+        </div>
+      )}
     </div>
   );
 }

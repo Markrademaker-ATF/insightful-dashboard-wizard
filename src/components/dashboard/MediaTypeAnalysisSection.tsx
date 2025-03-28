@@ -3,7 +3,7 @@ import React from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Info, TrendingUp, LineChart as LineChartIcon, PieChart, BarChart4 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MediaTypeSelector } from "@/components/dashboard/MediaTypeSelector";
+import { MediaTypeSelector, ChannelOption } from "@/components/dashboard/MediaTypeSelector";
 import { MediaGroupBreakdownChart } from "@/components/dashboard/MediaGroupBreakdownChart";
 import { MediaSaturationChart } from "@/components/dashboard/MediaSaturationChart";
 import { ChannelBreakdownDisplay } from "@/components/dashboard/ChannelBreakdownDisplay";
@@ -20,6 +20,9 @@ interface MediaTypeAnalysisSectionProps {
   mediaType: string;
   setMediaType: (type: string) => void;
   loading: boolean;
+  channelOptions?: ChannelOption[];
+  selectedChannel?: string;
+  setSelectedChannel?: (channel: string) => void;
 }
 
 export function MediaTypeAnalysisSection({
@@ -29,7 +32,10 @@ export function MediaTypeAnalysisSection({
   channelData,
   mediaType,
   setMediaType,
-  loading
+  loading,
+  channelOptions = [],
+  selectedChannel = "all",
+  setSelectedChannel
 }: MediaTypeAnalysisSectionProps) {
   const [insightView, setInsightView] = React.useState("breakdown");
 
@@ -38,7 +44,10 @@ export function MediaTypeAnalysisSection({
       <CardHeader>
         <MediaTypeSelector 
           activeType={mediaType} 
-          onTypeChange={setMediaType} 
+          onTypeChange={setMediaType}
+          activeChannel={selectedChannel}
+          onChannelChange={setSelectedChannel}
+          channelOptions={channelOptions}
         />
       </CardHeader>
       <CardContent>
@@ -83,6 +92,7 @@ export function MediaTypeAnalysisSection({
               <p className="flex items-center gap-2">
                 <Info className="h-4 w-4 text-primary" /> 
                 This chart shows the monthly contribution of each media type to total revenue.
+                {selectedChannel !== "all" && " Filtered by selected channel."}
               </p>
             </div>
           </TabsContent>
@@ -129,7 +139,9 @@ export function MediaTypeAnalysisSection({
                   loading={loading} 
                   mediaType={mediaType} 
                 />
-                <ChannelInsights mediaType={mediaType} />
+                <ChannelInsights 
+                  mediaType={mediaType} 
+                />
               </div>
             </TabsContent>
           )}

@@ -22,6 +22,7 @@ import { PerformanceBreakdownSection } from "@/components/dashboard/PerformanceB
 import { MediaTypeAnalysisSection } from "@/components/dashboard/MediaTypeAnalysisSection";
 import { KeyContributorsSection } from "@/components/dashboard/KeyContributorsSection";
 import { MediaTypesExplanationCard } from "@/components/dashboard/MediaTypesExplanationCard";
+import { ChannelOption } from "@/components/dashboard/MediaTypeSelector";
 
 const IncrementalPage = () => {
   const [loading, setLoading] = useState(true);
@@ -32,6 +33,31 @@ const IncrementalPage = () => {
   const [marginalReturnsData, setMarginalReturnsData] = useState<any[]>([]);
   const [channelData, setChannelData] = useState<any[]>([]);
   const [mediaType, setMediaType] = useState("all");
+  const [selectedChannel, setSelectedChannel] = useState("all");
+
+  // Channel options for each media type
+  const channelOptions: ChannelOption[] = [
+    // Paid Media Channels
+    { value: "search", label: "Search", color: "#4361ee", group: "paid" },
+    { value: "social", label: "Social Media", color: "#3a0ca3", group: "paid" },
+    { value: "display", label: "Display", color: "#4cc9f0", group: "paid" },
+    { value: "video", label: "Video", color: "#7209b7", group: "paid" },
+    
+    // Organic Media Channels
+    { value: "seo", label: "SEO", color: "#06d6a0", group: "organic" },
+    { value: "content", label: "Content", color: "#2dc653", group: "organic" },
+    { value: "referral", label: "Referral", color: "#57cc99", group: "organic" },
+    
+    // Non-Paid Media Channels
+    { value: "email", label: "Email", color: "#ffd166", group: "nonPaid" },
+    { value: "affiliate", label: "Affiliate", color: "#ffb703", group: "nonPaid" },
+    { value: "pr", label: "PR", color: "#fb8500", group: "nonPaid" },
+    
+    // Baseline Channels
+    { value: "brand", label: "Brand", color: "#ef476f", group: "baseline" },
+    { value: "seasonal", label: "Seasonal", color: "#e56b6f", group: "baseline" },
+    { value: "market", label: "Market Factors", color: "#d62828", group: "baseline" },
+  ];
 
   useEffect(() => {
     // Simulate data loading
@@ -61,12 +87,16 @@ const IncrementalPage = () => {
     loadData();
   }, []);
 
-  // Update channel data when media type changes
+  // Update channel data when media type or selected channel changes
   useEffect(() => {
     if (!loading) {
-      setChannelData(getChannelDataByMediaType(mediaType));
+      const updatedChannelData = getChannelDataByMediaType(
+        mediaType, 
+        selectedChannel !== "all" ? selectedChannel : undefined
+      );
+      setChannelData(updatedChannelData);
     }
-  }, [mediaType, loading]);
+  }, [mediaType, selectedChannel, loading]);
 
   // Calculate latest period data for key metrics
   const latestPeriodData = !loading && mediaGroupData.length > 0 
@@ -186,6 +216,9 @@ const IncrementalPage = () => {
         mediaType={mediaType}
         setMediaType={setMediaType}
         loading={loading}
+        channelOptions={channelOptions}
+        selectedChannel={selectedChannel}
+        setSelectedChannel={setSelectedChannel}
       />
 
       {/* Channel insights */}
