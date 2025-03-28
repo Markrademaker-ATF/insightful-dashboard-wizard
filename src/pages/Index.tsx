@@ -56,46 +56,9 @@ const Index = () => {
             </p>
           </div>
         </div>
-        
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-gray-700">Your Analytics Journey Path:</h3>
-          <ol className="space-y-3 pl-6 border-l-2 border-blue-200">
-            {journeySections.map((section, index) => (
-              <li 
-                key={section.id} 
-                className={`pl-4 -ml-[3px] border-l-2 transition-colors duration-300 ${
-                  activeSection === section.id 
-                    ? 'border-blue-500 text-blue-700' 
-                    : 'border-transparent text-muted-foreground hover:border-blue-300'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-sm font-medium">{section.title}</span>
-                  {index === 0 && (
-                    <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">
-                      Current Step
-                    </span>
-                  )}
-                </div>
-                {index === 0 && (
-                  <p className="text-sm mt-1">
-                    Begin with a high-level overview of your overall marketing return on investment
-                  </p>
-                )}
-              </li>
-            ))}
-          </ol>
-        </div>
-        
-        <div className="flex justify-between items-center mt-6">
-          <p className="text-sm text-muted-foreground">
-            Progress through your analytics journey
-          </p>
-          <Progress value={progress} className="w-48 h-2" />
-        </div>
-      </div>
 
-      <AnalyticsOverview />
+        <AnalyticsOverview />
+      </div>
     </>
   );
 };
