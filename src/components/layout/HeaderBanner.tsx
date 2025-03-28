@@ -8,8 +8,8 @@ export function HeaderBanner() {
   // Function to get page title based on current route
   const getPageTitle = () => {
     switch (location.pathname) {
-      case "/":
-        return "Analytics Overview";  // Changed from "Dashboard Overview"
+      case "/analytics":
+        return "Analytics Overview";
       case "/data":
         return "Data Overview";
       case "/channels":
@@ -38,7 +38,7 @@ export function HeaderBanner() {
   // Function to get page description based on current route
   const getPageDescription = () => {
     switch (location.pathname) {
-      case "/":
+      case "/analytics":
         return "Analytics Dashboard";
       case "/channels":
         return "Analyze campaign performance by channel";

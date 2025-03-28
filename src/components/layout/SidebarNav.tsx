@@ -30,7 +30,7 @@ type NavItem = {
 const navItems: NavItem[] = [
   {
     title: "Home",
-    href: "/guide",
+    href: "/",
     icon: Home,
   },
   {
@@ -39,7 +39,7 @@ const navItems: NavItem[] = [
     children: [
       {
         title: "Analytics Overview",
-        href: "/",
+        href: "/analytics",
         icon: LayoutDashboard,
       },
       {
