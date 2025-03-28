@@ -65,20 +65,9 @@ const Index = () => {
         <title>Analytics Dashboard - Artefact</title>
       </Helmet>
       
-      {/* Header Section with Logo and Progress */}
+      {/* Header Section with Progress only (logo is now in HeaderBanner) */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 animate-fade-in">
-        <div className="flex items-center gap-4 mb-4 md:mb-0">
-          <img 
-            src="/lovable-uploads/c91593ad-aa3a-4f49-b9f4-86d049161286.png" 
-            alt="Artefact Logo" 
-            className="h-12" 
-          />
-          <div className="h-10 w-px bg-gray-200 hidden md:block"></div>
-          <div className="hidden md:flex flex-col">
-            <h1 className="text-xl font-bold text-gray-800">Marketing Analytics</h1>
-            <p className="text-sm text-muted-foreground">Dashboard Overview</p>
-          </div>
-        </div>
+        <div></div> {/* Empty div to maintain layout */}
         
         <Card className="flex items-center px-4 py-2 bg-accent/50 border-none soft-shadow w-full md:w-auto">
           <div className="flex flex-col mr-4">

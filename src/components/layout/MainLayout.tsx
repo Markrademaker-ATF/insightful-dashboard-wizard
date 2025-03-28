@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { SidebarNav } from "./SidebarNav";
 import { SidebarHeader } from "./SidebarHeader";
+import { HeaderBanner } from "./HeaderBanner";
 import { cn } from "@/lib/utils";
 
 export function MainLayout() {
@@ -44,6 +45,7 @@ export function MainLayout() {
         "p-6"
       )}>
         <div className="max-w-7xl w-full mx-auto">
+          <HeaderBanner />
           <Outlet />
         </div>
       </div>
