@@ -99,6 +99,16 @@ export function WaterfallChart({
                 floodColor="rgba(0, 0, 0, 0.15)"
               />
             </filter>
+            {/* Add a glow effect for hover states */}
+            <filter id="glow-hover" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="2" result="blur" />
+              <feColorMatrix
+                in="blur" 
+                type="matrix"
+                values="0 0 0 0 0.6   0 0 0 0 0.6   0 0 0 0 1  0 0 0 0.4 0"
+              />
+              <feComposite in="SourceGraphic" />
+            </filter>
           </defs>
           <CartesianGrid 
             strokeDasharray="3 3" 
@@ -146,8 +156,7 @@ export function WaterfallChart({
             radius={[8, 8, 0, 0]}
             animationDuration={1500}
             animationEasing="ease-in-out"
-            className="drop-shadow-md"
-            filter="url(#shadow)"
+            className="drop-shadow-md hover:filter-glow-hover"
           >
             {chartData.map((entry, index) => (
               <Cell 

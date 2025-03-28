@@ -11,9 +11,9 @@ interface WaterfallSectionProps {
 
 export function WaterfallSection({ data, loading }: WaterfallSectionProps) {
   return (
-    <Card className="mb-8">
+    <Card className="mb-8 glass-card premium-shadow">
       <CardHeader>
-        <CardTitle>Revenue Breakdown</CardTitle>
+        <CardTitle className="text-xl text-primary font-semibold">Revenue Breakdown</CardTitle>
         <CardDescription>
           Contribution to revenue by media type
         </CardDescription>
@@ -23,6 +23,7 @@ export function WaterfallSection({ data, loading }: WaterfallSectionProps) {
           data={data}
           loading={loading}
           height={350}
+          className="animate-fade-in"
         />
         <div className="mt-4 text-sm text-muted-foreground">
           <p className="flex items-center gap-2">

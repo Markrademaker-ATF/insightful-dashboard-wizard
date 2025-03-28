@@ -62,10 +62,10 @@ export function PerformanceBreakdownSection({ data, loading }: PerformanceBreakd
   };
 
   return (
-    <Card className="mb-8">
+    <Card className="mb-8 glass-card premium-shadow">
       <CardHeader className="flex flex-row items-center justify-between">
         <div>
-          <CardTitle>Performance Breakdown</CardTitle>
+          <CardTitle className="text-xl text-primary font-semibold">Performance Breakdown</CardTitle>
           <CardDescription>Cumulative contribution to revenue by media type</CardDescription>
         </div>
         <div className="flex items-center gap-2">
@@ -73,7 +73,7 @@ export function PerformanceBreakdownSection({ data, loading }: PerformanceBreakd
             <Button
               variant={view === 'chart' ? 'default' : 'ghost'}
               size="sm"
-              className="rounded-r-none"
+              className={`rounded-r-none ${view === 'chart' ? 'bg-primary hover:bg-primary/90' : ''}`}
               onClick={() => setView('chart')}
             >
               <BarChart3 className="h-4 w-4 mr-1" />
@@ -82,14 +82,14 @@ export function PerformanceBreakdownSection({ data, loading }: PerformanceBreakd
             <Button
               variant={view === 'table' ? 'default' : 'ghost'}
               size="sm"
-              className="rounded-l-none"
+              className={`rounded-l-none ${view === 'table' ? 'bg-primary hover:bg-primary/90' : ''}`}
               onClick={() => setView('table')}
             >
               <TableIcon className="h-4 w-4 mr-1" />
               Table
             </Button>
           </div>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" className="hover:bg-primary/10 hover:text-primary">
             <DownloadIcon className="h-4 w-4 mr-1" />
             Export
           </Button>
@@ -106,13 +106,14 @@ export function PerformanceBreakdownSection({ data, loading }: PerformanceBreakd
                   data={data}
                   loading={loading}
                   height={450}
+                  className="animate-fade-in"
                 />
               </div>
             ) : (
               // Table view showing cumulative values
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
+              <div className="overflow-x-auto animate-fade-in">
+                <table className="min-w-full divide-y divide-gray-200 border border-border/40 rounded-lg overflow-hidden">
+                  <thead className="bg-muted/50">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Media Type
@@ -137,7 +138,10 @@ export function PerformanceBreakdownSection({ data, loading }: PerformanceBreakd
                       return (
                         <tr 
                           key={index}
-                          className={item.isTotal ? "font-bold bg-gray-50" : "hover:bg-gray-50"}
+                          className={item.isTotal 
+                            ? "font-bold bg-muted/30" 
+                            : "hover:bg-muted/20 transition-colors duration-150"}
+                          style={{ animationDelay: `${index * 100}ms` }}
                         >
                           <td className="px-6 py-4 whitespace-nowrap">
                             <div className="flex items-center">
@@ -151,11 +155,22 @@ export function PerformanceBreakdownSection({ data, loading }: PerformanceBreakd
                           <td className="px-6 py-4 whitespace-nowrap">
                             ${item.value.toLocaleString()}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          <td className="px-6 py-4 whitespace-nowrap font-medium text-primary">
                             ${item.cumulativeValue.toLocaleString()}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            {percentage.toFixed(1)}%
+                            <div className="flex items-center">
+                              <span className="mr-2">{percentage.toFixed(1)}%</span>
+                              <div className="w-16 bg-gray-200 rounded-full h-1.5">
+                                <div 
+                                  className="h-1.5 rounded-full" 
+                                  style={{ 
+                                    width: `${percentage}%`, 
+                                    backgroundColor: item.fill 
+                                  }}
+                                ></div>
+                              </div>
+                            </div>
                           </td>
                         </tr>
                       );

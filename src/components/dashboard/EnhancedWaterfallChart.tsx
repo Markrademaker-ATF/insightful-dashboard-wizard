@@ -157,6 +157,8 @@ export function EnhancedWaterfallChart({
           strokeWidth={1}
           rx={4}
           ry={4}
+          filter="url(#glow)"
+          className="transition-all duration-300"
         />
       );
     }
@@ -172,6 +174,7 @@ export function EnhancedWaterfallChart({
         strokeWidth={1}
         rx={4}
         ry={4}
+        className="transition-all duration-300"
       />
     );
   };
@@ -196,6 +199,7 @@ export function EnhancedWaterfallChart({
         fontSize={13}
         fontWeight="500"
         style={{ textShadow: "0px 1px 2px rgba(0,0,0,0.3)" }}
+        className="pointer-events-none select-none"
       >
         {displayText}
       </text>
@@ -219,7 +223,7 @@ export function EnhancedWaterfallChart({
   
   return (
     <div className={cn("w-full", className)}>
-      <div style={{ height }}>
+      <div style={{ height }} className="relative">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={cumulativeChartData}
@@ -231,6 +235,7 @@ export function EnhancedWaterfallChart({
             }}
             barGap={0}
             barCategoryGap={10}
+            className="animate-fade-in"
           >
             <defs>
               {Object.entries(categoryColors).map(([key, color]) => (
@@ -246,13 +251,23 @@ export function EnhancedWaterfallChart({
                   <stop offset="95%" stopColor={color} stopOpacity={0.7} />
                 </linearGradient>
               ))}
-              <filter id="shadow" height="130%">
+              <filter id="glow" height="130%">
                 <feDropShadow
                   dx="0"
                   dy="3"
                   stdDeviation="3"
                   floodColor="rgba(0, 0, 0, 0.15)"
                 />
+              </filter>
+              {/* Add a subtle glow effect for emphasis */}
+              <filter id="glow-intense" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="4" result="blur" />
+                <feColorMatrix
+                  in="blur" 
+                  type="matrix"
+                  values="0 0 0 0 0.6   0 0 0 0 0.6   0 0 0 0 1  0 0 0 0.7 0"
+                />
+                <feComposite in="SourceGraphic" />
               </filter>
             </defs>
             <CartesianGrid 
@@ -276,6 +291,10 @@ export function EnhancedWaterfallChart({
             <Legend 
               verticalAlign="top" 
               height={36}
+              wrapperStyle={{
+                paddingBottom: '15px',
+                fontWeight: 500
+              }}
             />
             {/* For non-total bars, use the cumulative value */}
             <Bar
@@ -298,6 +317,7 @@ export function EnhancedWaterfallChart({
                       ? 'drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.15))'
                       : 'none',
                     cursor: 'pointer',
+                    transition: 'all 0.3s ease'
                   }}
                 />
               ))}
