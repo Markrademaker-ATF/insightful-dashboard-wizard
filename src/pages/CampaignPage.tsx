@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useSearchParams, useLocation } from "react-router-dom";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -396,8 +395,13 @@ const ChannelDetailsPage = () => {
         />
       </div>
       
-      {/* Main Tabs for Campaign Overview and Campaign Detailed - moved here below the metrics */}
-      <Tabs defaultValue="overview" value={mainTab} onValueChange={setMainTab} className="mb-6">
+      {/* Main Tabs for Campaign Overview and Campaign Detailed */}
+      <Tabs 
+        defaultValue="overview" 
+        value={mainTab} 
+        onValueChange={setMainTab} 
+        className="mb-6"
+      >
         <TabsList className="w-full md:w-auto bg-white shadow-sm">
           <TabsTrigger value="overview" className="data-[state=active]:shadow-sm">
             Campaign Overview
@@ -406,6 +410,30 @@ const ChannelDetailsPage = () => {
             Campaign Detailed
           </TabsTrigger>
         </TabsList>
+        
+        {/* Campaign Performance Matrix */}
+        <Card className="mt-6">
+          <CardHeader>
+            <CardTitle>Campaign Performance Matrix</CardTitle>
+            <CardDescription>
+              Detailed performance analysis of marketing campaigns
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {/* Tab content for Performance Matrix will go here */}
+            <Tabs 
+              defaultValue="attribution" 
+              className="w-full"
+            >
+              <TabsList className="w-full md:w-auto">
+                <TabsTrigger value="attribution">Attribution</TabsTrigger>
+                <TabsTrigger value="performance">Performance</TabsTrigger>
+                <TabsTrigger value="conversion">Conversion</TabsTrigger>
+              </TabsList>
+              {/* Add content for each tab here */}
+            </Tabs>
+          </CardContent>
+        </Card>
         
         {/* Campaign Overview Tab Content */}
         <TabsContent value="overview" className="space-y-8 mt-6">
