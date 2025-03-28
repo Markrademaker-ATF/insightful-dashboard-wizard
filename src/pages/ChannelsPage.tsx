@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -85,6 +84,55 @@ export default function ChannelsPage() {
       </div>
 
       <ChannelMetricsOverview data={channelData} loading={loading} />
+      
+      {/* Show regular analysis when no channel is selected */}
+      {!selectedChannel && (
+        <Card>
+          <CardHeader className="flex flex-row items-center">
+            <div className="flex flex-col space-y-1.5">
+              <CardTitle>Channel Analysis</CardTitle>
+              <CardDescription>
+                Compare performance metrics across channels
+              </CardDescription>
+            </div>
+            <div className="ml-auto">
+              <FilterExportControls />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <RoasComparisonChart channelData={channelData} loading={loading} />
+            
+            <Tabs value={activeTab} onValueChange={setActiveTab}>
+              <TabsList className="w-full md:w-auto">
+                <TabsTrigger value="performance" className="flex items-center gap-1">
+                  <BarChart className="h-4 w-4" /> Performance
+                </TabsTrigger>
+                <TabsTrigger value="breakdown" className="flex items-center gap-1">
+                  <PieChart className="h-4 w-4" /> Breakdown
+                </TabsTrigger>
+                <TabsTrigger value="trends" className="flex items-center gap-1">
+                  <LineChartIcon className="h-4 w-4" /> Trends
+                </TabsTrigger>
+                <TabsTrigger value="comparison" className="flex items-center gap-1">
+                  <BarChart className="h-4 w-4" /> Comparison
+                </TabsTrigger>
+              </TabsList>
+              <TabsContent value="performance" className="border-none p-0 pt-4">
+                <ChannelPerformanceTable data={channelData} loading={loading} />
+              </TabsContent>
+              <TabsContent value="breakdown" className="border-none p-0 pt-4">
+                <ChannelBreakdownChart data={channelData} loading={loading} />
+              </TabsContent>
+              <TabsContent value="trends" className="border-none p-0 pt-4">
+                <ChannelTrendsChart data={trendsData} loading={loading} />
+              </TabsContent>
+              <TabsContent value="comparison" className="border-none p-0 pt-4">
+                <ChannelComparisonChart data={channelData} loading={loading} />
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Channel Filter Section */}
       <Card className="mb-4">
@@ -136,56 +184,6 @@ export default function ChannelsPage() {
           loading={loading} 
         />
       )}
-
-      {/* Show regular analysis when no channel is selected */}
-      {!selectedChannel && (
-        <Card>
-          <CardHeader className="flex flex-row items-center">
-            <div className="flex flex-col space-y-1.5">
-              <CardTitle>Channel Analysis</CardTitle>
-              <CardDescription>
-                Compare performance metrics across channels
-              </CardDescription>
-            </div>
-            <div className="ml-auto">
-              <FilterExportControls />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <RoasComparisonChart channelData={channelData} loading={loading} />
-            
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-6">
-              <TabsList className="w-full md:w-auto">
-                <TabsTrigger value="performance" className="flex items-center gap-1">
-                  <BarChart className="h-4 w-4" /> Performance
-                </TabsTrigger>
-                <TabsTrigger value="breakdown" className="flex items-center gap-1">
-                  <PieChart className="h-4 w-4" /> Breakdown
-                </TabsTrigger>
-                <TabsTrigger value="trends" className="flex items-center gap-1">
-                  <LineChartIcon className="h-4 w-4" /> Trends
-                </TabsTrigger>
-                <TabsTrigger value="comparison" className="flex items-center gap-1">
-                  <BarChart className="h-4 w-4" /> Comparison
-                </TabsTrigger>
-              </TabsList>
-              <TabsContent value="performance" className="border-none p-0 pt-4">
-                <ChannelPerformanceTable data={channelData} loading={loading} />
-              </TabsContent>
-              <TabsContent value="breakdown" className="border-none p-0 pt-4">
-                <ChannelBreakdownChart data={channelData} loading={loading} />
-              </TabsContent>
-              <TabsContent value="trends" className="border-none p-0 pt-4">
-                <ChannelTrendsChart data={trendsData} loading={loading} />
-              </TabsContent>
-              <TabsContent value="comparison" className="border-none p-0 pt-4">
-                <ChannelComparisonChart data={channelData} loading={loading} />
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
-      )}
     </div>
   );
 }
-

@@ -21,16 +21,16 @@ export function RoasComparisonChart({ channelData, loading }: RoasComparisonChar
   const sortedData = [...channelData].sort((a, b) => b.roas - a.roas);
 
   return (
-    <Card className="overflow-hidden border-border/40 shadow-sm">
+    <Card className="overflow-hidden border-border/40 shadow-sm mb-6">
       <div className="h-1 bg-gradient-to-r from-[#4cc9f0] to-[#7209b7]"></div>
       <CardHeader className="pb-2">
         <div className="flex items-center gap-2">
           <div className="p-1.5 rounded-md bg-primary/10">
             <BarChart4 className="h-4 w-4 text-primary" />
           </div>
-          <CardTitle>Channel Performance Matrix</CardTitle>
+          <CardTitle className="text-lg">Channel Performance Matrix</CardTitle>
         </div>
-        <CardDescription className="flex items-center gap-2">
+        <CardDescription className="flex flex-wrap items-center gap-2 text-xs">
           <div className="flex items-center gap-1">
             <CircleDot className="h-3 w-3 text-blue-500" />
             <span>ROAS (scatter)</span>
@@ -48,7 +48,7 @@ export function RoasComparisonChart({ channelData, loading }: RoasComparisonChar
         </CardDescription>
       </CardHeader>
       <CardContent className="p-0 pb-4">
-        <div className="w-full h-80">
+        <div className="w-full h-64">
           <ChartContainer 
             config={{
               cost: {
@@ -67,14 +67,14 @@ export function RoasComparisonChart({ channelData, loading }: RoasComparisonChar
           >
             <RechartsPrimitive.ComposedChart
               data={sortedData}
-              margin={{ top: 20, right: 30, left: 20, bottom: 80 }}
+              margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
             >
               <RechartsPrimitive.XAxis 
                 dataKey="name" 
                 angle={-45} 
                 textAnchor="end"
                 tick={{ fontSize: 12 }}
-                height={80}
+                height={60}
               />
               <RechartsPrimitive.YAxis 
                 yAxisId="left"
@@ -84,7 +84,7 @@ export function RoasComparisonChart({ channelData, loading }: RoasComparisonChar
                   value: 'Cost & Incremental ($)', 
                   angle: -90, 
                   position: 'insideLeft',
-                  style: { textAnchor: 'middle', fontSize: 12, fill: '#94a3b8' }
+                  style: { textAnchor: 'middle', fontSize: 11, fill: '#94a3b8' }
                 }}
               />
               <RechartsPrimitive.YAxis 
@@ -95,23 +95,23 @@ export function RoasComparisonChart({ channelData, loading }: RoasComparisonChar
                   value: 'ROAS (x)', 
                   angle: -90, 
                   position: 'insideRight',
-                  style: { textAnchor: 'middle', fontSize: 12, fill: '#3b82f6' }
+                  style: { textAnchor: 'middle', fontSize: 11, fill: '#3b82f6' }
                 }}
               />
-              <RechartsPrimitive.CartesianGrid strokeDasharray="3 3" />
+              <RechartsPrimitive.CartesianGrid strokeDasharray="3 3" opacity={0.6} />
               <RechartsPrimitive.Bar 
                 dataKey="cost" 
                 yAxisId="left"
                 fill="rgb(147, 197, 253, 0.7)" 
                 name="Cost"
-                barSize={30}
+                barSize={20}
               />
               <RechartsPrimitive.Bar 
                 dataKey="incremental" 
                 yAxisId="left"
                 fill="rgb(74, 222, 128, 0.7)" 
                 name="Incremental Outcome"
-                barSize={30}
+                barSize={20}
               />
               <RechartsPrimitive.Scatter 
                 dataKey="roas" 
@@ -128,7 +128,7 @@ export function RoasComparisonChart({ channelData, loading }: RoasComparisonChar
                       <circle 
                         cx={cx} 
                         cy={cy} 
-                        r={10} 
+                        r={8} 
                         stroke={color}
                         strokeWidth={2}
                         fill="white"
@@ -139,7 +139,7 @@ export function RoasComparisonChart({ channelData, loading }: RoasComparisonChar
                         textAnchor="middle" 
                         dominantBaseline="central"
                         fill={color}
-                        fontSize={10}
+                        fontSize={9}
                         fontWeight="bold"
                       >
                         {payload.roas}
