@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 interface MarginalReturnsChartProps {
   data: any[];
   height?: number;
-  customDot?: React.ElementType;
+  customDot?: React.ReactNode;
 }
 
 export function MarginalReturnsChart({
@@ -45,6 +45,8 @@ export function MarginalReturnsChart({
         <YAxis yAxisId="right" orientation="right" />
         <Tooltip
           formatter={(value, name) => {
+            if (value === undefined || value === null) return ["N/A", ""];
+            
             switch (name) {
               case "returns":
                 return [`${value}x`, "Average ROAS"];
@@ -54,7 +56,10 @@ export function MarginalReturnsChart({
                 return [value, name];
             }
           }}
-          labelFormatter={(value) => `Spend: $${Number(value).toLocaleString()}`}
+          labelFormatter={(value) => {
+            if (value === undefined || value === null) return "Spend: N/A";
+            return `Spend: $${Number(value).toLocaleString()}`;
+          }}
         />
         <Legend />
         
@@ -77,7 +82,7 @@ export function MarginalReturnsChart({
           stroke="#f72585"
           strokeWidth={2}
           yAxisId="right"
-          dot={customDot || false}
+          dot={customDot ? {} : false}
         />
       </LineChart>
     </ResponsiveContainer>

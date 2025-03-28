@@ -73,12 +73,21 @@ export const generateIncrementalData = () => {
 
 // Function to generate random performance data for each day
 export const generatePerformanceData = (days: number) => {
+  if (days <= 0) {
+    // Safety check: ensure days is positive
+    console.warn("Days must be greater than 0, defaulting to 7 days");
+    days = 7;
+  }
+
   const channels = Object.keys(channelNames);
   const data = [];
   for (let i = 0; i < days; i++) {
+    const date = new Date();
+    date.setDate(date.getDate() - (days - i - 1));
+
     const day = {
       name: `Day ${i + 1}`,
-      date: faker.date.recent({ days: i }).toLocaleDateString(),
+      date: date.toLocaleDateString(),
       totalRevenue: faker.number.int({ min: 10000, max: 50000 }),
     };
     channels.forEach((channel) => {
@@ -136,7 +145,6 @@ export function generateSankeyData() {
   return { nodes, links };
 }
 
-// Add the missing functions
 // Generate channel performance data with metrics
 export const generateChannelData = (period = "Q2") => {
   const channels = Object.keys(channelNames);
@@ -175,6 +183,11 @@ export const generateChannelData = (period = "Q2") => {
 
 // Generate trends data for channels over time
 export const generateChannelTrendsData = (days = 30) => {
+  if (days <= 0) {
+    console.warn("Days must be greater than 0, defaulting to 30 days");
+    days = 30;
+  }
+  
   const channels = Object.keys(channelNames);
   const data = [];
 
@@ -183,6 +196,7 @@ export const generateChannelTrendsData = (days = 30) => {
     date.setDate(date.getDate() - (days - i - 1));
     
     const entry = {
+      name: `Day ${i + 1}`,
       date: date.toISOString().split('T')[0],
     };
 

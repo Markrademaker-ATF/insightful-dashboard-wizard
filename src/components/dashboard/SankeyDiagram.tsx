@@ -49,7 +49,7 @@ export function SankeyDiagram({
         <Sankey
           data={data}
           node={{
-            padding: 50,
+            nodePadding: 50,
           }}
           link={{
             stroke: "transparent",
@@ -71,7 +71,7 @@ export function SankeyDiagram({
                       {data.source?.name} → {data.target?.name}
                     </p>
                     <p className="text-muted-foreground pt-1">
-                      Value: ${Number(data.value).toLocaleString()}
+                      Value: ${data.value ? Number(data.value).toLocaleString() : 'N/A'}
                     </p>
                   </div>
                 );

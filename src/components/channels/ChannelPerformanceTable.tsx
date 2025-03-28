@@ -52,6 +52,11 @@ export function ChannelPerformanceTable({ data, loading }: ChannelPerformanceTab
 
   // Format metric values
   const formatMetricValue = (value: any, metric: string) => {
+    // Handle undefined or null values
+    if (value === undefined || value === null) {
+      return "N/A";
+    }
+
     if (metric === "revenue" || metric === "cost" || metric === "cpa") {
       return `$${value.toLocaleString()}`;
     } else if (metric === "roas") {

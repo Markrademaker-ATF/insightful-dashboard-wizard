@@ -46,6 +46,18 @@ export function ChannelTrendsChart({ data, loading }: ChannelTrendsChartProps) {
     ? allChannels.filter(channel => selectedChannels.includes(channel))
     : allChannels;
 
+  // Ensure data is properly formatted for the chart
+  const processedData = data.map(item => {
+    const newItem = { ...item };
+    // Ensure all required properties have valid values (not undefined)
+    displayChannels.forEach(channel => {
+      if (newItem[channel] === undefined) {
+        newItem[channel] = 0; // Default to 0 for missing values
+      }
+    });
+    return newItem;
+  });
+
   return (
     <div className="w-full space-y-4">
       <div className="flex justify-end">
@@ -57,7 +69,7 @@ export function ChannelTrendsChart({ data, loading }: ChannelTrendsChartProps) {
       
       <ResponsiveContainer width="100%" height={400}>
         <LineChart
-          data={data}
+          data={processedData}
           margin={{
             top: 20,
             right: 30,
@@ -79,7 +91,11 @@ export function ChannelTrendsChart({ data, loading }: ChannelTrendsChartProps) {
             tickFormatter={(value) => `$${value}`}
           />
           <Tooltip
-            formatter={(value) => [`$${(value as number).toLocaleString()}`, ""]}
+            formatter={(value) => {
+              // Handle undefined values
+              if (value === undefined || value === null) return ["N/A", ""];
+              return [`$${(value as number).toLocaleString()}`, ""];
+            }}
             contentStyle={{
               borderRadius: "0.5rem",
               backgroundColor: "rgba(255, 255, 255, 0.95)",
