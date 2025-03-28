@@ -28,40 +28,73 @@ export function ChannelMetricsOverview({ data, loading }: ChannelMetricsOverview
     );
   }
 
+  // Handle empty data array to prevent calculation errors
+  if (!data || data.length === 0) {
+    return (
+      <div className="text-center p-6">
+        <p className="text-muted-foreground">No channel data available</p>
+      </div>
+    );
+  }
+
   // Calculate metrics
   const metrics = [
     {
       name: "Revenue",
       property: "revenue",
-      format: (val: number) => `$${val.toLocaleString()}`,
-      average: data.reduce((sum, item) => sum + item.revenue, 0) / data.length,
-      best: data.reduce((best, item) => item.revenue > best.revenue ? item : best, data[0]),
-      worst: data.reduce((worst, item) => item.revenue < worst.revenue ? item : worst, data[0])
+      format: (val: number | undefined) => {
+        if (val === undefined || val === null) return "$0";
+        return `$${val.toLocaleString()}`;
+      },
+      average: data.reduce((sum, item) => sum + (item.revenue || 0), 0) / data.length,
+      best: data.reduce((best, item) => (item.revenue || 0) > (best.revenue || 0) ? item : best, data[0]),
+      worst: data.reduce((worst, item) => (item.revenue || 0) < (worst.revenue || 0) ? item : worst, data[0])
     },
     {
       name: "Cost",
       property: "cost",
-      format: (val: number) => `$${val.toLocaleString()}`,
-      average: data.reduce((sum, item) => sum + item.cost, 0) / data.length,
+      format: (val: number | undefined) => {
+        if (val === undefined || val === null) return "$0";
+        return `$${val.toLocaleString()}`;
+      },
+      average: data.reduce((sum, item) => sum + (item.cost || 0), 0) / data.length,
       // For cost, lower is better
-      best: data.reduce((best, item) => item.cost < best.cost ? item : best, data[0]),
-      worst: data.reduce((worst, item) => item.cost > worst.cost ? item : worst, data[0])
+      best: data.reduce((best, item) => (item.cost || 0) < (best.cost || 0) ? item : best, data[0]),
+      worst: data.reduce((worst, item) => (item.cost || 0) > (worst.cost || 0) ? item : worst, data[0])
     },
     {
       name: "ROAS",
       property: "roas",
-      format: (val: number) => `${val.toFixed(2)}x`,
-      average: data.reduce((sum, item) => sum + item.roas, 0) / data.length,
-      best: data.reduce((best, item) => item.roas > best.roas ? item : best, data[0]),
-      worst: data.reduce((worst, item) => item.roas < worst.roas ? item : worst, data[0])
+      format: (val: number | undefined) => {
+        if (val === undefined || val === null) return "0.00x";
+        return `${val.toFixed(2)}x`;
+      },
+      average: data.reduce((sum, item) => sum + (item.roas || 0), 0) / data.length,
+      best: data.reduce((best, item) => (item.roas || 0) > (best.roas || 0) ? item : best, data[0]),
+      worst: data.reduce((worst, item) => (item.roas || 0) < (worst.roas || 0) ? item : worst, data[0])
     },
     {
       name: "Conversion",
       property: "conversion",
-      format: (val: number) => `${val.toFixed(2)}%`,
-      average: data.reduce((sum, item) => sum + item.conversion, 0) / data.length,
-      best: data.reduce((best, item) => item.conversion > best.conversion ? item : best, data[0]),
-      worst: data.reduce((worst, item) => item.conversion < worst.conversion ? item : worst, data[0])
+      format: (val: number | undefined) => {
+        if (val === undefined || val === null) return "0.00%";
+        return `${val.toFixed(2)}%`;
+      },
+      average: data.reduce((sum, item) => {
+        // Use convRate if conversion is not present, fallback to 0
+        const convValue = item.conversion || item.convRate || 0;
+        return sum + convValue;
+      }, 0) / data.length,
+      best: data.reduce((best, item) => {
+        const bestConv = best.conversion || best.convRate || 0;
+        const itemConv = item.conversion || item.convRate || 0;
+        return itemConv > bestConv ? item : best;
+      }, data[0]),
+      worst: data.reduce((worst, item) => {
+        const worstConv = worst.conversion || worst.convRate || 0;
+        const itemConv = item.conversion || item.convRate || 0;
+        return itemConv < worstConv ? item : worst;
+      }, data[0])
     }
   ];
 
@@ -88,12 +121,16 @@ export function ChannelMetricsOverview({ data, loading }: ChannelMetricsOverview
                   </div>
                   <div 
                     className="h-3 w-3 rounded-full" 
-                    style={{ backgroundColor: channelColors[metric.best.id as keyof typeof channelColors] }}
+                    style={{ 
+                      backgroundColor: channelColors[metric.best?.id as keyof typeof channelColors] || "#888" 
+                    }}
                   />
                 </div>
                 <div className="mt-1 flex justify-between items-center">
-                  <span className="font-medium text-sm">{metric.best.name}</span>
-                  <span className="font-bold">{metric.format(metric.best[metric.property])}</span>
+                  <span className="font-medium text-sm">{metric.best?.name || "N/A"}</span>
+                  <span className="font-bold">
+                    {metric.format(metric.best?.[metric.property])}
+                  </span>
                 </div>
               </div>
               
@@ -106,12 +143,16 @@ export function ChannelMetricsOverview({ data, loading }: ChannelMetricsOverview
                   </div>
                   <div 
                     className="h-3 w-3 rounded-full" 
-                    style={{ backgroundColor: channelColors[metric.worst.id as keyof typeof channelColors] }}
+                    style={{ 
+                      backgroundColor: channelColors[metric.worst?.id as keyof typeof channelColors] || "#888" 
+                    }}
                   />
                 </div>
                 <div className="mt-1 flex justify-between items-center">
-                  <span className="font-medium text-sm">{metric.worst.name}</span>
-                  <span className="font-bold">{metric.format(metric.worst[metric.property])}</span>
+                  <span className="font-medium text-sm">{metric.worst?.name || "N/A"}</span>
+                  <span className="font-bold">
+                    {metric.format(metric.worst?.[metric.property])}
+                  </span>
                 </div>
               </div>
             </div>

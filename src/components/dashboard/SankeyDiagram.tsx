@@ -48,8 +48,9 @@ export function SankeyDiagram({
       <ResponsiveContainer width="100%" height="100%">
         <Sankey
           data={data}
-          node={{
-            nodePadding: 50,
+          node={{ 
+            // Fix: Remove nodePadding which isn't in the type definition
+            // Use properties that are actually in the type
           }}
           link={{
             stroke: "transparent",
@@ -68,7 +69,7 @@ export function SankeyDiagram({
                 return (
                   <div className="rounded-lg border border-border/50 bg-background px-3 py-2 text-sm shadow-xl">
                     <p className="font-medium">
-                      {data.source?.name} → {data.target?.name}
+                      {data.source?.name || 'Unknown'} → {data.target?.name || 'Unknown'}
                     </p>
                     <p className="text-muted-foreground pt-1">
                       Value: ${data.value ? Number(data.value).toLocaleString() : 'N/A'}
