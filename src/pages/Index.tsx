@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { AnalyticsOverview } from "@/components/dashboard/AnalyticsOverview";
 import { Helmet } from "react-helmet";
@@ -50,12 +51,6 @@ const Index = () => {
           <div>
             <h2 className="text-2xl font-bold text-gray-800 mb-2">Marketing Performance Insights</h2>
             <p className="text-muted-foreground">
-              Your Analytics Journey
-              <br />
-              Follow your marketing performance story from high-level ROI metrics down to channel optimization opportunities. 
-              Use the insights to optimize your strategy and improve results.
-            </p>
-            <p className="text-muted-foreground mt-2">
               Dive deep into your marketing strategy with a comprehensive analytics journey. 
               Uncover insights from ROI metrics to channel optimization.
             </p>
