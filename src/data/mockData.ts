@@ -27,6 +27,11 @@ export const channelColors = {
   referral: "#577590",
   organicSearch: "#4d908e",
   organicSocial: "#277da1",
+  // Add media type colors
+  search: "#4361ee",
+  social: "#8B5CF6",
+  display: "#D946EF",
+  video: "#0EA5E9"
 };
 
 // Define saturation points and current spending for channel types
@@ -130,3 +135,103 @@ export function generateSankeyData() {
   
   return { nodes, links };
 }
+
+// Add the missing functions
+// Generate channel performance data with metrics
+export const generateChannelData = (period = "Q2") => {
+  const channels = Object.keys(channelNames);
+  return channels.map((channel) => {
+    // Base metrics with some variance by period
+    const periodMultiplier = period === "Q1" ? 0.8 : period === "Q3" ? 1.2 : 1;
+    const revenue = faker.number.int({ min: 80000, max: 350000 }) * periodMultiplier;
+    const cost = faker.number.int({ min: 20000, max: 120000 }) * periodMultiplier;
+    const roas = +(revenue / cost).toFixed(2);
+    const impressions = faker.number.int({ min: 500000, max: 3000000 });
+    const clicks = faker.number.int({ min: 10000, max: 100000 });
+    const ctr = +((clicks / impressions) * 100).toFixed(2);
+    const cpc = +(cost / clicks).toFixed(2);
+    const conversions = faker.number.int({ min: 100, max: 3000 });
+    const convRate = +((conversions / clicks) * 100).toFixed(2);
+    const cpa = +(cost / conversions).toFixed(2);
+
+    return {
+      id: channel,
+      name: channelNames[channel as keyof typeof channelNames],
+      color: channelColors[channel as keyof typeof channelColors],
+      revenue,
+      cost,
+      roas,
+      impressions,
+      clicks,
+      ctr,
+      cpc,
+      conversions,
+      convRate,
+      cpa,
+      impact: faker.number.int({ min: 5, max: 30 }),
+    };
+  });
+};
+
+// Generate trends data for channels over time
+export const generateChannelTrendsData = (days = 30) => {
+  const channels = Object.keys(channelNames);
+  const data = [];
+
+  for (let i = 0; i < days; i++) {
+    const date = new Date();
+    date.setDate(date.getDate() - (days - i - 1));
+    
+    const entry = {
+      date: date.toISOString().split('T')[0],
+    };
+
+    channels.forEach((channel) => {
+      // Generate values with slight upward trend over time
+      const trendFactor = 1 + (i / days) * 0.2; // 20% increase over the period
+      entry[channel] = +(faker.number.float({ min: 0.8, max: 4.5, fractionDigits: 2 }) * trendFactor).toFixed(2);
+    });
+
+    data.push(entry);
+  }
+
+  return data;
+};
+
+// Generate budget allocation data
+export const generateBudgetAllocation = () => {
+  const channels = Object.keys(channelNames);
+  return channels.map((channel) => {
+    return {
+      name: channelNames[channel as keyof typeof channelNames],
+      value: faker.number.int({ min: 10000, max: 100000 }),
+      color: channelColors[channel as keyof typeof channelColors],
+    };
+  });
+};
+
+// Generate budget recommendations
+export const generateBudgetRecommendations = () => {
+  const channels = Object.keys(channelNames);
+  return channels.map((channel) => {
+    const currentBudget = faker.number.int({ min: 10000, max: 100000 });
+    const impact = faker.number.int({ min: 5, max: 30 });
+    
+    // Calculate recommended budget based on impact
+    // Higher impact channels get higher budget recommendations
+    const recommendedBudget = Math.round(currentBudget * (1 + (impact / 100) * 2));
+    
+    // Calculate change percentage
+    const change = Math.round(((recommendedBudget - currentBudget) / currentBudget) * 100);
+    
+    return {
+      id: channel,
+      name: channelNames[channel as keyof typeof channelNames],
+      color: channelColors[channel as keyof typeof channelColors],
+      currentBudget,
+      recommendedBudget,
+      change,
+      impact,
+    };
+  });
+};
