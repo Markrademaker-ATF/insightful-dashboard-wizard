@@ -18,7 +18,10 @@ import {
   MessagesSquare,
   Lightbulb,
   ArrowRight,
-  BarChart4
+  BarChart4,
+  FileBarChart,
+  Layers,
+  LineChart
 } from "lucide-react";
 
 const GuidePage = () => {
@@ -377,11 +380,113 @@ const GuidePage = () => {
             </Card>
             
             <Card className="bg-white shadow-md hover:shadow-lg transition-all border border-indigo-50 overflow-hidden group">
+              <div className="h-2 bg-gradient-to-r from-indigo-500 to-blue-400"></div>
+              <CardHeader className="pb-2">
+                <div className="flex items-center gap-2">
+                  <div className="p-2 bg-indigo-50 rounded-full group-hover:bg-indigo-100 transition-colors">
+                    <BarChart4 className="h-5 w-5 text-indigo-600" />
+                  </div>
+                  <CardTitle>Campaign Analysis</CardTitle>
+                </div>
+                <CardDescription>
+                  Detailed campaign performance insights
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm mb-3 text-gray-600">
+                  The Campaign Analysis page provides detailed metrics and insights for individual marketing campaigns across channels.
+                </p>
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <span className="text-gray-700">View detailed campaign metrics and KPIs</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <span className="text-gray-700">Compare performance across creative variations</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <span className="text-gray-700">Analyze audience engagement and conversion data</span>
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-white shadow-md hover:shadow-lg transition-all border border-indigo-50 overflow-hidden group">
+              <div className="h-2 bg-gradient-to-r from-violet-500 to-purple-400"></div>
+              <CardHeader className="pb-2">
+                <div className="flex items-center gap-2">
+                  <div className="p-2 bg-violet-50 rounded-full group-hover:bg-violet-100 transition-colors">
+                    <Lightbulb className="h-5 w-5 text-violet-600" />
+                  </div>
+                  <CardTitle>Analytics Methodologies</CardTitle>
+                </div>
+                <CardDescription>
+                  Learn about analysis approaches
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm mb-3 text-gray-600">
+                  The Analytics Methodologies page explains the different approaches used to analyze marketing data and derive insights.
+                </p>
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <span className="text-gray-700">Learn about Marketing Mix Modeling (MMM)</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <span className="text-gray-700">Understand Incrementality Testing approaches</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <span className="text-gray-700">Explore Multi-Touch Attribution (MTA) techniques</span>
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-white shadow-md hover:shadow-lg transition-all border border-indigo-50 overflow-hidden group">
+              <div className="h-2 bg-gradient-to-r from-red-500 to-orange-400"></div>
+              <CardHeader className="pb-2">
+                <div className="flex items-center gap-2">
+                  <div className="p-2 bg-red-50 rounded-full group-hover:bg-red-100 transition-colors">
+                    <GitCompare className="h-5 w-5 text-red-600" />
+                  </div>
+                  <CardTitle>A/B Testing</CardTitle>
+                </div>
+                <CardDescription>
+                  Experiment results and insights
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm mb-3 text-gray-600">
+                  The A/B Testing page shows results from marketing experiments, helping you identify what works best for your audience.
+                </p>
+                <ul className="space-y-2 text-sm">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <span className="text-gray-700">Compare test variants performance metrics</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <span className="text-gray-700">Review statistical significance of results</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle className="h-4 w-4 text-green-500 mt-0.5" />
+                    <span className="text-gray-700">Get actionable insights based on test outcomes</span>
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+            
+            <Card className="bg-white shadow-md hover:shadow-lg transition-all border border-indigo-50 overflow-hidden group">
               <div className="h-2 bg-gradient-to-r from-teal-500 to-cyan-400"></div>
               <CardHeader className="pb-2">
                 <div className="flex items-center gap-2">
                   <div className="p-2 bg-teal-50 rounded-full group-hover:bg-teal-100 transition-colors">
-                    <GitCompare className="h-5 w-5 text-teal-600" />
+                    <Layers className="h-5 w-5 text-teal-600" />
                   </div>
                   <CardTitle>Metric Comparison</CardTitle>
                 </div>
