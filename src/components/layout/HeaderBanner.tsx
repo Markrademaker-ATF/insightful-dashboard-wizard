@@ -9,7 +9,7 @@ export function HeaderBanner() {
   const getPageTitle = () => {
     switch (location.pathname) {
       case "/":
-        return "Dashboard Overview";
+        return "Analytics Overview";  // Changed from "Dashboard Overview"
       case "/data":
         return "Data Overview";
       case "/channels":
@@ -60,17 +60,17 @@ export function HeaderBanner() {
   };
 
   return (
-    <div className="flex items-center gap-4 mb-6 animate-fade-in">
+    <div className="flex items-center gap-5 mb-6 animate-fade-in">
       <Link to="/">
         <img 
           src="/lovable-uploads/c91593ad-aa3a-4f49-b9f4-86d049161286.png" 
           alt="Artefact Logo" 
-          className="h-10" 
+          className="h-12" // Increased from h-10
         />
       </Link>
-      <div className="h-10 w-px bg-gray-200 hidden md:block"></div>
+      <div className="h-12 w-px bg-gray-200 hidden md:block"></div> {/* Also increased height */}
       <div className="flex flex-col">
-        <h1 className="text-xl font-bold text-gray-800">{getPageTitle()}</h1>
+        <h1 className="text-2xl font-bold text-gray-800">{getPageTitle()}</h1> {/* Increased from text-xl */}
         <p className="text-sm text-muted-foreground">{getPageDescription()}</p>
       </div>
     </div>

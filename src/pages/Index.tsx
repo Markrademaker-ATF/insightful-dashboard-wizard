@@ -108,7 +108,7 @@ const Index = () => {
           </Link>
         </div>
 
-        {/* Analytics Overview with enhanced styling */}
+        {/* Analytics Overview with enhanced styling but without header */}
         <div className="bg-white/70 rounded-xl p-6 soft-shadow">
           <AnalyticsOverview />
         </div>
