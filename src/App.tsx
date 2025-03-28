@@ -10,7 +10,7 @@ import LandingPage from "./pages/LandingPage";
 import AnalyticsOverview from "./pages/AnalyticsOverview";
 import DataPage from "./pages/DataPage";
 import ChannelsPage from "./pages/ChannelsPage";
-import CampaignPage from "./pages/CampaignPage"; // Updated import
+import CampaignPage from "./pages/CampaignPage";
 import MetricsPage from "./pages/MetricsPage";
 import IncrementalPage from "./pages/IncrementalPage";
 import BudgetPage from "./pages/BudgetPage";
@@ -37,9 +37,9 @@ const App = () => (
             <Route path="/methodologies" element={<MethodologiesPage />} />
             <Route path="/data" element={<DataPage />} />
             <Route path="/metrics" element={<MetricsPage />} />
-            <Route path="/channels" element={<ChannelsPage />} />
-            <Route path="/campaign" element={<CampaignPage />} /> {/* Updated route */}
             <Route path="/incremental" element={<IncrementalPage />} />
+            <Route path="/channels" element={<ChannelsPage />} />
+            <Route path="/campaign" element={<CampaignPage />} />
             <Route path="/budget" element={<BudgetPage />} />
             <Route path="/ab-testing" element={<ABTestingPage />} />
             <Route path="/guide" element={<GuidePage />} />

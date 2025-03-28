@@ -64,19 +64,19 @@ const navItems: NavItem[] = [
         icon: FileBarChart,
       },
       {
+        title: "Incremental Analysis",
+        href: "/incremental",
+        icon: TrendingUp,
+      },
+      {
         title: "Channel Analysis",
         href: "/channels",
         icon: Radio,
       },
       {
-        title: "Campaign Analysis", // Updated title
-        href: "/campaign", // Updated href
+        title: "Campaign Analysis",
+        href: "/campaign",
         icon: BarChart3,
-      },
-      {
-        title: "Incremental Analysis",
-        href: "/incremental",
-        icon: TrendingUp,
       },
     ]
   },
