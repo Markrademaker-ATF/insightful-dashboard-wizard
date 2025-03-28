@@ -77,8 +77,8 @@ export function ChannelSaturationCurve({
   })();
 
   // Custom render for the dot component to highlight current spending and max saturation
-  const CustomDot = (props: any) => {
-    const { cx, cy, payload } = props;
+  const CustomDot = ({ cx, cy, payload }: { cx?: number; cy?: number; payload?: any }) => {
+    if (!cx || !cy || !payload) return null;
     
     // Only render dots for special points
     const isCurrentSpend = payload.isCurrentSpend;

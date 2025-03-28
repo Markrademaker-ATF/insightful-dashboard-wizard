@@ -3,9 +3,11 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   generatePerformanceData, 
-  generateSankeyData,  // Updated import
+  generateSankeyData,
   channelColors,
-  generateBudgetRecommendations
+  generateBudgetRecommendations,
+  generateChannelData,
+  generateBudgetAllocation
 } from "@/data/mockData";
 
 import { ROISummaryCard } from "@/components/dashboard/ROISummaryCard";

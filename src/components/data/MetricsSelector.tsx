@@ -18,6 +18,7 @@ type MetricsSelectorProps = {
   getMetricColor: (metricKey: string) => string;
   timeframe: string;
   setTimeframe: (timeframe: string) => void;
+  setSelectedMetrics?: (metrics: string[]) => void;
 };
 
 export function MetricsSelector({
@@ -33,6 +34,7 @@ export function MetricsSelector({
   getMetricColor,
   timeframe,
   setTimeframe,
+  setSelectedMetrics
 }: MetricsSelectorProps) {
   return (
     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
@@ -112,7 +114,7 @@ export function MetricsSelector({
             <button 
               onClick={() => {
                 setShowAllMetrics(false);
-                if (selectedMetrics.length === 0) {
+                if (selectedMetrics.length === 0 && setSelectedMetrics) {
                   setSelectedMetrics(["revenue"]);
                 }
               }}

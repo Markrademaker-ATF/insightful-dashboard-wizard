@@ -13,6 +13,11 @@ export const channelNames = {
   referral: "Referral Traffic",
   organicSearch: "Organic Search",
   organicSocial: "Organic Social",
+  // Add media type names
+  search: "Search Advertising",
+  social: "Social Media",
+  display: "Display Advertising",
+  video: "Video Advertising"
 };
 
 // Define the channel colors
