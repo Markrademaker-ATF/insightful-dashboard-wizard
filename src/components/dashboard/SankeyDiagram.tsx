@@ -48,9 +48,8 @@ export function SankeyDiagram({
       <ResponsiveContainer width="100%" height="100%">
         <Sankey
           data={data}
-          node={{ 
-            // Fix: Remove nodePadding which isn't in the type definition
-            // Use properties that are actually in the type
+          node={{
+            // Removed nodePadding as it's not in the type definition
           }}
           link={{
             stroke: "transparent",
