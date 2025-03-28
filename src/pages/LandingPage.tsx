@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -177,38 +176,47 @@ const LandingPage = () => {
             </Button>
           </div>
 
-          {/* 3D Visual Elements */}
+          {/* 3D Visual Elements - Updated with the requested marketing analytics solutions */}
           <div className="mt-20 relative max-w-4xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {[
-                {
-                  title: "Data Insights",
-                  desc: "Understand your data with powerful visualization tools",
-                  color: "from-blue-400/80 to-purple-400/80"
-                },
-                {
-                  title: "Channel Analysis",
-                  desc: "Optimize your marketing campaigns across all channels",
-                  color: "from-purple-400/80 to-pink-400/80"
-                },
-                {
-                  title: "Budget Optimizer",
-                  desc: "Maximize ROI with intelligent budget allocation",
-                  color: "from-pink-400/80 to-orange-400/80"
-                }
-              ].map((card, i) => (
-                <div key={i} className="feature-card backdrop-blur-lg relative overflow-hidden">
-                  <div className={`absolute -top-10 -right-10 w-32 h-32 rounded-full bg-gradient-to-br ${card.color} opacity-50 blur-xl`}></div>
-                  <div className={`absolute -bottom-10 -left-10 w-24 h-24 rounded-full bg-gradient-to-tr ${card.color} opacity-40 blur-lg`}></div>
-                  <div className="relative z-10">
-                    <h3 className="text-xl font-bold mb-2">{card.title}</h3>
-                    <p className="text-white/80">{card.desc}</p>
-                    <Link to="/analytics" className="inline-flex items-center mt-4 text-pink-300 hover:text-pink-100">
-                      Learn more <ChevronRight className="h-4 w-4 ml-1" />
-                    </Link>
-                  </div>
+              {/* Marketing Mix Modelling */}
+              <div className="feature-card backdrop-blur-lg relative overflow-hidden">
+                <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-gradient-to-br from-blue-400/80 to-purple-400/80 opacity-50 blur-xl"></div>
+                <div className="absolute -bottom-10 -left-10 w-24 h-24 rounded-full bg-gradient-to-tr from-blue-400/80 to-purple-400/80 opacity-40 blur-lg"></div>
+                <div className="relative z-10">
+                  <h3 className="text-xl font-bold mb-2">Marketing Mix Modelling</h3>
+                  <p className="text-white/80">Optimize your marketing budget allocation with advanced statistical analysis</p>
+                  <Link to="/channels" className="inline-flex items-center mt-4 text-pink-300 hover:text-pink-100">
+                    Channel Analysis <ChevronRight className="h-4 w-4 ml-1" />
+                  </Link>
                 </div>
-              ))}
+              </div>
+
+              {/* Multi-Touch Attribution */}
+              <div className="feature-card backdrop-blur-lg relative overflow-hidden">
+                <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-gradient-to-br from-purple-400/80 to-pink-400/80 opacity-50 blur-xl"></div>
+                <div className="absolute -bottom-10 -left-10 w-24 h-24 rounded-full bg-gradient-to-tr from-purple-400/80 to-pink-400/80 opacity-40 blur-lg"></div>
+                <div className="relative z-10">
+                  <h3 className="text-xl font-bold mb-2">Multi-Touch Attribution</h3>
+                  <p className="text-white/80">Understand the customer journey by analyzing each touchpoint's contribution</p>
+                  <Link to="/channel-details" className="inline-flex items-center mt-4 text-pink-300 hover:text-pink-100">
+                    Campaign Analysis <ChevronRight className="h-4 w-4 ml-1" />
+                  </Link>
+                </div>
+              </div>
+
+              {/* Incrementality Testing */}
+              <div className="feature-card backdrop-blur-lg relative overflow-hidden">
+                <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full bg-gradient-to-br from-pink-400/80 to-orange-400/80 opacity-50 blur-xl"></div>
+                <div className="absolute -bottom-10 -left-10 w-24 h-24 rounded-full bg-gradient-to-tr from-pink-400/80 to-orange-400/80 opacity-40 blur-lg"></div>
+                <div className="relative z-10">
+                  <h3 className="text-xl font-bold mb-2">Incrementality Testing</h3>
+                  <p className="text-white/80">Measure the true impact of your marketing efforts through controlled experiments</p>
+                  <Link to="/ab-testing" className="inline-flex items-center mt-4 text-pink-300 hover:text-pink-100">
+                    A/B Testing <ChevronRight className="h-4 w-4 ml-1" />
+                  </Link>
+                </div>
+              </div>
             </div>
 
             {/* Background blur effects */}
