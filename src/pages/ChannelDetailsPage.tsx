@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useSearchParams, useLocation } from "react-router-dom";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -20,6 +19,7 @@ import { CampaignBreakdownTab } from "@/components/campaigns/CampaignBreakdownTa
 import { Cpu, Database, BarChart4, Info } from "lucide-react";
 import { ChannelJourneyComparison } from "@/components/campaigns/ChannelJourneyComparison";
 import { KeyMetricsGrid } from "@/components/dashboard/KeyMetricsGrid";
+import { RoasComparisonChart } from "@/components/channels/RoasComparisonChart";
 
 const ChannelDetailsPage = () => {
   const [searchParams] = useSearchParams();
@@ -56,7 +56,14 @@ const ChannelDetailsPage = () => {
       await new Promise((resolve) => setTimeout(resolve, 800));
 
       const channelsData = generateChannelData(timeframe === "7d" ? "Q1" : timeframe === "30d" ? "Q2" : "Q3");
-      const channel = channelsData.find((c) => c.id === channelId) || channelsData[0];
+      
+      // Add incremental outcomes for each channel (a derived metric based on revenue minus cost)
+      const enhancedChannelsData = channelsData.map(channel => ({
+        ...channel,
+        incremental: Math.round(channel.revenue - channel.cost)
+      }));
+      
+      const channel = enhancedChannelsData.find((c) => c.id === channelId) || enhancedChannelsData[0];
       
       const days = timeframe === "7d" ? 7 : timeframe === "30d" ? 30 : 90;
       const allPerformance = generatePerformanceData(days);
@@ -389,6 +396,17 @@ const ChannelDetailsPage = () => {
               )}
             </CardContent>
           </Card>
+
+          {/* ROAS vs Cost and Incremental Outcome Chart - New Section */}
+          <div className="mb-6">
+            <RoasComparisonChart 
+              channelData={generateChannelData("Q2").map(channel => ({
+                ...channel,
+                incremental: Math.round(channel.revenue - channel.cost)
+              }))} 
+              loading={loading} 
+            />
+          </div>
 
           {/* Data-Driven Attribution Section */}
           <Card className="mb-6 overflow-hidden shadow-sm border-border/40">
