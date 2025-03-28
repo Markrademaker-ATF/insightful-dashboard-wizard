@@ -14,7 +14,7 @@ interface RoasComparisonChartProps {
 
 export function RoasComparisonChart({ channelData, loading }: RoasComparisonChartProps) {
   if (loading) {
-    return <Skeleton className="w-full h-80" />;
+    return <Skeleton className="w-full h-96" />;
   }
 
   // Sort channels by ROAS for better visualization
@@ -48,7 +48,7 @@ export function RoasComparisonChart({ channelData, loading }: RoasComparisonChar
         </CardDescription>
       </CardHeader>
       <CardContent className="p-0 pb-4">
-        <div className="w-full h-64">
+        <div className="w-full h-[500px]">
           <ChartContainer 
             config={{
               cost: {
@@ -68,6 +68,8 @@ export function RoasComparisonChart({ channelData, loading }: RoasComparisonChar
             <RechartsPrimitive.ComposedChart
               data={sortedData}
               margin={{ top: 20, right: 30, left: 20, bottom: 60 }}
+              width={800}
+              height={500}
             >
               <RechartsPrimitive.XAxis 
                 dataKey="name" 
@@ -164,3 +166,4 @@ export function RoasComparisonChart({ channelData, loading }: RoasComparisonChar
     </Card>
   );
 }
+
