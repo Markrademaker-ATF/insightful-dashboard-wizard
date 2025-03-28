@@ -41,25 +41,6 @@ const Index = () => {
         </Card>
       </div>
 
-      {/* Link to Methodologies Page */}
-      <Card className="mb-8 p-4 border-l-4 border-l-primary">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-xl font-semibold">Looking for Analytics Methodology Information?</h2>
-            <p className="text-muted-foreground mt-1">
-              Learn about MMM, Incrementality Testing, and Multi-Touch Attribution methodologies
-            </p>
-          </div>
-          <Link 
-            to="/methodologies"
-            className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-md hover:bg-primary/90 transition-colors"
-          >
-            <Lightbulb className="h-5 w-5" />
-            <span>Explore Methodologies</span>
-          </Link>
-        </div>
-      </Card>
-
       {/* Marketing Performance Insights - Redesigned */}
       <div className="bg-gradient-to-br from-blue-50 to-white/50 rounded-2xl p-8 space-y-6 mb-8 animate-fade-in">
         <div className="flex items-center gap-6">
@@ -69,6 +50,12 @@ const Index = () => {
           <div>
             <h2 className="text-2xl font-bold text-gray-800 mb-2">Marketing Performance Insights</h2>
             <p className="text-muted-foreground">
+              Your Analytics Journey
+              <br />
+              Follow your marketing performance story from high-level ROI metrics down to channel optimization opportunities. 
+              Use the insights to optimize your strategy and improve results.
+            </p>
+            <p className="text-muted-foreground mt-2">
               Dive deep into your marketing strategy with a comprehensive analytics journey. 
               Uncover insights from ROI metrics to channel optimization.
             </p>
@@ -113,7 +100,6 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Rest of the existing code remains the same */}
       <AnalyticsOverview />
     </>
   );
