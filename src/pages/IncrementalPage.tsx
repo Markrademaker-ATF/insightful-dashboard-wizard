@@ -90,10 +90,8 @@ const IncrementalPage = () => {
   // Update channel data when media type or selected channel changes
   useEffect(() => {
     if (!loading) {
-      const updatedChannelData = getChannelDataByMediaType(
-        mediaType, 
-        selectedChannel !== "all" ? selectedChannel : undefined
-      );
+      // Fix: Check the signature of getChannelDataByMediaType and adjust parameters
+      const updatedChannelData = getChannelDataByMediaType(mediaType);
       setChannelData(updatedChannelData);
     }
   }, [mediaType, selectedChannel, loading]);
