@@ -28,7 +28,6 @@ import {
   FileBarChart
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { ChannelSaturationCurve } from "@/components/channels/ChannelSaturationCurve";
 
 const journeySections = [
   { id: "roi", title: "ROI Summary" },
@@ -104,98 +103,6 @@ const Index = () => {
             <AnalyticsOverview />
           </CardContent>
         </Card>
-      </div>
-      
-      {/* Quick Insights Section */}
-      <div className="space-y-6 animate-fade-in" style={{ animationDelay: "200ms" }}>
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
-          <div>
-            <h2 className="text-2xl font-semibold text-gray-800 mb-1">Quick Insights</h2>
-            <p className="text-muted-foreground">Get a snapshot of your marketing performance</p>
-          </div>
-          <Link 
-            to="/channels" 
-            className="flex items-center text-primary font-medium hover:underline mt-2 md:mt-0"
-          >
-            View all channels <ChevronRight className="h-4 w-4 ml-1" />
-          </Link>
-        </div>
-        
-        {/* Quick Action Cards - Enhanced Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card className="bg-gradient-to-br from-white to-blue-50/50 border-blue-100/50 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
-            <CardContent className="p-6 flex flex-col gap-3">
-              <div className="p-3 rounded-full bg-blue-50 w-fit">
-                <BarChart3 className="h-5 w-5 text-blue-600" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-800 mb-1">Channel Analysis</h3>
-                <p className="text-sm text-muted-foreground">Compare performance across channels</p>
-              </div>
-              <div className="mt-2 pt-2 border-t border-gray-100 flex justify-between items-center">
-                <span className="text-sm font-medium text-blue-600">4 active channels</span>
-                <ChevronRight className="h-4 w-4 text-blue-600" />
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-gradient-to-br from-white to-green-50/50 border-green-100/50 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
-            <CardContent className="p-6 flex flex-col gap-3">
-              <div className="p-3 rounded-full bg-green-50 w-fit">
-                <TrendingUp className="h-5 w-5 text-green-600" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-800 mb-1">Revenue Tracking</h3>
-                <p className="text-sm text-muted-foreground">Monitor trends and predictions</p>
-              </div>
-              <div className="mt-2 pt-2 border-t border-gray-100 flex justify-between items-center">
-                <span className="text-sm font-medium text-green-600">+12.5% this month</span>
-                <ChevronRight className="h-4 w-4 text-green-600" />
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-gradient-to-br from-white to-amber-50/50 border-amber-100/50 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
-            <CardContent className="p-6 flex flex-col gap-3">
-              <div className="p-3 rounded-full bg-amber-50 w-fit">
-                <Zap className="h-5 w-5 text-amber-600" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-800 mb-1">Quick Insights</h3>
-                <p className="text-sm text-muted-foreground">Actionable recommendations</p>
-              </div>
-              <div className="mt-2 pt-2 border-t border-gray-100 flex justify-between items-center">
-                <span className="text-sm font-medium text-amber-600">3 new insights</span>
-                <ChevronRight className="h-4 w-4 text-amber-600" />
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-gradient-to-br from-white to-purple-50/50 border-purple-100/50 hover:shadow-md transition-all duration-300 hover:-translate-y-1">
-            <CardContent className="p-6 flex flex-col gap-3">
-              <div className="p-3 rounded-full bg-purple-50 w-fit">
-                <PieChart className="h-5 w-5 text-purple-600" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-800 mb-1">Budget Allocation</h3>
-                <p className="text-sm text-muted-foreground">Optimize spending distribution</p>
-              </div>
-              <div className="mt-2 pt-2 border-t border-gray-100 flex justify-between items-center">
-                <span className="text-sm font-medium text-purple-600">Budget review due</span>
-                <ChevronRight className="h-4 w-4 text-purple-600" />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-      
-      {/* Saturation Curve Analysis - Enhanced */}
-      <div className="animate-fade-in" style={{ animationDelay: "300ms" }}>
-        <ChannelSaturationCurve 
-          channelId="social" 
-          channelName="Social Media" 
-          color="#4f46e5" 
-        />
       </div>
       
       {/* Help & Resources Section */}
