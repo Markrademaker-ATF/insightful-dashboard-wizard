@@ -17,6 +17,7 @@ import { ChannelDetailView } from "@/components/channels/ChannelDetailView";
 import { RoasComparisonChart } from "@/components/channels/RoasComparisonChart";
 
 export default function ChannelsPage() {
+  const [mainTab, setMainTab] = useState("analysis");
   const [activeTab, setActiveTab] = useState("performance");
   const [channelData, setChannelData] = useState<any[]>([]);
   const [trendsData, setTrendsData] = useState<any[]>([]);
@@ -83,101 +84,117 @@ export default function ChannelsPage() {
 
       <ChannelMetricsOverview data={channelData} loading={loading} />
       
-      {/* Main Channel Analysis Card */}
-      <Card>
-        <CardHeader className="flex flex-row items-center">
-          <div className="flex flex-col space-y-1.5">
-            <CardTitle>Channel Analysis</CardTitle>
-            <CardDescription>
-              Compare performance metrics across channels
-            </CardDescription>
-          </div>
-          <div className="ml-auto">
-            <FilterExportControls />
-          </div>
-        </CardHeader>
-        <CardContent>
-          <RoasComparisonChart channelData={channelData} loading={loading} />
-          
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="w-full md:w-auto">
-              <TabsTrigger value="performance" className="flex items-center gap-1">
-                <BarChart className="h-4 w-4" /> Performance
-              </TabsTrigger>
-              <TabsTrigger value="breakdown" className="flex items-center gap-1">
-                <PieChart className="h-4 w-4" /> Breakdown
-              </TabsTrigger>
-              <TabsTrigger value="trends" className="flex items-center gap-1">
-                <LineChartIcon className="h-4 w-4" /> Trends
-              </TabsTrigger>
-              <TabsTrigger value="comparison" className="flex items-center gap-1">
-                <BarChart className="h-4 w-4" /> Comparison
-              </TabsTrigger>
-            </TabsList>
-            <TabsContent value="performance" className="border-none p-0 pt-4">
-              <ChannelPerformanceTable data={channelData} loading={loading} />
-            </TabsContent>
-            <TabsContent value="breakdown" className="border-none p-0 pt-4">
-              <ChannelBreakdownChart data={channelData} loading={loading} />
-            </TabsContent>
-            <TabsContent value="trends" className="border-none p-0 pt-4">
-              <ChannelTrendsChart data={trendsData} loading={loading} />
-            </TabsContent>
-            <TabsContent value="comparison" className="border-none p-0 pt-4">
-              <ChannelComparisonChart data={channelData} loading={loading} />
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
+      {/* Main Tabs */}
+      <Tabs value={mainTab} onValueChange={setMainTab} className="space-y-6">
+        <TabsList className="justify-start">
+          <TabsTrigger value="analysis" className="flex items-center gap-1">
+            <BarChart className="h-4 w-4" /> Channel Analysis
+          </TabsTrigger>
+          <TabsTrigger value="details" className="flex items-center gap-1">
+            <TableIcon className="h-4 w-4" /> Channel Details
+          </TabsTrigger>
+        </TabsList>
 
-      {/* Channel Details Section */}
-      <Card>
-        <CardHeader>
-          <div className="flex flex-row items-center justify-between">
-            <div>
-              <CardTitle className="flex items-center gap-2">
-                <TableIcon className="h-5 w-5" /> 
-                Channel Details
-              </CardTitle>
-              <CardDescription>
-                Select a specific channel to view detailed performance insights
-              </CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          {/* Channel Filter Section */}
-          <div className="mb-6 p-4 bg-muted/30 rounded-lg">
-            <h3 className="text-sm font-medium mb-3">Channel Filter</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
-              {availableChannels.map((channel) => (
-                <Button
-                  key={channel.id}
-                  variant={selectedChannel === channel.id ? "default" : "outline"}
-                  className="w-full justify-start"
-                  onClick={() => handleChannelSelect(channel.id)}
-                  style={{ borderColor: selectedChannel === channel.id ? "transparent" : channelColors[channel.id as keyof typeof channelColors] }}
-                >
-                  {channel.name}
-                </Button>
-              ))}
-            </div>
-          </div>
-          
-          {/* Show Channel Detail View when a channel is selected */}
-          {selectedChannel && selectedChannelData ? (
-            <ChannelDetailView 
-              channelData={selectedChannelData} 
-              trendsData={trendsData}
-              loading={loading} 
-            />
-          ) : (
-            <div className="text-center py-8 text-muted-foreground">
-              Select a channel above to view detailed performance data
-            </div>
-          )}
-        </CardContent>
-      </Card>
+        {/* Channel Analysis Tab Content */}
+        <TabsContent value="analysis" className="space-y-6 mt-6">
+          <Card>
+            <CardHeader className="flex flex-row items-center">
+              <div className="flex flex-col space-y-1.5">
+                <CardTitle>Channel Analysis</CardTitle>
+                <CardDescription>
+                  Compare performance metrics across channels
+                </CardDescription>
+              </div>
+              <div className="ml-auto">
+                <FilterExportControls />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <RoasComparisonChart channelData={channelData} loading={loading} />
+              
+              <Tabs value={activeTab} onValueChange={setActiveTab}>
+                <TabsList className="w-full md:w-auto">
+                  <TabsTrigger value="performance" className="flex items-center gap-1">
+                    <BarChart className="h-4 w-4" /> Performance
+                  </TabsTrigger>
+                  <TabsTrigger value="breakdown" className="flex items-center gap-1">
+                    <PieChart className="h-4 w-4" /> Breakdown
+                  </TabsTrigger>
+                  <TabsTrigger value="trends" className="flex items-center gap-1">
+                    <LineChartIcon className="h-4 w-4" /> Trends
+                  </TabsTrigger>
+                  <TabsTrigger value="comparison" className="flex items-center gap-1">
+                    <BarChart className="h-4 w-4" /> Comparison
+                  </TabsTrigger>
+                </TabsList>
+                <TabsContent value="performance" className="border-none p-0 pt-4">
+                  <ChannelPerformanceTable data={channelData} loading={loading} />
+                </TabsContent>
+                <TabsContent value="breakdown" className="border-none p-0 pt-4">
+                  <ChannelBreakdownChart data={channelData} loading={loading} />
+                </TabsContent>
+                <TabsContent value="trends" className="border-none p-0 pt-4">
+                  <ChannelTrendsChart data={trendsData} loading={loading} />
+                </TabsContent>
+                <TabsContent value="comparison" className="border-none p-0 pt-4">
+                  <ChannelComparisonChart data={channelData} loading={loading} />
+                </TabsContent>
+              </Tabs>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Channel Details Tab Content */}
+        <TabsContent value="details" className="space-y-6 mt-6">
+          <Card>
+            <CardHeader>
+              <div className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2">
+                    <TableIcon className="h-5 w-5" /> 
+                    Channel Details
+                  </CardTitle>
+                  <CardDescription>
+                    Select a specific channel to view detailed performance insights
+                  </CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {/* Channel Filter Section */}
+              <div className="mb-6 p-4 bg-muted/30 rounded-lg">
+                <h3 className="text-sm font-medium mb-3">Channel Filter</h3>
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+                  {availableChannels.map((channel) => (
+                    <Button
+                      key={channel.id}
+                      variant={selectedChannel === channel.id ? "default" : "outline"}
+                      className="w-full justify-start"
+                      onClick={() => handleChannelSelect(channel.id)}
+                      style={{ borderColor: selectedChannel === channel.id ? "transparent" : channelColors[channel.id as keyof typeof channelColors] }}
+                    >
+                      {channel.name}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Show Channel Detail View when a channel is selected */}
+              {selectedChannel && selectedChannelData ? (
+                <ChannelDetailView 
+                  channelData={selectedChannelData} 
+                  trendsData={trendsData}
+                  loading={loading} 
+                />
+              ) : (
+                <div className="text-center py-8 text-muted-foreground">
+                  Select a channel above to view detailed performance data
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
