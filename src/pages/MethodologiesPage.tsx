@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Helmet } from "react-helmet";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
@@ -20,7 +21,12 @@ const MethodologiesPage = () => {
       {/* Introduction to Analytics Methodologies */}
       <Card className="mb-8">
         <CardHeader>
-          <CardTitle className="text-2xl">Marketing Analytics Intelligence</CardTitle>
+          <div className="flex items-center gap-2 mb-1">
+            <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold">
+              <span>1</span>
+            </div>
+            <CardTitle className="text-2xl">Marketing Analytics Intelligence</CardTitle>
+          </div>
           <CardDescription>
             Comprehensive data-driven insights to optimize your marketing strategy and maximize ROI
           </CardDescription>
