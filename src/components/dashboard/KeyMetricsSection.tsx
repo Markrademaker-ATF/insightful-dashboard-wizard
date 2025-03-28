@@ -40,22 +40,25 @@ const channelBreakdown = {
 export function KeyMetricsSection({ loading, latestPeriodData }: KeyMetricsSectionProps) {
   const [expandedMetric, setExpandedMetric] = useState<string | null>(null);
 
+  // Calculate sums from channel data
+  const paidTotal = channelBreakdown.paid.reduce((sum, channel) => sum + channel.value, 0);
+  const organicTotal = channelBreakdown.organic.reduce((sum, channel) => sum + channel.value, 0);
+  const nonPaidTotal = channelBreakdown.nonPaid.reduce((sum, channel) => sum + channel.value, 0);
+  
+  // Update total based on the sum of all channels plus baseline
+  const calculatedTotal = paidTotal + organicTotal + nonPaidTotal + latestPeriodData.baseline;
+
   // Calculate percentages
-  const paidPct = latestPeriodData.total > 0 
-    ? ((latestPeriodData.paid / latestPeriodData.total) * 100).toFixed(1) 
-    : "0";
-
-  const organicPct = latestPeriodData.total > 0 
-    ? ((latestPeriodData.organic / latestPeriodData.total) * 100).toFixed(1) 
-    : "0";
-
-  const nonPaidPct = latestPeriodData.total > 0 
-    ? ((latestPeriodData.nonPaid / latestPeriodData.total) * 100).toFixed(1) 
-    : "0";
-
-  const baselinePct = latestPeriodData.total > 0 
-    ? ((latestPeriodData.baseline / latestPeriodData.total) * 100).toFixed(1) 
-    : "0";
+  const calculatePercentage = (value: number, total: number): string => {
+    if (total <= 0) return "0";
+    const percentage = (value / total) * 100;
+    return percentage < 100 ? percentage.toFixed(1) : "100";
+  };
+  
+  const paidPct = calculatePercentage(paidTotal, calculatedTotal);
+  const organicPct = calculatePercentage(organicTotal, calculatedTotal);
+  const nonPaidPct = calculatePercentage(nonPaidTotal, calculatedTotal);
+  const baselinePct = calculatePercentage(latestPeriodData.baseline, calculatedTotal);
 
   const toggleExpand = (metricName: string) => {
     setExpandedMetric(expandedMetric === metricName ? null : metricName);
@@ -66,14 +69,14 @@ export function KeyMetricsSection({ loading, latestPeriodData }: KeyMetricsSecti
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
         <MetricCard
           title="Total Revenue"
-          value={loading ? "-" : `$${latestPeriodData.total.toLocaleString()}`}
+          value={loading ? "-" : `$${calculatedTotal.toLocaleString()}`}
           icon={<Layers className="h-4 w-4" />}
           loading={loading}
           className="bg-gradient-to-br from-primary/10 to-primary/5 border-l-4 border-l-primary lg:col-span-1"
         />
         <MetricCard
           title="Paid Media"
-          value={loading ? "-" : `$${latestPeriodData.paid.toLocaleString()}`}
+          value={loading ? "-" : `$${paidTotal.toLocaleString()}`}
           description={`${paidPct}% of total`}
           icon={<DollarSign className="h-4 w-4" />}
           loading={loading}
@@ -87,7 +90,7 @@ export function KeyMetricsSection({ loading, latestPeriodData }: KeyMetricsSecti
         />
         <MetricCard
           title="Organic Media"
-          value={loading ? "-" : `$${latestPeriodData.organic.toLocaleString()}`}
+          value={loading ? "-" : `$${organicTotal.toLocaleString()}`}
           description={`${organicPct}% of total`}
           icon={<Compass className="h-4 w-4" />}
           loading={loading}
@@ -101,7 +104,7 @@ export function KeyMetricsSection({ loading, latestPeriodData }: KeyMetricsSecti
         />
         <MetricCard
           title="Non-Paid Media"
-          value={loading ? "-" : `$${latestPeriodData.nonPaid.toLocaleString()}`}
+          value={loading ? "-" : `$${nonPaidTotal.toLocaleString()}`}
           description={`${nonPaidPct}% of total`}
           icon={<CreditCard className="h-4 w-4" />}
           loading={loading}
@@ -136,33 +139,43 @@ export function KeyMetricsSection({ loading, latestPeriodData }: KeyMetricsSecti
               </h3>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {channelBreakdown[expandedMetric as keyof typeof channelBreakdown]?.map((channel, i) => (
-                <div 
-                  key={i}
-                  className="rounded-md border bg-card p-3 flex flex-col gap-2"
-                  style={{ animationDelay: `${i * 50}ms` }}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <div className="w-3 h-3 rounded-full" style={{ backgroundColor: channel.color }}></div>
-                      <span className="text-sm font-medium">{channel.name}</span>
+              {channelBreakdown[expandedMetric as keyof typeof channelBreakdown]?.map((channel, i) => {
+                const mediaTypeTotal = expandedMetric === "paid" 
+                  ? paidTotal 
+                  : expandedMetric === "organic" 
+                    ? organicTotal 
+                    : nonPaidTotal;
+                
+                const percentage = ((channel.value / mediaTypeTotal) * 100).toFixed(1);
+                
+                return (
+                  <div 
+                    key={i}
+                    className="rounded-md border bg-card p-3 flex flex-col gap-2"
+                    style={{ animationDelay: `${i * 50}ms` }}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full" style={{ backgroundColor: channel.color }}></div>
+                        <span className="text-sm font-medium">{channel.name}</span>
+                      </div>
+                      <span className="text-sm font-semibold">${channel.value.toLocaleString()}</span>
                     </div>
-                    <span className="text-sm font-semibold">${channel.value.toLocaleString()}</span>
+                    <div className="w-full bg-muted/30 rounded-full h-1.5">
+                      <div 
+                        className="h-1.5 rounded-full" 
+                        style={{ 
+                          width: `${percentage}%`,
+                          backgroundColor: channel.color 
+                        }}
+                      ></div>
+                    </div>
+                    <div className="text-xs text-right text-muted-foreground">
+                      {percentage}% of {expandedMetric}
+                    </div>
                   </div>
-                  <div className="w-full bg-muted/30 rounded-full h-1.5">
-                    <div 
-                      className="h-1.5 rounded-full" 
-                      style={{ 
-                        width: `${(channel.value / latestPeriodData[expandedMetric as keyof typeof latestPeriodData]) * 100}%`,
-                        backgroundColor: channel.color 
-                      }}
-                    ></div>
-                  </div>
-                  <div className="text-xs text-right text-muted-foreground">
-                    {((channel.value / latestPeriodData[expandedMetric as keyof typeof latestPeriodData]) * 100).toFixed(1)}% of {expandedMetric}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </CardContent>
         </Card>
