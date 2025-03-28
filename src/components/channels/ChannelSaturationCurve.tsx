@@ -1,3 +1,4 @@
+
 import React from "react";
 import { 
   LineChart, 
@@ -186,7 +187,7 @@ export function ChannelSaturationCurve({
                   strokeWidth={3}
                   shape="circle"
                   name="Current Spend"
-                  symbolSize={20}  // Increased size
+                  size={200}  // Using size instead of symbolSize
                 >
                 </Scatter>
                 
@@ -199,7 +200,7 @@ export function ChannelSaturationCurve({
                   strokeWidth={3}
                   shape="diamond"
                   name="New Spend"
-                  symbolSize={20}  // Increased size
+                  size={200}  // Using size instead of symbolSize
                 >
                 </Scatter>
                 
@@ -212,7 +213,7 @@ export function ChannelSaturationCurve({
                   strokeWidth={3}
                   shape="star"
                   name="Max Saturation"
-                  symbolSize={20}  // Increased size
+                  size={200}  // Using size instead of symbolSize
                 >
                 </Scatter>
                 
