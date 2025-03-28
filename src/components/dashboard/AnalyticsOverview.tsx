@@ -3,8 +3,7 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   generatePerformanceData, 
-  generateChannelData, 
-  generateBudgetAllocation, 
+  generateSankeyData,  // Updated import
   channelColors,
   generateBudgetRecommendations
 } from "@/data/mockData";
@@ -227,7 +226,7 @@ export function AnalyticsOverview() {
   ];
 
   return (
-    <div className="animate-fade-in">
+    <div className="animate-fade-in space-y-6">
       <PageHeader 
         title="Analytics Overview" 
         description="Your marketing performance journey starts here"
@@ -246,6 +245,32 @@ export function AnalyticsOverview() {
         </Tabs>
       </PageHeader>
       
+      {/* Performance Insights Section - Transformed from a box to a more sleek design */}
+      <div className="bg-gradient-to-br from-blue-50 to-white/50 p-6 rounded-2xl shadow-sm">
+        <div className="flex items-start gap-4">
+          <div className="p-3 rounded-full bg-blue-100/70">
+            <LightbulbIcon className="h-6 w-6 text-blue-700" />
+          </div>
+          <div>
+            <h2 className="text-xl font-semibold mb-2 text-gray-800">Key Performance Insights</h2>
+            <ul className="space-y-2 text-muted-foreground">
+              <li className="flex items-start gap-3">
+                <span className="text-blue-500 font-bold mt-1">•</span> 
+                <span>Your top performing channel is <span className="font-medium text-foreground">{topChannel?.name || 'Loading...'}</span> with a ROAS of {topChannel?.roas.toFixed(2) || '0'}x</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-blue-500 font-bold mt-1">•</span> 
+                <span>Overall ROAS is <span className="font-medium text-foreground">{totalRoas.toFixed(2)}x</span>, which is {roasChange >= 0 ? 'up' : 'down'} {Math.abs(roasChange).toFixed(1)}% vs. previous period</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-blue-500 font-bold mt-1">•</span> 
+                <span>Consider optimizing your budget allocation to improve performance of <span className="font-medium text-foreground">{bottomChannel?.name || 'Loading...'}</span></span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
       {/* Section Navigation */}
       <SectionNav 
         sections={sections.map(s => ({ id: s.id, title: s.title }))}
