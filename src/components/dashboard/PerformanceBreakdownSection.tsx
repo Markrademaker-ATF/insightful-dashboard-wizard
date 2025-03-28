@@ -16,15 +16,6 @@ const mediaTypeColors = {
   total: "#000000"
 };
 
-const channelColors = {
-  search: "#4361ee",
-  social: "#3a0ca3",
-  display: "#7209b7",
-  video: "#f72585",
-  email: "#4cc9f0",
-  affiliates: "#480ca8",
-};
-
 type PerformanceBreakdownSectionProps = {
   data: any[];
   loading: boolean;
@@ -33,7 +24,7 @@ type PerformanceBreakdownSectionProps = {
 export function PerformanceBreakdownSection({ data, loading }: PerformanceBreakdownSectionProps) {
   const [view, setView] = useState<'chart' | 'table'>('chart');
   
-  // Transform data for waterfall chart
+  // Prepare data for waterfall chart format
   const prepareWaterfallData = () => {
     if (!data || data.length === 0) return [];
     
@@ -93,7 +84,6 @@ export function PerformanceBreakdownSection({ data, loading }: PerformanceBreakd
           <>
             {view === 'chart' ? (
               <div className="space-y-6">
-                {/* Enhanced Waterfall Chart */}
                 <EnhancedWaterfallChart
                   data={data}
                   loading={loading}
