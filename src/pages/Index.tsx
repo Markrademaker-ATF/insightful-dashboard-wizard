@@ -21,7 +21,6 @@ import {
   TrendingUp
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { KeyMetricsSection } from "@/components/dashboard/KeyMetricsSection";
 
 const journeySections = [
   { id: "roi", title: "ROI Summary" },
@@ -32,14 +31,6 @@ const journeySections = [
   { id: "forecasting", title: "Forecasting" },
   { id: "insights", title: "Insights" }
 ];
-
-const dummyMetricsData = {
-  total: 1250000,
-  paid: 425000,
-  organic: 320000,
-  nonPaid: 275000,
-  baseline: 230000
-};
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState("roi");
@@ -76,14 +67,6 @@ const Index = () => {
           </div>
           <Progress value={progress} className="w-24 h-2" />
         </Card>
-      </div>
-
-      {/* Statistics Cards */}
-      <div className={`mb-8 ${isLoaded ? 'animate-fade-in' : 'opacity-0'}`} style={{ animationDelay: "100ms" }}>
-        <KeyMetricsSection 
-          loading={false} 
-          latestPeriodData={dummyMetricsData}
-        />
       </div>
 
       {/* Marketing Performance Insights - Enhanced */}
