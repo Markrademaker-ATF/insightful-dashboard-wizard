@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useSearchParams, useLocation } from "react-router-dom";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -6,7 +7,7 @@ import { MetricCard } from "@/components/dashboard/MetricCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Brain, LineChart, Target, Users, DollarSign, BarChart3, Filter } from "lucide-react";
+import { Brain, LineChart, Target, Users, DollarSign, BarChart3, Filter, ChevronRight } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { FilterExportControls } from "@/components/channels/FilterExportControls";
 import {
@@ -337,7 +338,7 @@ const ChannelDetailsPage = () => {
           onValueChange={setTimeframe}
           className="w-[240px]"
         >
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-3 shadow-sm">
             <TabsTrigger value="7d">7D</TabsTrigger>
             <TabsTrigger value="30d">30D</TabsTrigger>
             <TabsTrigger value="90d">90D</TabsTrigger>
@@ -347,15 +348,20 @@ const ChannelDetailsPage = () => {
 
       {/* Main Tabs for Campaign Overview and Campaign Detailed */}
       <Tabs defaultValue="overview" value={mainTab} onValueChange={setMainTab} className="mb-6">
-        <TabsList className="w-full md:w-auto">
-          <TabsTrigger value="overview">Campaign Overview</TabsTrigger>
-          <TabsTrigger value="detailed">Campaign Detailed</TabsTrigger>
+        <TabsList className="w-full md:w-auto bg-white shadow-sm">
+          <TabsTrigger value="overview" className="data-[state=active]:shadow-sm">
+            Campaign Overview
+          </TabsTrigger>
+          <TabsTrigger value="detailed" className="data-[state=active]:shadow-sm">
+            Campaign Detailed
+          </TabsTrigger>
         </TabsList>
         
         {/* Campaign Overview Tab Content */}
-        <TabsContent value="overview" className="space-y-6">
+        <TabsContent value="overview" className="space-y-8 mt-6">
           {/* Campaign Overview Section */}
-          <Card className="mb-6">
+          <Card className="mb-6 overflow-hidden border-border/40 shadow-sm">
+            <div className="h-1 bg-gradient-to-r from-primary/80 to-primary/40"></div>
             <CardHeader className="pb-3">
               <CardTitle>Campaign Overview</CardTitle>
               <CardDescription>Key performance metrics across all marketing campaigns</CardDescription>
@@ -385,10 +391,13 @@ const ChannelDetailsPage = () => {
           </Card>
 
           {/* Data-Driven Attribution Section */}
-          <Card className="mb-6">
+          <Card className="mb-6 overflow-hidden shadow-sm border-border/40">
+            <div className="h-1 bg-gradient-to-r from-[#4361ee] to-[#7209b7]"></div>
             <CardHeader>
               <div className="flex flex-row items-center gap-2 mb-1">
-                <Brain className="h-5 w-5 text-primary" />
+                <div className="p-1.5 rounded-md bg-primary/10">
+                  <Brain className="h-5 w-5 text-primary" />
+                </div>
                 <CardTitle>Data-Driven Attribution</CardTitle>
               </div>
               <CardDescription>
@@ -397,17 +406,20 @@ const ChannelDetailsPage = () => {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
                 <div>
-                  <h3 className="text-sm font-medium mb-3">How It Works</h3>
-                  <div className="p-4 bg-muted/40 rounded-lg space-y-3">
+                  <h3 className="text-sm font-medium mb-3 flex items-center gap-2">
+                    <ChevronRight className="h-4 w-4 text-primary" /> 
+                    How It Works
+                  </h3>
+                  <div className="p-5 bg-muted/30 rounded-xl space-y-5 border border-border/40">
                     <div className="flex items-start gap-3">
                       <div className="bg-primary/10 p-2 rounded-full mt-0.5">
                         <Database className="h-4 w-4 text-primary" />
                       </div>
                       <div>
                         <p className="text-sm font-medium">Data Collection</p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-xs text-muted-foreground mt-1">
                           Captures complete customer journey touchpoints across all channels and devices
                         </p>
                       </div>
@@ -418,7 +430,7 @@ const ChannelDetailsPage = () => {
                       </div>
                       <div>
                         <p className="text-sm font-medium">Deep Learning Models</p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-xs text-muted-foreground mt-1">
                           LSTM networks analyze sequential patterns while Temporal Fusion Transformers identify key interactions
                         </p>
                       </div>
@@ -429,7 +441,7 @@ const ChannelDetailsPage = () => {
                       </div>
                       <div>
                         <p className="text-sm font-medium">Advanced Analytics</p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-xs text-muted-foreground mt-1">
                           Algorithms identify true incremental impact of each touchpoint based on conversion probability
                         </p>
                       </div>
@@ -438,26 +450,29 @@ const ChannelDetailsPage = () => {
                 </div>
                 
                 <div className="space-y-4">
-                  <h3 className="text-sm font-medium mb-3">Model Advantages</h3>
-                  <ul className="space-y-2 text-sm">
+                  <h3 className="text-sm font-medium mb-3 flex items-center gap-2">
+                    <ChevronRight className="h-4 w-4 text-primary" /> 
+                    Model Advantages
+                  </h3>
+                  <ul className="space-y-3 text-sm bg-muted/30 p-5 rounded-xl border border-border/40">
                     <li className="flex items-center gap-2">
-                      <div className="h-1.5 w-1.5 rounded-full bg-primary"></div>
+                      <div className="h-2 w-2 rounded-full bg-[#4361ee]"></div>
                       <span>Captures complex non-linear relationships between touchpoints</span>
                     </li>
                     <li className="flex items-center gap-2">
-                      <div className="h-1.5 w-1.5 rounded-full bg-primary"></div>
+                      <div className="h-2 w-2 rounded-full bg-[#7209b7]"></div>
                       <span>Accounts for time delays between marketing activities and conversions</span>
                     </li>
                     <li className="flex items-center gap-2">
-                      <div className="h-1.5 w-1.5 rounded-full bg-primary"></div>
+                      <div className="h-2 w-2 rounded-full bg-[#f72585]"></div>
                       <span>Identifies channel synergies and diminishing returns</span>
                     </li>
                     <li className="flex items-center gap-2">
-                      <div className="h-1.5 w-1.5 rounded-full bg-primary"></div>
+                      <div className="h-2 w-2 rounded-full bg-[#4cc9f0]"></div>
                       <span>Continuously improves attribution accuracy with new data</span>
                     </li>
                     <li className="flex items-center gap-2">
-                      <div className="h-1.5 w-1.5 rounded-full bg-primary"></div>
+                      <div className="h-2 w-2 rounded-full bg-[#560bad]"></div>
                       <span>Personalizes attribution based on customer segments</span>
                     </li>
                   </ul>
@@ -465,7 +480,10 @@ const ChannelDetailsPage = () => {
               </div>
 
               {/* Key metrics */}
-              <h3 className="text-sm font-medium mb-6">Channel Contribution Analysis</h3>
+              <h3 className="text-sm font-medium mb-6 flex items-center gap-2">
+                <ChevronRight className="h-4 w-4 text-primary" /> 
+                Channel Contribution Analysis
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 <MetricCard
                   title="Attributed Revenue"
@@ -502,18 +520,20 @@ const ChannelDetailsPage = () => {
               </div>
 
               {/* Attribution chart */}
-              {loading ? (
-                <Skeleton className="w-full h-[400px]" />
-              ) : (
-                <div className="h-[400px]">
-                  <AttributionChart data={channelContribution} />
+              <div className="bg-white p-5 rounded-xl border border-border/40 shadow-sm">
+                {loading ? (
+                  <Skeleton className="w-full h-[400px]" />
+                ) : (
+                  <div className="h-[400px]">
+                    <AttributionChart data={channelContribution} />
+                  </div>
+                )}
+                <div className="mt-4 text-sm text-muted-foreground border-t border-border/30 pt-4">
+                  <p className="flex items-center gap-2">
+                    <Info className="h-4 w-4 text-primary" /> 
+                    Showing data-driven attribution results from neural network models trained on your marketing data.
+                  </p>
                 </div>
-              )}
-              <div className="mt-4 text-sm text-muted-foreground">
-                <p className="flex items-center gap-2">
-                  <Info className="h-4 w-4 text-primary" /> 
-                  Showing data-driven attribution results from neural network models trained on your marketing data.
-                </p>
               </div>
             </CardContent>
           </Card>
@@ -530,15 +550,18 @@ const ChannelDetailsPage = () => {
         </TabsContent>
         
         {/* Campaign Detailed Tab Content */}
-        <TabsContent value="detailed" className="space-y-6">
+        <TabsContent value="detailed" className="space-y-8 mt-6">
           {/* Campaign Filter Section */}
-          <div className="space-y-6">
+          <div className="space-y-8">
             {/* Campaign Selector */}
-            <Card>
+            <Card className="shadow-sm overflow-hidden border-border/40">
+              <div className="h-1 bg-gradient-to-r from-[#f72585] to-[#4361ee]"></div>
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Filter className="h-5 w-5 text-primary" />
+                    <div className="p-1.5 rounded-md bg-primary/10">
+                      <Filter className="h-5 w-5 text-primary" />
+                    </div>
                     <CardTitle>Campaign Filter</CardTitle>
                   </div>
                   <FilterExportControls 
@@ -555,7 +578,7 @@ const ChannelDetailsPage = () => {
                   value={selectedCampaign}
                   onValueChange={handleCampaignChange}
                 >
-                  <SelectTrigger className="w-full md:w-[320px]">
+                  <SelectTrigger className="w-full md:w-[320px] border-border/60">
                     <SelectValue placeholder="Select campaign" />
                   </SelectTrigger>
                   <SelectContent>
@@ -570,7 +593,8 @@ const ChannelDetailsPage = () => {
             </Card>
 
             {/* Attribution over time */}
-            <Card>
+            <Card className="shadow-sm overflow-hidden border-border/40">
+              <div className="h-1 bg-gradient-to-r from-[#4361ee] to-[#f72585]"></div>
               <CardHeader>
                 <CardTitle>Campaign Performance Over Time</CardTitle>
                 <CardDescription>
@@ -602,7 +626,7 @@ const ChannelDetailsPage = () => {
 
             {/* Campaign Breakdown - Only shown when a specific campaign is selected */}
             {selectedCampaign !== "all" && (
-              <div className="space-y-6 mt-6">
+              <div className="mt-6">
                 <CampaignBreakdownTab 
                   campaignData={campaignData} 
                   loading={loading} 
@@ -637,9 +661,9 @@ const AttributionChart: React.FC<{ data: any[] }> = ({ data }) => {
                     </div>
                     <span className="font-medium text-sm">{item.contribution}%</span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2.5">
+                  <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
                     <div
-                      className="h-2.5 rounded-full"
+                      className="h-2.5 rounded-full transition-all duration-1000 animate-[expandWidth_1s_ease-out]"
                       style={{
                         width: `${item.contribution}%`,
                         backgroundColor: item.color

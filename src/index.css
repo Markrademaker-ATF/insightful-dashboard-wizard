@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -115,5 +116,20 @@
 
   .soft-shadow {
     box-shadow: 0 10px 25px -12px rgba(0, 0, 0, 0.08);
+  }
+  
+  @keyframes expandWidth {
+    from { width: 0%; }
+    to { width: 100%; }
+  }
+  
+  /* Card with gradient bar on top */
+  .gradient-card {
+    @apply relative overflow-hidden rounded-xl border border-border/40 shadow-sm;
+  }
+  
+  .gradient-card::before {
+    content: "";
+    @apply absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/70 to-primary/30;
   }
 }
