@@ -24,7 +24,6 @@ import { MediaTypeAnalysisSection } from "@/components/dashboard/MediaTypeAnalys
 import { KeyContributorsSection } from "@/components/dashboard/KeyContributorsSection";
 import { MediaTypesExplanationCard } from "@/components/dashboard/MediaTypesExplanationCard";
 import { WaterfallSection } from "@/components/dashboard/WaterfallSection";
-import { MediaFlowSection } from "@/components/dashboard/MediaFlowSection";
 
 const IncrementalPage = () => {
   const [loading, setLoading] = useState(true);
@@ -35,7 +34,6 @@ const IncrementalPage = () => {
   const [waterfallData, setWaterfallData] = useState<any[]>([]);
   const [marginalReturnsData, setMarginalReturnsData] = useState<any[]>([]);
   const [channelData, setChannelData] = useState<any[]>([]);
-  const [sankeyData, setSankeyData] = useState<any>({ nodes: [], links: [] });
   const [mediaType, setMediaType] = useState("all");
 
   useEffect(() => {
@@ -54,7 +52,6 @@ const IncrementalPage = () => {
       const wfData = generateWaterfallData();
       const mrData = generateMarginalReturnsData();
       const chData = getChannelDataByMediaType(mediaType);
-      const skData = generateSankeyData();
 
       setIncrementalData(incData);
       setMediaGroupData(mediaData);
@@ -63,7 +60,6 @@ const IncrementalPage = () => {
       setWaterfallData(wfData);
       setMarginalReturnsData(mrData);
       setChannelData(chData);
-      setSankeyData(skData);
       setLoading(false);
     };
 
@@ -81,13 +77,6 @@ const IncrementalPage = () => {
   const latestPeriodData = !loading && mediaGroupData.length > 0 
     ? mediaGroupData[mediaGroupData.length - 1] 
     : { paid: 0, organic: 0, nonPaid: 0, baseline: 0, total: 0 };
-
-  // Adding console log to debug Sankey data
-  React.useEffect(() => {
-    if (!loading) {
-      console.log("Sankey Data:", sankeyData);
-    }
-  }, [sankeyData, loading]);
 
   return (
     <div className="animate-fade-in">
@@ -109,9 +98,6 @@ const IncrementalPage = () => {
 
       {/* Waterfall Chart Section */}
       <WaterfallSection data={waterfallData} loading={loading} />
-
-      {/* Media Flow Sankey Diagram Section - moving it above the Media Type Analysis for better flow */}
-      <MediaFlowSection data={sankeyData} loading={loading} />
 
       {/* Media Type Analysis */}
       <MediaTypeAnalysisSection

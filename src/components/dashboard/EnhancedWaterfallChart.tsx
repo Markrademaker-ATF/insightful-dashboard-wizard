@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
   ResponsiveContainer,
@@ -17,7 +18,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
-// Define colors for different category types
+// Define enhanced colors for different category types with gradients
 const categoryColors = {
   baseline: "#9b87f5", // Primary Purple
   nonPaid: "#0EA5E9", // Ocean Blue
@@ -48,6 +49,40 @@ const channelColors = {
   
   // Used for baseline
   baseline: "#9b87f5",
+};
+
+// Define gradient IDs for each category
+const gradients = {
+  baseline: {
+    id: "baselineGradient",
+    startColor: "#9b87f5",
+    endColor: "#7a65d6"
+  },
+  nonPaid: {
+    id: "nonPaidGradient",
+    startColor: "#0EA5E9",
+    endColor: "#0284c7"
+  },
+  organic: {
+    id: "organicGradient",
+    startColor: "#6E59A5",
+    endColor: "#4c3882"
+  },
+  paid: {
+    id: "paidGradient",
+    startColor: "#F97316",
+    endColor: "#ea580c"
+  },
+  total: {
+    id: "totalGradient",
+    startColor: "#33C3F0",
+    endColor: "#06b6d4"
+  },
+  remaining: {
+    id: "remainingGradient",
+    startColor: "#33C3F0", 
+    endColor: "#0891b2"
+  }
 };
 
 type WaterfallItem = {
@@ -222,10 +257,10 @@ export function EnhancedWaterfallChart({
     if (active && payload && payload.length) {
       const data = payload[0].payload;
       return (
-        <Card>
-          <CardContent className="py-2 px-3">
-            <p className="font-medium">{data.name}</p>
-            <p className="text-sm">
+        <Card className="shadow-lg border-border/60">
+          <CardContent className="py-3 px-4">
+            <p className="font-medium text-base">{data.name}</p>
+            <p className="text-muted-foreground text-sm mt-1">
               {data.isTotal 
                 ? `Total: $${Math.abs(data.value).toLocaleString()}`
                 : `Contribution: $${Math.abs(data.value).toLocaleString()} (${getPercentage(data.value)})`
@@ -245,15 +280,16 @@ export function EnhancedWaterfallChart({
     return `${Math.round(Math.abs(value) / latestData.total * 100)}%`;
   };
   
-  // Get color for a bar
-  const getBarColor = (item: any) => {
+  // Get color or gradient for a bar
+  const getBarFill = (item: any) => {
     if (item.parentCategory) {
       // For child items, use channel colors
       const channelName = item.name.toLowerCase().replace(/\s+/g, '');
       return channelColors[channelName as keyof typeof channelColors] || "#888888";
     } else {
-      // For category items, use category colors
-      return categoryColors[item.category as keyof typeof categoryColors] || "#888888";
+      // For category items, use gradient
+      const category = item.category as keyof typeof gradients;
+      return `url(#${gradients[category]?.id || 'defaultGradient'})`;
     }
   };
   
@@ -263,7 +299,7 @@ export function EnhancedWaterfallChart({
     const item = chartData[index];
     
     // Only show label if bar is large enough
-    if (height < 15) return null;
+    if (height < 20) return null;
     
     // For "Remaining" item, show total value
     const displayText = item.name === "Remaining" 
@@ -277,8 +313,9 @@ export function EnhancedWaterfallChart({
         fill="#fff"
         textAnchor="middle"
         dominantBaseline="middle"
-        fontSize={12}
-        fontWeight="bold"
+        fontSize={13}
+        fontWeight="500"
+        style={{ textShadow: "0px 1px 2px rgba(0,0,0,0.3)" }}
       >
         {displayText}
       </text>
@@ -291,13 +328,38 @@ export function EnhancedWaterfallChart({
         <ResponsiveContainer width="100%" height="100%">
           <BarChart
             data={chartData}
-            margin={{ top: 20, right: 30, left: 40, bottom: 5 }}
-            barGap={0}
+            margin={{ top: 30, right: 30, left: 40, bottom: 5 }}
+            barGap={2}
             layout="vertical"
+            className="drop-shadow-sm"
           >
+            {/* Define gradients for each category */}
+            <defs>
+              {Object.entries(gradients).map(([key, gradient]) => (
+                <linearGradient 
+                  key={gradient.id} 
+                  id={gradient.id} 
+                  x1="0" 
+                  y1="0" 
+                  x2="1" 
+                  y2="0"
+                >
+                  <stop offset="0%" stopColor={gradient.startColor} stopOpacity={0.95} />
+                  <stop offset="100%" stopColor={gradient.endColor} stopOpacity={0.8} />
+                </linearGradient>
+              ))}
+              <filter id="shadow" height="130%">
+                <feDropShadow dx="0" dy="3" stdDeviation="3" floodOpacity="0.2" />
+              </filter>
+            </defs>
+            
             <XAxis
               type="number"
               tickFormatter={(value) => `$${Math.abs(value).toLocaleString()}`}
+              stroke="#94a3b8"
+              fontSize={12}
+              tickLine={false}
+              axisLine={{ stroke: "#e2e8f0" }}
             />
             <YAxis
               type="category"
@@ -308,7 +370,15 @@ export function EnhancedWaterfallChart({
                 // Don't render toggle buttons for total items or channel items
                 if (item.isTotal || item.parentCategory) {
                   return (
-                    <text x={x} y={y} dy={4} textAnchor="end" fontSize={12}>
+                    <text 
+                      x={x} 
+                      y={y} 
+                      dy={4} 
+                      textAnchor="end" 
+                      fontSize={13} 
+                      fontWeight={item.isTotal ? "500" : "400"}
+                      fill={item.isTotal ? "#334155" : "#64748b"}
+                    >
                       {item.parentCategory ? `└─ ${item.name}` : item.name}
                     </text>
                   );
@@ -322,7 +392,9 @@ export function EnhancedWaterfallChart({
                       y={y} 
                       dy={4} 
                       textAnchor="end" 
-                      fontSize={12}
+                      fontSize={13}
+                      fontWeight="500"
+                      fill="#334155"
                       className="cursor-pointer hover:font-medium"
                     >
                       {item.name}
@@ -333,35 +405,42 @@ export function EnhancedWaterfallChart({
                         transform={`translate(${x - 15}, ${y - 7})`}
                       >
                         {item.isExpanded ? (
-                          <ChevronUp size={14} />
+                          <ChevronUp size={14} color="#64748b" />
                         ) : (
-                          <ChevronDown size={14} />
+                          <ChevronDown size={14} color="#64748b" />
                         )}
                       </g>
                     )}
                   </g>
                 );
               }}
-              width={150}
+              width={160}
+              axisLine={false}
+              tickLine={false}
             />
             <Tooltip content={<CustomTooltip />} />
-            <ReferenceLine x={0} stroke="#000" />
+            <ReferenceLine x={0} stroke="#64748b" />
             <Bar
               dataKey="value"
-              fill="#8884d8"
+              radius={[4, 4, 4, 4]}
               onMouseDown={(data: any) => {
                 // Only toggle when clicking on a category (not child or total)
                 if (!data.isTotal && !data.parentCategory) {
                   toggleCategory(data.category);
                 }
               }}
+              animationDuration={1000}
+              animationEasing="ease-out"
             >
               <LabelList dataKey="value" content={renderCustomBarLabel} />
               {chartData.map((entry, index) => (
                 <Cell 
                   key={`cell-${index}`}
-                  fill={getBarColor(entry)}
-                  style={{ cursor: entry.isTotal || entry.parentCategory ? 'default' : 'pointer' }}
+                  fill={getBarFill(entry)}
+                  style={{ 
+                    cursor: entry.isTotal || entry.parentCategory ? 'default' : 'pointer',
+                    filter: 'drop-shadow(0px 2px 2px rgba(0,0,0,0.1))'
+                  }}
                 />
               ))}
             </Bar>
