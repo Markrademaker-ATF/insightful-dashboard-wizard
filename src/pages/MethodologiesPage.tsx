@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Helmet } from "react-helmet";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
@@ -8,7 +7,7 @@ import MethodologySelector from "@/components/methodologies/MethodologySelector"
 import MethodologyDetails from "@/components/methodologies/MethodologyDetails";
 
 const MethodologiesPage = () => {
-  const [activeMethodology, setActiveMethodology] = useState<string>("");
+  const [activeMethodology, setActiveMethodology] = useState<string>("mmm");
   
   return (
     <>
@@ -206,8 +205,8 @@ const MethodologiesPage = () => {
         />
       </div>
       
-      {/* Methodology Details Display */}
-      {activeMethodology && <MethodologyDetails methodology={activeMethodology} />}
+      {/* Methodology Details Display - Now always showing MMM by default */}
+      <MethodologyDetails methodology={activeMethodology} />
     </>
   );
 };
