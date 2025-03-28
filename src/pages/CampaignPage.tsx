@@ -395,7 +395,7 @@ const ChannelDetailsPage = () => {
         />
       </div>
       
-      {/* Main Tabs for Campaign Overview and Campaign Detailed - moved above performance matrix */}
+      {/* Main Tabs for Campaign Overview and Campaign Detailed */}
       <Tabs 
         defaultValue="overview" 
         value={mainTab} 
@@ -410,280 +410,290 @@ const ChannelDetailsPage = () => {
             Campaign Detailed
           </TabsTrigger>
         </TabsList>
-      </Tabs>
       
-      {/* Campaign Performance Matrix - renamed from Channel Performance Matrix */}
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>Campaign Performance Matrix</CardTitle>
-          <CardDescription>
-            Detailed performance analysis of marketing campaigns
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {/* Tab content for Performance Matrix */}
-          <Tabs 
-            defaultValue="attribution" 
-            className="w-full"
-          >
-            <TabsList className="w-full md:w-auto">
-              <TabsTrigger value="attribution">Attribution</TabsTrigger>
-              <TabsTrigger value="performance">Performance</TabsTrigger>
-              <TabsTrigger value="conversion">Conversion</TabsTrigger>
-            </TabsList>
-            {/* Add content for each tab here */}
-          </Tabs>
-        </CardContent>
-      </Card>
-        
-      {/* Campaign Overview Tab Content */}
-      <TabsContent value="overview" className="space-y-8 mt-6">
-        {/* Data-Driven Attribution Section */}
-        <Card className="mb-6 overflow-hidden shadow-sm border-border/40">
-          <div className="h-1 bg-gradient-to-r from-[#4361ee] to-[#7209b7]"></div>
-          <CardHeader>
-            <div className="flex flex-row items-center gap-2 mb-1">
-              <div className="p-1.5 rounded-md bg-primary/10">
-                <Brain className="h-5 w-5 text-primary" />
-              </div>
-              <CardTitle>Data-Driven Attribution</CardTitle>
-            </div>
-            <CardDescription>
-              Powered by deep learning LSTM and Temporal Fusion Transformer models 
-              that analyze touchpoint sequences to determine true contribution
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-              <div>
-                <h3 className="text-sm font-medium mb-3 flex items-center gap-2">
-                  <ChevronRight className="h-4 w-4 text-primary" /> 
-                  How It Works
-                </h3>
-                <div className="p-5 bg-muted/30 rounded-xl space-y-5 border border-border/40">
-                  <div className="flex items-start gap-3">
-                    <div className="bg-primary/10 p-2 rounded-full mt-0.5">
-                      <Database className="h-4 w-4 text-primary" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium">Data Collection</p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Captures complete customer journey touchpoints across all channels and devices
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <div className="bg-primary/10 p-2 rounded-full mt-0.5">
-                      <Cpu className="h-4 w-4 text-primary" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium">Deep Learning Models</p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        LSTM networks analyze sequential patterns while Temporal Fusion Transformers identify key interactions
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <div className="bg-primary/10 p-2 rounded-full mt-0.5">
-                      <BarChart4 className="h-4 w-4 text-primary" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium">Advanced Analytics</p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Algorithms identify true incremental impact of each touchpoint based on conversion probability
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="space-y-4">
-                <h3 className="text-sm font-medium mb-3 flex items-center gap-2">
-                  <ChevronRight className="h-4 w-4 text-primary" /> 
-                  Model Advantages
-                </h3>
-                <ul className="space-y-3 text-sm bg-muted/30 p-5 rounded-xl border border-border/40">
-                  <li className="flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-[#4361ee]"></div>
-                    <span>Captures complex non-linear relationships between touchpoints</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-[#7209b7]"></div>
-                    <span>Accounts for time delays between marketing activities and conversions</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-[#f72585]"></div>
-                    <span>Identifies channel synergies and diminishing returns</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-[#4cc9f0]"></div>
-                    <span>Continuously improves attribution accuracy with new data</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-[#560bad]"></div>
-                    <span>Personalizes attribution based on customer segments</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-
-            {/* Key metrics */}
-            <h3 className="text-sm font-medium mb-6 flex items-center gap-2">
-              <ChevronRight className="h-4 w-4 text-primary" /> 
-              Channel Contribution Analysis
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-              <MetricCard
-                title="Attributed Revenue"
-                value={loading ? "-" : `$${totalRevenue.toLocaleString()}`}
-                change={5.2}
-                description="vs. previous period"
-                icon={<DollarSign className="h-4 w-4" />}
-                loading={loading}
-              />
-              <MetricCard
-                title="Attributed Conversions"
-                value={loading ? "-" : totalConversions.toLocaleString()}
-                change={3.8}
-                description="vs. previous period"
-                icon={<Users className="h-4 w-4" />}
-                loading={loading}
-              />
-              <MetricCard
-                title="Average Order Value"
-                value={loading ? "-" : `$${avgOrderValue.toFixed(2)}`}
-                change={1.5}
-                description="vs. previous period"
-                icon={<BarChart3 className="h-4 w-4" />}
-                loading={loading}
-              />
-              <MetricCard
-                title="Conversion Rate"
-                value={loading ? "-" : `${conversionRate}%`}
-                change={0.3}
-                description="vs. previous period"
-                icon={<LineChart className="h-4 w-4" />}
-                loading={loading}
-              />
-            </div>
-
-            {/* Attribution chart */}
-            <div className="bg-white p-5 rounded-xl border border-border/40 shadow-sm">
-              {loading ? (
-                <Skeleton className="w-full h-[400px]" />
-              ) : (
-                <div className="h-[400px]">
-                  <AttributionChart data={channelContribution} />
-                </div>
-              )}
-              <div className="mt-4 text-sm text-muted-foreground border-t border-border/30 pt-4">
-                <p className="flex items-center gap-2">
-                  <Info className="h-4 w-4 text-primary" /> 
-                  Showing data-driven attribution results from neural network models trained on your marketing data.
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Overview Section - Journey Analysis */}
-        <div className="space-y-6 mb-6">
-          {journeyData && (
-            <ChannelJourneyComparison 
-              data={journeyData || { channels: [] }} 
-              loading={loading} 
-            />
-          )}
-        </div>
-      </TabsContent>
-      
-      {/* Campaign Detailed Tab Content */}
-      <TabsContent value="detailed" className="space-y-8 mt-6">
-        {/* Campaign Filter Section */}
-        <div className="space-y-8">
-          {/* Campaign Selector */}
-          <Card className="shadow-sm overflow-hidden border-border/40">
-            <div className="h-1 bg-gradient-to-r from-[#f72585] to-[#4361ee]"></div>
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="p-1.5 rounded-md bg-primary/10">
-                    <Filter className="h-5 w-5 text-primary" />
-                  </div>
-                  <CardTitle>Campaign Filter</CardTitle>
-                </div>
-                <FilterExportControls 
-                  filterOptions={{ 
-                    channels: false,
-                    metrics: true
-                  }}
-                />
-              </div>
-              <CardDescription>Select a specific campaign to view detailed analytics</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Select
-                value={selectedCampaign}
-                onValueChange={handleCampaignChange}
-              >
-                <SelectTrigger className="w-full md:w-[320px] border-border/60">
-                  <SelectValue placeholder="Select campaign" />
-                </SelectTrigger>
-                <SelectContent>
-                  {campaigns.map((campaign) => (
-                    <SelectItem key={campaign.id} value={campaign.id}>
-                      {campaign.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </CardContent>
-          </Card>
-
-          {/* Attribution over time */}
-          <Card className="shadow-sm overflow-hidden border-border/40">
-            <div className="h-1 bg-gradient-to-r from-[#4361ee] to-[#f72585]"></div>
+        {/* Campaign Performance Matrix - renamed from Channel Performance Matrix */}
+        <div className="mt-6">
+          <Card className="mb-6">
             <CardHeader>
-              <CardTitle>Campaign Performance Over Time</CardTitle>
+              <CardTitle>Campaign Performance Matrix</CardTitle>
               <CardDescription>
-                Visualize attributed revenue and conversions across the selected time period
+                Detailed performance analysis of marketing campaigns
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <PerformanceChart 
-                data={attributionData} 
-                lines={[
-                  {
-                    dataKey: "value",
-                    color: "#4361ee",
-                    label: "Attributed Revenue",
-                    yAxisId: "left"
-                  },
-                  {
-                    dataKey: "conversions",
-                    color: "#f72585",
-                    label: "Conversions",
-                    yAxisId: "right"
-                  },
-                ]}
-                loading={loading}
-                height={350}
-              />
+              {/* Tab content for Performance Matrix */}
+              <Tabs 
+                defaultValue="attribution" 
+                className="w-full"
+              >
+                <TabsList className="w-full md:w-auto">
+                  <TabsTrigger value="attribution">Attribution</TabsTrigger>
+                  <TabsTrigger value="performance">Performance</TabsTrigger>
+                  <TabsTrigger value="conversion">Conversion</TabsTrigger>
+                </TabsList>
+                <TabsContent value="attribution">
+                  <div className="py-2">Attribution content here</div>
+                </TabsContent>
+                <TabsContent value="performance">
+                  <div className="py-2">Performance content here</div>
+                </TabsContent>
+                <TabsContent value="conversion">
+                  <div className="py-2">Conversion content here</div>
+                </TabsContent>
+              </Tabs>
+            </CardContent>
+          </Card>
+        </div>
+        
+        {/* Campaign Overview Tab Content */}
+        <TabsContent value="overview" className="space-y-8 mt-6">
+          {/* Data-Driven Attribution Section */}
+          <Card className="mb-6 overflow-hidden shadow-sm border-border/40">
+            <div className="h-1 bg-gradient-to-r from-[#4361ee] to-[#7209b7]"></div>
+            <CardHeader>
+              <div className="flex flex-row items-center gap-2 mb-1">
+                <div className="p-1.5 rounded-md bg-primary/10">
+                  <Brain className="h-5 w-5 text-primary" />
+                </div>
+                <CardTitle>Data-Driven Attribution</CardTitle>
+              </div>
+              <CardDescription>
+                Powered by deep learning LSTM and Temporal Fusion Transformer models 
+                that analyze touchpoint sequences to determine true contribution
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <div>
+                  <h3 className="text-sm font-medium mb-3 flex items-center gap-2">
+                    <ChevronRight className="h-4 w-4 text-primary" /> 
+                    How It Works
+                  </h3>
+                  <div className="p-5 bg-muted/30 rounded-xl space-y-5 border border-border/40">
+                    <div className="flex items-start gap-3">
+                      <div className="bg-primary/10 p-2 rounded-full mt-0.5">
+                        <Database className="h-4 w-4 text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">Data Collection</p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Captures complete customer journey touchpoints across all channels and devices
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="bg-primary/10 p-2 rounded-full mt-0.5">
+                        <Cpu className="h-4 w-4 text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">Deep Learning Models</p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          LSTM networks analyze sequential patterns while Temporal Fusion Transformers identify key interactions
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3">
+                      <div className="bg-primary/10 p-2 rounded-full mt-0.5">
+                        <BarChart4 className="h-4 w-4 text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">Advanced Analytics</p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Algorithms identify true incremental impact of each touchpoint based on conversion probability
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="space-y-4">
+                  <h3 className="text-sm font-medium mb-3 flex items-center gap-2">
+                    <ChevronRight className="h-4 w-4 text-primary" /> 
+                    Model Advantages
+                  </h3>
+                  <ul className="space-y-3 text-sm bg-muted/30 p-5 rounded-xl border border-border/40">
+                    <li className="flex items-center gap-2">
+                      <div className="h-2 w-2 rounded-full bg-[#4361ee]"></div>
+                      <span>Captures complex non-linear relationships between touchpoints</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <div className="h-2 w-2 rounded-full bg-[#7209b7]"></div>
+                      <span>Accounts for time delays between marketing activities and conversions</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <div className="h-2 w-2 rounded-full bg-[#f72585]"></div>
+                      <span>Identifies channel synergies and diminishing returns</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <div className="h-2 w-2 rounded-full bg-[#4cc9f0]"></div>
+                      <span>Continuously improves attribution accuracy with new data</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <div className="h-2 w-2 rounded-full bg-[#560bad]"></div>
+                      <span>Personalizes attribution based on customer segments</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Key metrics */}
+              <h3 className="text-sm font-medium mb-6 flex items-center gap-2">
+                <ChevronRight className="h-4 w-4 text-primary" /> 
+                Channel Contribution Analysis
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <MetricCard
+                  title="Attributed Revenue"
+                  value={loading ? "-" : `$${totalRevenue.toLocaleString()}`}
+                  change={5.2}
+                  description="vs. previous period"
+                  icon={<DollarSign className="h-4 w-4" />}
+                  loading={loading}
+                />
+                <MetricCard
+                  title="Attributed Conversions"
+                  value={loading ? "-" : totalConversions.toLocaleString()}
+                  change={3.8}
+                  description="vs. previous period"
+                  icon={<Users className="h-4 w-4" />}
+                  loading={loading}
+                />
+                <MetricCard
+                  title="Average Order Value"
+                  value={loading ? "-" : `$${avgOrderValue.toFixed(2)}`}
+                  change={1.5}
+                  description="vs. previous period"
+                  icon={<BarChart3 className="h-4 w-4" />}
+                  loading={loading}
+                />
+                <MetricCard
+                  title="Conversion Rate"
+                  value={loading ? "-" : `${conversionRate}%`}
+                  change={0.3}
+                  description="vs. previous period"
+                  icon={<LineChart className="h-4 w-4" />}
+                  loading={loading}
+                />
+              </div>
+
+              {/* Attribution chart */}
+              <div className="bg-white p-5 rounded-xl border border-border/40 shadow-sm">
+                {loading ? (
+                  <Skeleton className="w-full h-[400px]" />
+                ) : (
+                  <div className="h-[400px]">
+                    <AttributionChart data={channelContribution} />
+                  </div>
+                )}
+                <div className="mt-4 text-sm text-muted-foreground border-t border-border/30 pt-4">
+                  <p className="flex items-center gap-2">
+                    <Info className="h-4 w-4 text-primary" /> 
+                    Showing data-driven attribution results from neural network models trained on your marketing data.
+                  </p>
+                </div>
+              </div>
             </CardContent>
           </Card>
 
-          {/* Campaign Breakdown - Only shown when a specific campaign is selected */}
-          {selectedCampaign !== "all" && (
-            <div className="mt-6">
-              <CampaignBreakdownTab 
-                campaignData={campaignData} 
+          {/* Overview Section - Journey Analysis */}
+          <div className="space-y-6 mb-6">
+            {journeyData && (
+              <ChannelJourneyComparison 
+                data={journeyData || { channels: [] }} 
                 loading={loading} 
-                campaign={campaigns.find(c => c.id === selectedCampaign) || { id: "", name: "" }}
               />
-            </div>
-          )}
-        </div>
-      </TabsContent>
+            )}
+          </div>
+        </TabsContent>
+        
+        {/* Campaign Detailed Tab Content */}
+        <TabsContent value="detailed" className="space-y-8 mt-6">
+          {/* Campaign Filter Section */}
+          <div className="space-y-8">
+            {/* Campaign Selector */}
+            <Card className="shadow-sm overflow-hidden border-border/40">
+              <div className="h-1 bg-gradient-to-r from-[#f72585] to-[#4361ee]"></div>
+              <CardHeader className="pb-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="p-1.5 rounded-md bg-primary/10">
+                      <Filter className="h-5 w-5 text-primary" />
+                    </div>
+                    <CardTitle>Campaign Filter</CardTitle>
+                  </div>
+                  <FilterExportControls 
+                    filterOptions={{ 
+                      channels: false,
+                      metrics: true
+                    }}
+                  />
+                </div>
+                <CardDescription>Select a specific campaign to view detailed analytics</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Select
+                  value={selectedCampaign}
+                  onValueChange={handleCampaignChange}
+                >
+                  <SelectTrigger className="w-full md:w-[320px] border-border/60">
+                    <SelectValue placeholder="Select campaign" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {campaigns.map((campaign) => (
+                      <SelectItem key={campaign.id} value={campaign.id}>
+                        {campaign.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </CardContent>
+            </Card>
+
+            {/* Attribution over time */}
+            <Card className="shadow-sm overflow-hidden border-border/40">
+              <div className="h-1 bg-gradient-to-r from-[#4361ee] to-[#f72585]"></div>
+              <CardHeader>
+                <CardTitle>Campaign Performance Over Time</CardTitle>
+                <CardDescription>
+                  Visualize attributed revenue and conversions across the selected time period
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <PerformanceChart 
+                  data={attributionData} 
+                  lines={[
+                    {
+                      dataKey: "value",
+                      color: "#4361ee",
+                      label: "Attributed Revenue",
+                      yAxisId: "left"
+                    },
+                    {
+                      dataKey: "conversions",
+                      color: "#f72585",
+                      label: "Conversions",
+                      yAxisId: "right"
+                    },
+                  ]}
+                  loading={loading}
+                  height={350}
+                />
+              </CardContent>
+            </Card>
+
+            {/* Campaign Breakdown - Only shown when a specific campaign is selected */}
+            {selectedCampaign !== "all" && (
+              <div className="mt-6">
+                <CampaignBreakdownTab 
+                  campaignData={campaignData} 
+                  loading={loading} 
+                  campaign={campaigns.find(c => c.id === selectedCampaign) || { id: "", name: "" }}
+                />
+              </div>
+            )}
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
