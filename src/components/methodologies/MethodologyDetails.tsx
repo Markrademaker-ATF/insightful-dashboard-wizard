@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -581,4 +582,52 @@ const IncrementalityTestingDetails = () => {
                     formula="Causal Effect = E[Y(1)] - E[Y(0)]" 
                     description={
                       <DefinitionList items={[
-                        { term: "Y(1)", definition: "Potential outcome if treated
+                        { term: "Y(1)", definition: "Potential outcome if treated" },
+                        { term: "Y(0)", definition: "Potential outcome if not treated" },
+                        { term: "E[·]", definition: "Expected value (average across population)" }
+                      ]} />
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </CardContent>
+    </Card>
+  );
+};
+
+// This would be a placeholder for the MultiTouchAttribution component
+const MultiTouchAttributionDetails = () => {
+  return (
+    <Card className="mb-6 border-t-4 border-t-green-500">
+      <CardHeader className="bg-gradient-to-r from-green-50/50 to-indigo-50/50">
+        <CardTitle className="text-2xl">Multi-Touch Attribution - Technical Deep Dive</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-6 pt-6">
+        <Tabs defaultValue="overview">
+          <TabsList className="bg-slate-100 p-1 rounded-lg mb-2 w-full grid grid-cols-4">
+            <TabsTrigger value="overview" className="rounded-md">Overview</TabsTrigger>
+            <TabsTrigger value="mathematics" className="rounded-md">Mathematical Foundation</TabsTrigger>
+            <TabsTrigger value="implementation" className="rounded-md">Implementation</TabsTrigger>
+            <TabsTrigger value="advanced" className="rounded-md">Advanced Techniques</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="overview" className="space-y-6 mt-6 animate-fade-in">
+            <div>
+              <h3 className="text-lg font-semibold mb-2 text-green-700 flex items-center gap-2">
+                <span className="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center text-green-700">1</span>
+                Technical Definition
+              </h3>
+              <p className="leading-relaxed">Multi-Touch Attribution (MTA) is a methodology that assigns credit to various marketing touchpoints along the customer journey, helping determine which channels and tactics contribute most effectively to conversions or other desired outcomes.</p>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default MethodologyDetails;
+
