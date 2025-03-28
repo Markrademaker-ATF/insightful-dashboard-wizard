@@ -72,17 +72,18 @@ const MetricsPage = () => {
         </div>
       </PageHeader>
 
-      {/* Key Metrics Overview - Updated to be full width */}
-      <div className="mb-8 w-full">
-        <div className="mb-4">
+      {/* Key Metrics Overview - Enhanced with better styling */}
+      <div className="mb-8 w-full bg-gradient-to-br from-primary/5 to-transparent p-6 rounded-lg border border-primary/10">
+        <div className="mb-4 flex items-center justify-between">
           <h2 className="text-xl font-semibold flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary animate-pulse" />
             Key Metrics Overview
           </h2>
+          <div className="text-sm text-muted-foreground bg-background/70 px-3 py-1 rounded-full border shadow-sm">
+            {timeframe === "7d" ? "Last 7 days" : timeframe === "30d" ? "Last 30 days" : "Last 90 days"}
+          </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
-          <ChannelMetricsCards data={channelData} loading={loading} />
-        </div>
+        <ChannelMetricsCards data={channelData} loading={loading} />
       </div>
 
       {/* Exploratory Data Analysis Section - Enhanced with eda-card class */}
