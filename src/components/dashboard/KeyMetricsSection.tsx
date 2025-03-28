@@ -34,6 +34,11 @@ const channelBreakdown = {
     { name: channelNames.direct, value: 215000, color: channelColors.direct },
     { name: channelNames.referral, value: 145000, color: channelColors.referral },
     { name: channelNames.affiliate, value: 240000, color: channelColors.affiliate }
+  ],
+  baseline: [
+    { name: "Brand Equity", value: 380000, color: "#F59E0B" },
+    { name: "Existing Customers", value: 270000, color: "#FBBF24" },
+    { name: "Market Momentum", value: 150000, color: "#FCD34D" }
   ]
 };
 
@@ -44,9 +49,10 @@ export function KeyMetricsSection({ loading, latestPeriodData }: KeyMetricsSecti
   const paidTotal = channelBreakdown.paid.reduce((sum, channel) => sum + channel.value, 0);
   const organicTotal = channelBreakdown.organic.reduce((sum, channel) => sum + channel.value, 0);
   const nonPaidTotal = channelBreakdown.nonPaid.reduce((sum, channel) => sum + channel.value, 0);
+  const baselineTotal = channelBreakdown.baseline.reduce((sum, channel) => sum + channel.value, 0);
   
   // Update total based on the sum of all channels plus baseline
-  const calculatedTotal = paidTotal + organicTotal + nonPaidTotal + latestPeriodData.baseline;
+  const calculatedTotal = paidTotal + organicTotal + nonPaidTotal + baselineTotal;
 
   // Calculate percentages
   const calculatePercentage = (value: number, total: number): string => {
@@ -58,7 +64,7 @@ export function KeyMetricsSection({ loading, latestPeriodData }: KeyMetricsSecti
   const paidPct = calculatePercentage(paidTotal, calculatedTotal);
   const organicPct = calculatePercentage(organicTotal, calculatedTotal);
   const nonPaidPct = calculatePercentage(nonPaidTotal, calculatedTotal);
-  const baselinePct = calculatePercentage(latestPeriodData.baseline, calculatedTotal);
+  const baselinePct = calculatePercentage(baselineTotal, calculatedTotal);
 
   const toggleExpand = (metricName: string) => {
     setExpandedMetric(expandedMetric === metricName ? null : metricName);
@@ -73,6 +79,20 @@ export function KeyMetricsSection({ loading, latestPeriodData }: KeyMetricsSecti
           icon={<Layers className="h-4 w-4" />}
           loading={loading}
           className="bg-gradient-to-br from-primary/10 to-primary/5 border-l-4 border-l-primary lg:col-span-1"
+        />
+        <MetricCard
+          title="Baseline"
+          value={loading ? "-" : `$${baselineTotal.toLocaleString()}`}
+          description={`${baselinePct}% of total`}
+          icon={<Archive className="h-4 w-4" />}
+          loading={loading}
+          className="bg-gradient-to-br from-amber-50 to-amber-50/50 border-l-4 border-l-amber-400 lg:col-span-1 cursor-pointer hover:shadow-md transition-shadow"
+          onMetricClick={() => toggleExpand("baseline")}
+          action={
+            <Button variant="ghost" size="icon" className="h-6 w-6">
+              {expandedMetric === "baseline" ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+            </Button>
+          }
         />
         <MetricCard
           title="Paid Media"
@@ -116,14 +136,6 @@ export function KeyMetricsSection({ loading, latestPeriodData }: KeyMetricsSecti
             </Button>
           }
         />
-        <MetricCard
-          title="Baseline"
-          value={loading ? "-" : `$${latestPeriodData.baseline.toLocaleString()}`}
-          description={`${baselinePct}% of total`}
-          icon={<Archive className="h-4 w-4" />}
-          loading={loading}
-          className="bg-gradient-to-br from-amber-50 to-amber-50/50 border-l-4 border-l-amber-400 lg:col-span-1"
-        />
       </div>
 
       {/* Channel breakdown expansion */}
@@ -135,6 +147,7 @@ export function KeyMetricsSection({ loading, latestPeriodData }: KeyMetricsSecti
                 {expandedMetric === "paid" && "Paid Media"}
                 {expandedMetric === "organic" && "Organic Media"}
                 {expandedMetric === "nonPaid" && "Non-Paid Media"}
+                {expandedMetric === "baseline" && "Baseline Revenue"}
                 <span className="text-xs ml-2 text-muted-foreground"> - Channel Breakdown</span>
               </h3>
             </div>
@@ -144,7 +157,9 @@ export function KeyMetricsSection({ loading, latestPeriodData }: KeyMetricsSecti
                   ? paidTotal 
                   : expandedMetric === "organic" 
                     ? organicTotal 
-                    : nonPaidTotal;
+                    : expandedMetric === "nonPaid" 
+                      ? nonPaidTotal
+                      : baselineTotal;
                 
                 const percentage = ((channel.value / mediaTypeTotal) * 100).toFixed(1);
                 
@@ -171,7 +186,7 @@ export function KeyMetricsSection({ loading, latestPeriodData }: KeyMetricsSecti
                       ></div>
                     </div>
                     <div className="text-xs text-right text-muted-foreground">
-                      {percentage}% of {expandedMetric}
+                      {percentage}% of {expandedMetric === "baseline" ? "baseline" : expandedMetric}
                     </div>
                   </div>
                 );
