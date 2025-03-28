@@ -32,7 +32,7 @@ export function RoasComparisonChart({ channelData, loading }: RoasComparisonChar
         </div>
         <CardDescription className="flex flex-wrap items-center gap-2 text-xs">
           <div className="flex items-center gap-1">
-            <CircleDot className="h-3 w-3 text-blue-500" />
+            <CircleDot className="h-3 w-3 text-indigo-500" />
             <span>ROAS (scatter)</span>
           </div>
           <span className="text-muted-foreground">vs.</span>
@@ -61,7 +61,7 @@ export function RoasComparisonChart({ channelData, loading }: RoasComparisonChar
               },
               roas: {
                 label: "ROAS",
-                color: "#3b82f6" // blue-500
+                color: "#8B5CF6" // indigo-500 - brighter color for better visibility
               }
             }}
           >
@@ -92,15 +92,15 @@ export function RoasComparisonChart({ channelData, loading }: RoasComparisonChar
               <RechartsPrimitive.YAxis 
                 yAxisId="right" 
                 orientation="right"
-                stroke="#3b82f6"
+                stroke="#8B5CF6" // Match the ROAS color for consistency
                 label={{ 
                   value: 'ROAS (x)', 
                   angle: -90, 
                   position: 'insideRight',
-                  style: { textAnchor: 'middle', fontSize: 11, fill: '#3b82f6' }
+                  style: { textAnchor: 'middle', fontSize: 11, fill: '#8B5CF6' }
                 }}
               />
-              <RechartsPrimitive.CartesianGrid strokeDasharray="3 3" opacity={0.6} />
+              <RechartsPrimitive.CartesianGrid strokeDasharray="3 3" opacity={0.5} />
               <RechartsPrimitive.Bar 
                 dataKey="cost" 
                 yAxisId="left"
@@ -118,22 +118,23 @@ export function RoasComparisonChart({ channelData, loading }: RoasComparisonChar
               <RechartsPrimitive.Scatter 
                 dataKey="roas" 
                 yAxisId="right" 
-                fill="#3b82f6" 
+                fill="#8B5CF6" 
                 name="ROAS"
                 shape={(props) => {
                   const { cx, cy, payload } = props;
                   const channelId = payload.id;
-                  const color = channelColors[channelId as keyof typeof channelColors] || "#3b82f6";
+                  const color = channelColors[channelId as keyof typeof channelColors] || "#8B5CF6";
                   
                   return (
                     <svg>
                       <circle 
                         cx={cx} 
                         cy={cy} 
-                        r={8} 
+                        r={10} // Increased from 8 to 10
                         stroke={color}
-                        strokeWidth={2}
+                        strokeWidth={3} // Increased from 2 to 3
                         fill="white"
+                        opacity={0.9} // Added slight opacity for better layering
                       />
                       <text 
                         x={cx} 
@@ -141,10 +142,10 @@ export function RoasComparisonChart({ channelData, loading }: RoasComparisonChar
                         textAnchor="middle" 
                         dominantBaseline="central"
                         fill={color}
-                        fontSize={9}
+                        fontSize={10} // Increased from 9 to 10
                         fontWeight="bold"
                       >
-                        {payload.roas}
+                        {parseFloat(payload.roas).toFixed(1)} {/* Format to 1 decimal place */}
                       </text>
                     </svg>
                   );
@@ -166,4 +167,3 @@ export function RoasComparisonChart({ channelData, loading }: RoasComparisonChar
     </Card>
   );
 }
-
