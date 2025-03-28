@@ -119,10 +119,6 @@ const LandingPage = () => {
   
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden">
-      <Helmet>
-        <title>Artefact - Marketing Intelligence Platform</title>
-      </Helmet>
-      
       {/* Dynamic Background Canvas */}
       <canvas 
         ref={canvasRef} 
@@ -161,8 +157,8 @@ const LandingPage = () => {
               variant="default" 
               className="bg-pink-500 hover:bg-pink-600 rounded-full px-8 py-6 text-white w-full md:w-auto"
             >
-              <Link to="/analytics">
-                Go to Dashboard <ArrowRight className="ml-2 h-5 w-5" />
+              <Link to="/getting-started">
+                Get Started <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
             <Button 
