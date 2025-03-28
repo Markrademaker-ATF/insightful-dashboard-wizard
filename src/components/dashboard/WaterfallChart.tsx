@@ -63,10 +63,10 @@ export function WaterfallChart({
         <BarChart
           data={chartData}
           margin={{
-            top: 20,
+            top: 30,
             right: 30,
             left: 20,
-            bottom: 5,
+            bottom: 10,
           }}
         >
           <defs>
@@ -91,13 +91,27 @@ export function WaterfallChart({
                 />
               </linearGradient>
             ))}
+            <filter id="shadow" height="130%">
+              <feDropShadow 
+                dx="0" 
+                dy="3" 
+                stdDeviation="3"
+                floodColor="rgba(0, 0, 0, 0.15)"
+              />
+            </filter>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(0,0,0,0.05)" />
+          <CartesianGrid 
+            strokeDasharray="3 3" 
+            stroke="rgba(0,0,0,0.05)" 
+            vertical={false}
+          />
           <XAxis 
             dataKey="name" 
-            tick={{ fontSize: 12 }} 
+            tick={{ fontSize: 12, fontWeight: 500 }} 
             tickLine={false}
             axisLine={{ stroke: "rgba(0,0,0,0.09)" }}
+            height={60}
+            tickMargin={8}
           />
           <YAxis
             tick={{ fontSize: 12 }}
@@ -125,13 +139,15 @@ export function WaterfallChart({
               }
               return null;
             }}
+            wrapperStyle={{ outline: "none" }}
           />
           <Bar 
             dataKey="value" 
-            radius={[6, 6, 0, 0]}
+            radius={[8, 8, 0, 0]}
             animationDuration={1500}
             animationEasing="ease-in-out"
-            className="drop-shadow-sm"
+            className="drop-shadow-md"
+            filter="url(#shadow)"
           >
             {chartData.map((entry, index) => (
               <Cell 
@@ -139,11 +155,29 @@ export function WaterfallChart({
                 fill={entry.isTotal ? `url(#colorGradient${index})` : `url(#colorGradient${index})`}
                 stroke={entry.fill}
                 strokeWidth={1}
-                style={{ filter: entry.isTotal ? 'drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.1))' : 'none' }}
+                style={{ 
+                  filter: entry.isTotal ? 'drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.15))' : 'none',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease'
+                }}
               />
             ))}
           </Bar>
-          <ReferenceLine y={0} stroke="rgba(0,0,0,0.3)" strokeWidth={1.5} />
+          <ReferenceLine 
+            y={0} 
+            stroke="rgba(0,0,0,0.3)" 
+            strokeWidth={1.5} 
+            strokeDasharray="3 3"
+          />
+          <Legend 
+            verticalAlign="top" 
+            height={36}
+            wrapperStyle={{ 
+              paddingTop: '10px',
+              fontSize: '13px',
+              fontWeight: 500
+            }}
+          />
         </BarChart>
       </ResponsiveContainer>
     </div>

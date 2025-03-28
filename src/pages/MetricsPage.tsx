@@ -72,15 +72,17 @@ const MetricsPage = () => {
         </div>
       </PageHeader>
 
-      {/* Key Metrics Overview - Enhanced with animation */}
-      <div className="mb-8 grid grid-cols-1 md:grid-cols-4 gap-4">
+      {/* Key Metrics Overview - Updated to use columns */}
+      <div className="mb-8">
         <div className="col-span-full">
           <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary animate-pulse" />
             Key Metrics Overview
           </h2>
         </div>
-        <ChannelMetricsCards data={channelData} loading={loading} />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <ChannelMetricsCards data={channelData} loading={loading} />
+        </div>
       </div>
 
       {/* Exploratory Data Analysis Section - Enhanced with eda-card class */}
