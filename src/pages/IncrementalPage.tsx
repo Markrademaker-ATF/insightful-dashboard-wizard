@@ -12,9 +12,8 @@ import {
   generateMediaGroupData,
   generateSaturationData,
   generateTimeSeriesData,
-  generateWaterfallData,
+  generateMarginalReturnsData,
   getChannelDataByMediaType,
-  generateMarginalReturnsData
 } from "@/data/mediaGroupData";
 
 // Import the components
@@ -23,7 +22,6 @@ import { PerformanceBreakdownSection } from "@/components/dashboard/PerformanceB
 import { MediaTypeAnalysisSection } from "@/components/dashboard/MediaTypeAnalysisSection";
 import { KeyContributorsSection } from "@/components/dashboard/KeyContributorsSection";
 import { MediaTypesExplanationCard } from "@/components/dashboard/MediaTypesExplanationCard";
-import { WaterfallSection } from "@/components/dashboard/WaterfallSection";
 
 const IncrementalPage = () => {
   const [loading, setLoading] = useState(true);
@@ -31,7 +29,6 @@ const IncrementalPage = () => {
   const [mediaGroupData, setMediaGroupData] = useState<any[]>([]);
   const [saturationData, setSaturationData] = useState<any[]>([]);
   const [timeSeriesData, setTimeSeriesData] = useState<any[]>([]);
-  const [waterfallData, setWaterfallData] = useState<any[]>([]);
   const [marginalReturnsData, setMarginalReturnsData] = useState<any[]>([]);
   const [channelData, setChannelData] = useState<any[]>([]);
   const [mediaType, setMediaType] = useState("all");
@@ -49,7 +46,6 @@ const IncrementalPage = () => {
       const mediaData = generateMediaGroupData();
       const satData = generateSaturationData();
       const tsData = generateTimeSeriesData();
-      const wfData = generateWaterfallData();
       const mrData = generateMarginalReturnsData();
       const chData = getChannelDataByMediaType(mediaType);
 
@@ -57,7 +53,6 @@ const IncrementalPage = () => {
       setMediaGroupData(mediaData);
       setSaturationData(satData);
       setTimeSeriesData(tsData);
-      setWaterfallData(wfData);
       setMarginalReturnsData(mrData);
       setChannelData(chData);
       setLoading(false);
@@ -95,9 +90,6 @@ const IncrementalPage = () => {
 
       {/* Performance Breakdown Section - replacing TimeSeriesSection */}
       <PerformanceBreakdownSection data={timeSeriesData} loading={loading} />
-
-      {/* Waterfall Chart Section */}
-      <WaterfallSection data={waterfallData} loading={loading} />
 
       {/* Media Type Analysis */}
       <MediaTypeAnalysisSection
