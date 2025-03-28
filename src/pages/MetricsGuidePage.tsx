@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FileBarChart, BarChart3, LineChart, PieChart, TrendingUp, DollarSign, Target, Percent, Users } from "lucide-react";
+import { FileBarChart, BarChart3, LineChart, PieChart, TrendingUp, DollarSign, Target, Percent, Users, Layers } from "lucide-react";
 
 export default function MetricsGuidePage() {
   return (
