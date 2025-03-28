@@ -1,3 +1,4 @@
+
 import React from "react";
 import { 
   LineChart, 
@@ -177,41 +178,59 @@ export function ChannelSaturationCurve({
                   activeDot={{ r: 8 }}
                 />
                 
-                {/* Current point marker - Enhanced visibility */}
+                {/* Current point marker - Enhanced visibility with larger size */}
                 <Scatter
                   yAxisId="left"
-                  data={[{ spend: currentPoint.spend, incrementalOutcome: currentPoint.incrementalOutcome }]}
+                  data={[{ 
+                    spend: currentPoint.spend, 
+                    incrementalOutcome: currentPoint.incrementalOutcome 
+                  }]}
                   fill="#FF8C00"  // Bright orange
                   stroke="#FFFFFF"
-                  strokeWidth={3}
+                  strokeWidth={2}
                   shape="circle"
                   name="Current Spend"
-                  r={10}  // Explicitly set radius
-                />
+                >
+                  <svg width={20} height={20}>
+                    <circle cx={10} cy={10} r={10} fill="#FF8C00" stroke="#FFFFFF" strokeWidth={2} />
+                  </svg>
+                </Scatter>
                 
-                {/* New point marker - Enhanced visibility */}
+                {/* New point marker - Enhanced visibility with larger size and different shape */}
                 <Scatter
                   yAxisId="left"
-                  data={[{ spend: newPoint.spend, incrementalOutcome: newPoint.incrementalOutcome }]}
+                  data={[{ 
+                    spend: newPoint.spend, 
+                    incrementalOutcome: newPoint.incrementalOutcome 
+                  }]}
                   fill="#4CAF50"  // Bright green
                   stroke="#FFFFFF"
-                  strokeWidth={3}
+                  strokeWidth={2}
                   shape="diamond"
                   name="New Spend"
-                  r={10}  // Explicitly set radius
-                />
+                >
+                  <svg width={24} height={24}>
+                    <polygon points="12,2 22,12 12,22 2,12" fill="#4CAF50" stroke="#FFFFFF" strokeWidth={2} />
+                  </svg>
+                </Scatter>
                 
-                {/* Max saturation point marker - Enhanced visibility */}
+                {/* Max saturation point marker - Enhanced visibility with larger size and different shape */}
                 <Scatter
                   yAxisId="left"
-                  data={[{ spend: maxSaturationPoint.spend, incrementalOutcome: maxSaturationPoint.incrementalOutcome }]}
+                  data={[{ 
+                    spend: maxSaturationPoint.spend, 
+                    incrementalOutcome: maxSaturationPoint.incrementalOutcome 
+                  }]}
                   fill="#9C27B0"  // Bright purple
                   stroke="#FFFFFF"
-                  strokeWidth={3}
+                  strokeWidth={2}
                   shape="star"
                   name="Max Saturation"
-                  r={10}  // Explicitly set radius
-                />
+                >
+                  <svg width={24} height={24}>
+                    <polygon points="12,2 14,10 22,10 16,15 18,23 12,19 6,23 8,15 2,10 10,10" fill="#9C27B0" stroke="#FFFFFF" strokeWidth={2} />
+                  </svg>
+                </Scatter>
                 
                 {/* Reference lines for key points */}
                 <ReferenceLine x={currentPoint.spend} yAxisId="left" stroke="#FF8C00" strokeDasharray="3 3" />
