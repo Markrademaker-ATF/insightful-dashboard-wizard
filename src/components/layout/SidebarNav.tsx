@@ -17,8 +17,7 @@ import {
   FileBarChart,
   Lightbulb,
   Home,
-  Rocket,
-  Bot
+  Rocket
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -98,11 +97,6 @@ const navItems: NavItem[] = [
     icon: LineChart,
   },
   {
-    title: "Analytics AI",
-    href: "/chat-ai",
-    icon: Bot,
-  },
-  {
     title: "Help & Resources",
     icon: HelpCircle,
     children: [
@@ -159,7 +153,7 @@ export function SidebarNav() {
                 onClick={() => toggleGroup(item.title)}
                 className={cn(
                   "nav-link group w-full flex justify-between",
-                  hasActiveChild ? "text-[#8B5CF6] font-medium" : "text-slate-700"
+                  hasActiveChild ? "text-primary" : ""
                 )}
                 style={{
                   animationDelay: `${index * 50}ms`,
@@ -177,7 +171,7 @@ export function SidebarNav() {
               </button>
               
               {isExpanded && (
-                <div className="ml-6 mt-1 flex flex-col gap-1 border-l pl-2 border-[#8B5CF6]/30">
+                <div className="ml-6 mt-1 flex flex-col gap-1 border-l pl-2 border-border/50">
                   {item.children.map((child, childIndex) => {
                     const isActive = location.pathname === child.href;
                     return (
@@ -186,7 +180,7 @@ export function SidebarNav() {
                         to={child.href || "#"}
                         className={cn(
                           "nav-link group",
-                          isActive ? "bg-[#8B5CF6]/10 text-[#8B5CF6] font-medium" : "text-slate-600"
+                          isActive ? "active" : ""
                         )}
                         style={{
                           animationDelay: `${(index + childIndex) * 50}ms`,
@@ -210,7 +204,7 @@ export function SidebarNav() {
               to={item.href || "#"}
               className={cn(
                 "nav-link group",
-                isActive ? "bg-[#8B5CF6]/10 text-[#8B5CF6] font-medium" : "text-slate-600"
+                isActive ? "active" : ""
               )}
               style={{
                 animationDelay: `${index * 50}ms`,
