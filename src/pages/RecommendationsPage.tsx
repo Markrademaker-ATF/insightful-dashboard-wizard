@@ -4,10 +4,9 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { AlertCircle, BrainCircuit, ChevronRight, Filter, LightbulbIcon, LineChart, BarChart3, Zap, TrendingUp, Target, Clock, Download, Bell, BellRing } from "lucide-react";
+import { AlertCircle, BrainCircuit, ChevronRight, Filter, LightbulbIcon, LineChart, BarChart3, Zap, TrendingUp, Target, Clock, Download } from "lucide-react";
 import { RecommendationCard } from "@/components/recommendations/RecommendationCard";
 import { Link } from "react-router-dom";
-import { toast } from "@/hooks/use-toast";
 
 // Sample recommendation data (In a real app, this would come from an API)
 const recommendationsData = [
@@ -97,44 +96,10 @@ const recommendationsData = [
   }
 ];
 
-// New recommendations that will be added during runtime for demonstration
-const newRecommendations = [
-  {
-    id: "rec-007",
-    title: "Video Ad Performance Alert",
-    category: "campaign",
-    date: new Date(),
-    summary: "Your video ads are showing a 22% increase in view-through rate this week. Consider allocating more budget to this format.",
-    impact: "high" as const,
-    metrics: {
-      current: 1.5,
-      projected: 1.9,
-      unit: "vtr"
-    },
-    detailsUrl: "/campaign?id=video-campaign"
-  },
-  {
-    id: "rec-008",
-    title: "Audience Segmentation Opportunity",
-    category: "audience",
-    date: new Date(),
-    summary: "Creating a segment for returning visitors could yield a 14% higher conversion rate based on recent behavior patterns.",
-    impact: "medium" as const,
-    metrics: {
-      current: 2.1,
-      projected: 2.4,
-      unit: "cvr"
-    },
-    detailsUrl: "/audience?segment=returning"
-  }
-];
-
 const RecommendationsPage = () => {
   const [filter, setFilter] = useState("all");
   const [recommendations, setRecommendations] = useState(recommendationsData);
   const [loading, setLoading] = useState(true);
-  const [lastUpdated, setLastUpdated] = useState(new Date());
-  const [notificationCount, setNotificationCount] = useState(0);
 
   useEffect(() => {
     // Simulate API loading
@@ -148,45 +113,11 @@ const RecommendationsPage = () => {
   useEffect(() => {
     // Filter recommendations based on selected category
     if (filter === "all") {
-      setRecommendations(recommendations);
+      setRecommendations(recommendationsData);
     } else {
-      setRecommendations(recommendations.filter(rec => rec.category === filter));
+      setRecommendations(recommendationsData.filter(rec => rec.category === filter));
     }
-  }, [filter, recommendations]);
-
-  // Real-time recommendations simulation
-  useEffect(() => {
-    // Set up intervals to add new recommendations
-    const interval = setInterval(() => {
-      // Only add new recommendations if we still have some in our demo array
-      if (newRecommendations.length > 0) {
-        const newRec = newRecommendations.shift(); // Take the first new recommendation
-        if (newRec) {
-          setRecommendations(prev => [newRec, ...prev]);
-          setLastUpdated(new Date());
-          setNotificationCount(prev => prev + 1);
-          
-          // Show a toast notification for the new recommendation
-          toast({
-            title: "New Recommendation",
-            description: newRec.title,
-            action: (
-              <Button variant="outline" size="sm" asChild>
-                <Link to="#new-recommendation">View</Link>
-              </Button>
-            ),
-          });
-        }
-      }
-    }, 30000); // Add a new recommendation every 30 seconds
-    
-    return () => clearInterval(interval);
-  }, []);
-
-  // Function to clear notifications
-  const clearNotifications = () => {
-    setNotificationCount(0);
-  };
+  }, [filter]);
 
   // Format relative time (e.g., "2 days ago")
   const formatRelativeTime = (date: Date) => {
@@ -211,15 +142,6 @@ const RecommendationsPage = () => {
     }
   };
 
-  // Format time as HH:MM AM/PM
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString('en-US', { 
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true 
-    });
-  };
-
   return (
     <div className="space-y-8 animate-fade-in">
       <PageHeader 
@@ -235,17 +157,6 @@ const RecommendationsPage = () => {
             <Filter className="h-4 w-4" />
             Filter
           </Button>
-          <div className="relative">
-            <Button size="sm" variant="outline" className="gap-1" onClick={clearNotifications}>
-              {notificationCount > 0 ? <BellRing className="h-4 w-4 text-primary" /> : <Bell className="h-4 w-4" />}
-              Notifications
-              {notificationCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  {notificationCount}
-                </span>
-              )}
-            </Button>
-          </div>
         </div>
       </PageHeader>
 
@@ -280,7 +191,7 @@ const RecommendationsPage = () => {
             </TabsList>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Clock className="h-4 w-4" />
-              <span>Last updated: {formatTime(lastUpdated)}</span>
+              <span>Last updated: Today at 9:15 AM</span>
             </div>
           </div>
           
