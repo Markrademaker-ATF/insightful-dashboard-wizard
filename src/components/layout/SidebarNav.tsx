@@ -159,7 +159,7 @@ export function SidebarNav() {
                 onClick={() => toggleGroup(item.title)}
                 className={cn(
                   "nav-link group w-full flex justify-between",
-                  hasActiveChild ? "text-[#8B5CF6] font-medium" : ""
+                  hasActiveChild ? "text-[#8B5CF6] font-medium" : "text-slate-700"
                 )}
                 style={{
                   animationDelay: `${index * 50}ms`,
@@ -186,7 +186,7 @@ export function SidebarNav() {
                         to={child.href || "#"}
                         className={cn(
                           "nav-link group",
-                          isActive ? "bg-[#8B5CF6]/10 text-[#8B5CF6] font-medium" : ""
+                          isActive ? "bg-[#8B5CF6]/10 text-[#8B5CF6] font-medium" : "text-slate-600"
                         )}
                         style={{
                           animationDelay: `${(index + childIndex) * 50}ms`,
@@ -210,7 +210,7 @@ export function SidebarNav() {
               to={item.href || "#"}
               className={cn(
                 "nav-link group",
-                isActive ? "bg-[#8B5CF6]/10 text-[#8B5CF6] font-medium" : ""
+                isActive ? "bg-[#8B5CF6]/10 text-[#8B5CF6] font-medium" : "text-slate-600"
               )}
               style={{
                 animationDelay: `${index * 50}ms`,

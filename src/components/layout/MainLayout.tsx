@@ -21,7 +21,7 @@ export function MainLayout() {
     <div className={cn("flex min-h-screen bg-gray-50", mounted ? "animate-fade-in" : "opacity-0")}>
       {/* Sidebar */}
       <div className={cn(
-        "fixed inset-y-0 left-0 z-50 flex flex-col vibrant-sidebar premium-shadow",
+        "fixed inset-y-0 left-0 z-50 flex flex-col vibrant-sidebar",
         sidebarWidth,
         sidebarTransition
       )}>
@@ -32,7 +32,7 @@ export function MainLayout() {
         </div>
         
         <div className="p-4">
-          <div className="text-xs text-white/70">
+          <div className="text-xs text-slate-500">
             {!collapsed && "© 2023 Artefact"}
           </div>
         </div>
