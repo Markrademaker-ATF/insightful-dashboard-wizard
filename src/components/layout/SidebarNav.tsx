@@ -59,11 +59,6 @@ const navItems: NavItem[] = [
         href: "/data",
         icon: Layers,
       },
-      {
-        title: "Chat AI Assistant",
-        href: "/chat-ai",
-        icon: Bot,
-      },
     ]
   },
   {
@@ -101,6 +96,11 @@ const navItems: NavItem[] = [
     title: "A/B Testing",
     href: "/ab-testing",
     icon: LineChart,
+  },
+  {
+    title: "Chat AI Assistant",
+    href: "/chat-ai",
+    icon: Bot,
   },
   {
     title: "Help & Resources",
