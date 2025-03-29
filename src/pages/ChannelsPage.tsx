@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -88,13 +87,13 @@ export default function ChannelsPage() {
       {/* Main Tabs */}
       <Tabs value={mainTab} onValueChange={setMainTab} className="space-y-6">
         <TabsList className="justify-start">
-          <TabsTrigger value="analysis" className="flex items-center gap-1">
+          <TabsTrigger value="analysis" className="flex items-center gap-2">
             <BarChart className="h-4 w-4" /> Channel Overview
           </TabsTrigger>
-          <TabsTrigger value="details" className="flex items-center gap-1">
+          <TabsTrigger value="details" className="flex items-center gap-2">
             <TableIcon className="h-4 w-4" /> Channel Details
           </TabsTrigger>
-          <TabsTrigger value="geography" className="flex items-center gap-1">
+          <TabsTrigger value="geography" className="flex items-center gap-2">
             <Globe className="h-4 w-4" /> Geographic Analysis
           </TabsTrigger>
         </TabsList>
@@ -104,7 +103,9 @@ export default function ChannelsPage() {
           <Card>
             <CardHeader className="flex flex-row items-center">
               <div className="flex flex-col space-y-1.5">
-                <CardTitle>Channel Overview</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <BarChart className="h-5 w-5" /> Channel Overview
+                </CardTitle>
                 <CardDescription>
                   Compare performance metrics across channels
                 </CardDescription>
@@ -263,7 +264,9 @@ export default function ChannelsPage() {
             <div className="flex items-start gap-2">
               <Info className="h-5 w-5 text-primary mt-0.5" />
               <div>
-                <h3 className="text-sm font-medium mb-1">About Geographic Analysis</h3>
+                <h3 className="text-sm font-medium mb-1 flex items-center gap-2">
+                  <Globe className="h-4 w-4" /> Geographic Analysis
+                </h3>
                 <p className="text-sm text-muted-foreground">
                   This visualization shows marketing performance across European regions, displaying how ROAS varies geographically.
                   Higher ROAS values (shown in deeper green) indicate stronger performance in those regions.
