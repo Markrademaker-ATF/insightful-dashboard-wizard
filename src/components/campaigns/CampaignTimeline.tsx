@@ -14,11 +14,12 @@ import {
   Check, 
   Target, 
   ChevronRight, 
-  ChevronDown, 
+  ChevronDown,
   BarChart3, 
   Users, 
   Star,
-  DollarSign
+  DollarSign,
+  Flag
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -41,11 +42,13 @@ interface CampaignEvent {
 interface CampaignTimelineProps {
   loading?: boolean;
   events?: CampaignEvent[];
+  selectedCampaign?: string;
 }
 
 export const CampaignTimeline: React.FC<CampaignTimelineProps> = ({
   loading = false,
-  events = []
+  events = [],
+  selectedCampaign
 }) => {
   const [expandedEvent, setExpandedEvent] = useState<string | null>(null);
   
@@ -57,93 +60,234 @@ export const CampaignTimeline: React.FC<CampaignTimelineProps> = ({
     }
   };
   
-  // Generate mock events if none are provided
-  const timelineEvents = events.length > 0 ? events : [
+  // Campaign data for timeline - representing the same campaigns as in filter
+  const defaultCampaigns = [
     {
-      id: "event1",
-      date: "2023-06-01",
-      title: "Summer Campaign Launch",
-      description: "Initial launch of our Summer Sale campaign across all digital channels.",
-      type: "launch",
-      status: "completed",
-      performance: {
-        revenue: 124500,
-        conversions: 2840,
-        roas: 3.6
-      }
+      id: "summer-2023",
+      name: "Summer 2023 Campaign",
+      events: [
+        {
+          id: "event1",
+          date: "2023-06-01",
+          title: "Campaign Launch",
+          description: "Initial launch of our Summer Sale campaign across all digital channels.",
+          type: "launch",
+          status: "completed",
+          performance: {
+            revenue: 124500,
+            conversions: 2840,
+            roas: 3.6
+          }
+        },
+        {
+          id: "event2",
+          date: "2023-06-15",
+          title: "Mid-Month Review",
+          description: "Analysis of first two weeks performance data. Adjustments made to ad spend.",
+          type: "report",
+          status: "completed",
+          performance: {
+            revenue: 178600,
+            conversions: 3920,
+            roas: 4.1
+          }
+        },
+        {
+          id: "event3",
+          date: "2023-07-01",
+          title: "Campaign Expansion",
+          description: "Extended campaign to include new social media platforms and increased budget.",
+          type: "update",
+          status: "completed",
+          performance: {
+            revenue: 245800,
+            conversions: 5240,
+            roas: 3.8
+          }
+        }
+      ]
     },
     {
-      id: "event2",
-      date: "2023-06-15",
-      title: "Mid-Month Performance Review",
-      description: "Analysis of first two weeks performance data. Adjustments made to ad spend allocation based on initial results.",
-      type: "report",
-      status: "completed",
-      performance: {
-        revenue: 178600,
-        conversions: 3920,
-        roas: 4.1
-      }
+      id: "black-friday",
+      name: "Black Friday 2023",
+      events: [
+        {
+          id: "bf-event1",
+          date: "2023-11-01",
+          title: "Pre-Launch Teaser",
+          description: "Teaser content distributed across email and social channels.",
+          type: "update",
+          status: "completed",
+          performance: {
+            revenue: 45200,
+            conversions: 980,
+            roas: 4.2
+          }
+        },
+        {
+          id: "bf-event2",
+          date: "2023-11-20",
+          title: "Early Access Launch",
+          description: "Early access deals for loyalty members across all channels.",
+          type: "launch",
+          status: "completed",
+          performance: {
+            revenue: 287400,
+            conversions: 5840,
+            roas: 5.1
+          }
+        },
+        {
+          id: "bf-event3",
+          date: "2023-11-24",
+          title: "Black Friday Peak",
+          description: "Main Black Friday offers go live with increased ad spend.",
+          type: "milestone",
+          status: "completed",
+          performance: {
+            revenue: 512000,
+            conversions: 9240,
+            roas: 5.8
+          }
+        }
+      ]
     },
     {
-      id: "event3",
-      date: "2023-07-01",
-      title: "Campaign Expansion",
-      description: "Extended campaign to include new social media platforms and increased budget for best performing channels.",
-      type: "update",
-      status: "completed",
-      performance: {
-        revenue: 245800,
-        conversions: 5240,
-        roas: 3.8
-      }
+      id: "holiday-2023",
+      name: "Holiday 2023 Campaign",
+      events: [
+        {
+          id: "hol-event1",
+          date: "2023-12-01",
+          title: "Holiday Campaign Kickoff",
+          description: "Launch of holiday season marketing across all channels.",
+          type: "launch",
+          status: "completed",
+          performance: {
+            revenue: 324000,
+            conversions: 6240,
+            roas: 4.2
+          }
+        },
+        {
+          id: "hol-event2",
+          date: "2023-12-15",
+          title: "Last Shipping Day Push",
+          description: "Increased promotion for last guaranteed shipping day.",
+          type: "update",
+          status: "completed",
+          performance: {
+            revenue: 402000,
+            conversions: 8150,
+            roas: 4.5
+          }
+        },
+        {
+          id: "hol-event3",
+          date: "2023-12-26",
+          title: "Post-Holiday Sales",
+          description: "After-Christmas clearance promotions and gift card campaigns.",
+          type: "milestone",
+          status: "completed",
+          performance: {
+            revenue: 356000,
+            conversions: 7240,
+            roas: 4.8
+          }
+        }
+      ]
     },
     {
-      id: "event4",
-      date: "2023-07-15",
-      title: "10,000 Conversions Milestone",
-      description: "Campaign reached 10,000 total conversions, exceeding mid-point targets by 15%.",
-      type: "milestone",
-      status: "completed",
-      performance: {
-        revenue: 512400,
-        conversions: 10000,
-        roas: 4.5
-      }
+      id: "spring-2024",
+      name: "Spring 2024 Collection",
+      events: [
+        {
+          id: "spr-event1",
+          date: "2024-03-01",
+          title: "Spring Preview Launch",
+          description: "Teaser campaign for the upcoming spring collection.",
+          type: "update",
+          status: "completed",
+          performance: {
+            revenue: 187000,
+            conversions: 3750,
+            roas: 3.9
+          }
+        },
+        {
+          id: "spr-event2",
+          date: "2024-03-15",
+          title: "Full Collection Launch",
+          description: "Complete spring collection release with cross-channel campaign.",
+          type: "launch",
+          status: "active",
+          performance: {
+            revenue: 245000,
+            conversions: 4920,
+            roas: 4.3
+          }
+        },
+        {
+          id: "spr-event3",
+          date: "2024-04-01",
+          title: "Mid-Season Promotion",
+          description: "Planned mid-season promotional event to boost sales.",
+          type: "milestone",
+          status: "upcoming",
+          performance: {
+            revenue: 0,
+            conversions: 0,
+            roas: 0
+          }
+        }
+      ]
     },
     {
-      id: "event5",
-      date: "2023-08-01",
-      title: "Final Performance Review",
-      description: "Complete analysis of campaign performance across all channels. Preparation of insights report for future campaigns.",
-      type: "report",
-      status: "active",
-      performance: {
-        revenue: 728300,
-        conversions: 14950,
-        roas: 4.2
-      }
-    },
-    {
-      id: "event6",
-      date: "2023-08-15",
-      title: "Fall Campaign Planning",
-      description: "Strategic planning session for upcoming Fall promotion based on Summer campaign learnings.",
-      type: "update",
-      status: "upcoming",
-      performance: {
-        revenue: 0,
-        conversions: 0,
-        roas: 0
-      }
+      id: "summer-2024",
+      name: "Summer 2024 Preview",
+      events: [
+        {
+          id: "sum24-event1",
+          date: "2024-05-15",
+          title: "Summer Campaign Planning",
+          description: "Strategic planning for upcoming summer campaign.",
+          type: "update",
+          status: "upcoming",
+          performance: {
+            revenue: 0,
+            conversions: 0,
+            roas: 0
+          }
+        },
+        {
+          id: "sum24-event2",
+          date: "2024-06-01",
+          title: "Early Summer Launch",
+          description: "Planned launch of early summer promotions.",
+          type: "launch",
+          status: "upcoming",
+          performance: {
+            revenue: 0,
+            conversions: 0,
+            roas: 0
+          }
+        }
+      ]
     }
   ];
+  
+  // Get the current campaign based on selection
+  const activeCampaign = selectedCampaign 
+    ? defaultCampaigns.find(c => c.id === selectedCampaign) 
+    : defaultCampaigns[0];
+  
+  const timelineEvents = activeCampaign?.events || [];
   
   // Get icon based on event type
   const getEventIcon = (type: string) => {
     switch (type) {
       case "launch":
-        return <Calendar className="h-4 w-4" />;
+        return <Flag className="h-4 w-4" />;
       case "milestone":
         return <Target className="h-4 w-4" />;
       case "update":
@@ -210,10 +354,10 @@ export const CampaignTimeline: React.FC<CampaignTimelineProps> = ({
           <div className="p-1.5 rounded-md bg-primary/10">
             <CalendarDays className="h-5 w-5 text-primary" />
           </div>
-          <CardTitle>Campaign Timeline</CardTitle>
+          <CardTitle>Campaign Timeline: {activeCampaign?.name}</CardTitle>
         </div>
         <CardDescription>
-          Campaign progression with performance metrics
+          Key milestones and performance metrics over time
         </CardDescription>
       </CardHeader>
       <CardContent>
