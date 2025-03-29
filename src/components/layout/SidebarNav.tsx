@@ -17,7 +17,8 @@ import {
   FileBarChart,
   Lightbulb,
   Home,
-  Rocket
+  Rocket,
+  Bot
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -95,6 +96,11 @@ const navItems: NavItem[] = [
     title: "A/B Testing",
     href: "/ab-testing",
     icon: LineChart,
+  },
+  {
+    title: "Analytics AI",
+    href: "/chat-ai",
+    icon: Bot,
   },
   {
     title: "Help & Resources",
