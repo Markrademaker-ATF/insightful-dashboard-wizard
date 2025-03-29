@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -513,10 +512,12 @@ const LandingPage = () => {
               </div>
               <div className="md:w-1/2 order-1 md:order-2 relative">
                 <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/10">
-                  <div className="aspect-video bg-gradient-to-br from-purple-900/70 to-pink-900/70 backdrop-blur-lg p-8 flex items-center justify-center">
-                    <div className="w-full h-full bg-black/40 rounded-lg flex items-center justify-center">
-                      <Lightbulb className="w-16 h-16 text-white/40" />
-                    </div>
+                  <div className="aspect-video bg-gradient-to-br from-purple-900/70 to-pink-900/70 backdrop-blur-lg p-4 flex items-center justify-center">
+                    <img 
+                      src="/lovable-uploads/9de72820-6736-421e-9a98-b7e526ebe48f.png"
+                      alt="AI-Powered Marketing Recommendations" 
+                      className="w-full h-full object-cover rounded-lg"
+                    />
                   </div>
                 </div>
                 <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-purple-500/30 rounded-full blur-3xl"></div>
@@ -581,63 +582,4 @@ const LandingPage = () => {
         <div className="container mx-auto px-6 py-16 md:py-32">
           <div className="max-w-4xl mx-auto bg-gradient-to-br from-purple-900/50 to-pink-900/50 backdrop-blur-lg rounded-3xl p-8 md:p-16 border border-white/10 shadow-2xl relative overflow-hidden">
             <div className="absolute -top-24 -right-24 w-64 h-64 bg-purple-500/30 rounded-full blur-3xl"></div>
-            <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-pink-500/30 rounded-full blur-3xl"></div>
-            
-            <div className="relative z-10 text-center">
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to Transform Your Marketing Strategy?</h2>
-              <p className="text-xl text-white/80 mb-10 max-w-2xl mx-auto">
-                Join industry leaders using our platform to drive better marketing decisions and achieve exceptional results.
-              </p>
-              
-              <div className="flex flex-col sm:flex-row justify-center gap-6">
-                <Button 
-                  asChild
-                  variant="default" 
-                  className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 rounded-full px-8 py-6 text-white"
-                >
-                  <Link to="/login">
-                    Start Today <ChevronRight className="ml-2 h-5 w-5" />
-                  </Link>
-                </Button>
-                <Button 
-                  asChild
-                  variant="outline" 
-                  className="bg-transparent hover:bg-white/10 rounded-full px-8 py-6 text-white border-white"
-                >
-                  <a href="#" rel="noopener noreferrer">
-                    Schedule a Demo <Clock className="ml-2 h-5 w-5" />
-                  </a>
-                </Button>
-              </div>
-
-              <p className="mt-6 text-sm text-white/60">
-                No credit card required. Free trial available for qualified businesses.
-              </p>
-            </div>
-          </div>
-        </div>
-      </main>
-      
-      <footer className="bg-transparent text-white py-6 px-6 relative z-10">
-        <div className="container mx-auto text-center">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="flex items-center space-x-2">
-              <h2 className="text-xl font-bold">ARTEFACT</h2>
-              <p className="text-xs">AI IS ABOUT PEOPLE</p>
-            </div>
-            <div className="text-sm opacity-80">
-              © {new Date().getFullYear()} Artefact. All rights reserved.
-            </div>
-            <div className="flex gap-4">
-              <Button variant="ghost" size="sm" className="text-white hover:text-pink-300 hover:bg-transparent p-0">About</Button>
-              <Button variant="ghost" size="sm" className="text-white hover:text-pink-300 hover:bg-transparent p-0">Privacy</Button>
-              <Button variant="ghost" size="sm" className="text-white hover:text-pink-300 hover:bg-transparent p-0">Contact</Button>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>
-  );
-};
-
-export default LandingPage;
+            <div className="absolute -bottom-24 -left-24 w-64 h-64 bg
