@@ -145,7 +145,7 @@ const RecommendationsPage = () => {
   return (
     <div className="space-y-8 animate-fade-in">
       <PageHeader 
-        title="AI-Powered Recommendations" 
+        title="Quick Recommendations" 
         description="Actionable insights to optimize your marketing strategy and improve performance"
       >
         <div className="flex flex-wrap gap-2">

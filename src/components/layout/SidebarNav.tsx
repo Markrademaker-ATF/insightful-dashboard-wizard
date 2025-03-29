@@ -18,7 +18,8 @@ import {
   Lightbulb,
   Home,
   Rocket,
-  Bot
+  Bot,
+  Zap
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -86,6 +87,11 @@ const navItems: NavItem[] = [
         icon: BarChart3,
       },
     ]
+  },
+  {
+    title: "Quick Recommendations",
+    href: "/recommendations",
+    icon: Zap,
   },
   {
     title: "Budget Optimizer",
