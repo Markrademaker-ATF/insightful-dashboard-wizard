@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -583,4 +584,60 @@ const LandingPage = () => {
             <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-pink-500/30 rounded-full blur-3xl"></div>
             
             <div className="relative z-10 text-center">
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to Transform Your
+              <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to Transform Your Marketing Strategy?</h2>
+              <p className="text-xl text-white/80 mb-10 max-w-2xl mx-auto">
+                Join industry leaders using our platform to drive better marketing decisions and achieve exceptional results.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row justify-center gap-6">
+                <Button 
+                  asChild
+                  variant="default" 
+                  className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 rounded-full px-8 py-6 text-white"
+                >
+                  <Link to="/login">
+                    Start Today <ChevronRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
+                <Button 
+                  asChild
+                  variant="outline" 
+                  className="bg-transparent hover:bg-white/10 rounded-full px-8 py-6 text-white border-white"
+                >
+                  <a href="#" rel="noopener noreferrer">
+                    Schedule a Demo <Clock className="ml-2 h-5 w-5" />
+                  </a>
+                </Button>
+              </div>
+
+              <p className="mt-6 text-sm text-white/60">
+                No credit card required. Free trial available for qualified businesses.
+              </p>
+            </div>
+          </div>
+        </div>
+      </main>
+      
+      <footer className="bg-transparent text-white py-6 px-6 relative z-10">
+        <div className="container mx-auto text-center">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex items-center space-x-2">
+              <h2 className="text-xl font-bold">ARTEFACT</h2>
+              <p className="text-xs">AI IS ABOUT PEOPLE</p>
+            </div>
+            <div className="text-sm opacity-80">
+              © {new Date().getFullYear()} Artefact. All rights reserved.
+            </div>
+            <div className="flex gap-4">
+              <Button variant="ghost" size="sm" className="text-white hover:text-pink-300 hover:bg-transparent p-0">About</Button>
+              <Button variant="ghost" size="sm" className="text-white hover:text-pink-300 hover:bg-transparent p-0">Privacy</Button>
+              <Button variant="ghost" size="sm" className="text-white hover:text-pink-300 hover:bg-transparent p-0">Contact</Button>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default LandingPage;
