@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,9 +10,14 @@ import { toast } from "sonner";
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  
+  // Extract the redirect path from URL search params, default to getting-started
+  const searchParams = new URLSearchParams(location.search);
+  const redirectTo = searchParams.get("redirectTo") || "/getting-started";
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,7 +28,7 @@ const LoginPage = () => {
       // For demo purposes, accept any input
       toast.success("Login successful!");
       setLoading(false);
-      navigate("/getting-started");
+      navigate(redirectTo);
     }, 1000);
   };
 
