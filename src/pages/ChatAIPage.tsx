@@ -115,15 +115,15 @@ const ChatAIPage = () => {
         </Button>
       </PageHeader>
 
-      <Card className="flex-1 flex flex-col overflow-hidden p-0 border shadow-md">
-        <div className="bg-blue-50 p-4 border-b">
+      <div className="flex-1 flex flex-col overflow-hidden shadow-md rounded-lg bg-white">
+        <div className="bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] p-4 text-white">
           <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center">
-              <Bot className="h-4 w-4 text-blue-700" />
+            <div className="h-8 w-8 rounded-full bg-white/20 flex items-center justify-center">
+              <Bot className="h-4 w-4 text-white" />
             </div>
             <div>
               <h3 className="font-medium">Analytics AI</h3>
-              <p className="text-xs text-muted-foreground">Powered by machine learning</p>
+              <p className="text-xs text-white/80">Powered by machine learning</p>
             </div>
           </div>
         </div>
@@ -140,22 +140,22 @@ const ChatAIPage = () => {
               <div
                 className={`max-w-[80%] rounded-lg p-4 ${
                   message.sender === "user"
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-secondary"
+                    ? "bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] text-white"
+                    : "bg-gray-100"
                 }`}
               >
                 <div className="flex items-center gap-2 mb-1">
                   <div
                     className={`h-6 w-6 rounded-full flex items-center justify-center ${
                       message.sender === "user"
-                        ? "bg-primary-foreground/20"
-                        : "bg-blue-100"
+                        ? "bg-white/20"
+                        : "bg-[#8B5CF6]/20"
                     }`}
                   >
                     {message.sender === "user" ? (
-                      <User className="h-3 w-3" />
+                      <User className="h-3 w-3 text-white" />
                     ) : (
-                      <Bot className="h-3 w-3 text-blue-700" />
+                      <Bot className="h-3 w-3 text-[#8B5CF6]" />
                     )}
                   </div>
                   <span className="text-xs">
@@ -174,10 +174,10 @@ const ChatAIPage = () => {
           ))}
           {isLoading && (
             <div className="flex justify-start">
-              <div className="max-w-[80%] bg-secondary rounded-lg p-4">
+              <div className="max-w-[80%] bg-gray-100 rounded-lg p-4">
                 <div className="flex items-center gap-2 mb-1">
-                  <div className="h-6 w-6 rounded-full bg-blue-100 flex items-center justify-center">
-                    <Bot className="h-3 w-3 text-blue-700" />
+                  <div className="h-6 w-6 rounded-full bg-[#8B5CF6]/20 flex items-center justify-center">
+                    <Bot className="h-3 w-3 text-[#8B5CF6]" />
                   </div>
                   <span className="text-xs">Analytics AI</span>
                 </div>
@@ -192,18 +192,18 @@ const ChatAIPage = () => {
         </div>
 
         {/* Input area */}
-        <div className="border-t p-4">
+        <div className="p-4 bg-gray-50">
           <div className="relative">
             <Textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Ask about your analytics data..."
-              className="pr-14 resize-none min-h-[80px]"
+              className="pr-14 resize-none min-h-[80px] border-[#8B5CF6]/30 focus-visible:ring-[#8B5CF6]/50"
             />
             <Button
               size="icon"
-              className="absolute right-2 bottom-2"
+              className="absolute right-2 bottom-2 bg-gradient-to-r from-[#8B5CF6] to-[#D946EF] hover:opacity-90"
               onClick={handleSendMessage}
               disabled={isLoading || !input.trim()}
             >
@@ -218,7 +218,7 @@ const ChatAIPage = () => {
             <Button
               variant="ghost"
               size="sm"
-              className="h-auto p-0 text-xs"
+              className="h-auto p-0 text-xs text-[#8B5CF6]"
               onClick={scrollToBottom}
             >
               <ArrowDown className="h-3 w-3 mr-1" />
@@ -226,11 +226,11 @@ const ChatAIPage = () => {
             </Button>
           </div>
         </div>
-      </Card>
+      </div>
 
       {/* Example questions */}
-      <Card className="p-4 border shadow-sm">
-        <h3 className="text-sm font-medium mb-2">Example questions you can ask:</h3>
+      <div className="p-4 rounded-lg shadow-sm bg-white">
+        <h3 className="text-sm font-medium mb-2 text-[#8B5CF6]">Example questions you can ask:</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
           {[
             "Which channel has the highest ROAS?",
@@ -244,7 +244,7 @@ const ChatAIPage = () => {
               key={index}
               variant="outline"
               size="sm"
-              className="justify-start h-auto py-2 text-left"
+              className="justify-start h-auto py-2 text-left border-[#8B5CF6]/20 hover:bg-[#8B5CF6]/5 hover:text-[#8B5CF6]"
               onClick={() => {
                 setInput(question);
                 setTimeout(() => handleSendMessage(), 100);
@@ -254,7 +254,7 @@ const ChatAIPage = () => {
             </Button>
           ))}
         </div>
-      </Card>
+      </div>
     </div>
   );
 };

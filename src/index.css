@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,6 +9,11 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+  :root {
+    --vibrant-primary: #8B5CF6;
+    --vibrant-secondary: #D946EF;
+    --vibrant-accent: #0EA5E9;
   }
 }
 
@@ -57,10 +63,21 @@
     @apply bg-secondary text-foreground font-bold;
   }
   .dashboard-card {
-    @apply rounded-lg border bg-card text-card-foreground shadow-sm p-6;
+    @apply rounded-lg bg-card text-card-foreground shadow-sm p-6;
   }
   .feature-card {
     @apply p-6 rounded-2xl text-white shadow-lg relative overflow-hidden;
+  }
+  
+  /* Updated vibrant styles */
+  .vibrant-title {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-[#8B5CF6] to-[#D946EF];
+  }
+  .vibrant-sidebar {
+    @apply bg-gradient-to-b from-slate-800/90 to-slate-900/90 text-white;
+  }
+  .vibrant-card {
+    @apply bg-white shadow-md p-6 rounded-lg;
   }
 }
 

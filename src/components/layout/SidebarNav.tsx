@@ -159,7 +159,7 @@ export function SidebarNav() {
                 onClick={() => toggleGroup(item.title)}
                 className={cn(
                   "nav-link group w-full flex justify-between",
-                  hasActiveChild ? "text-primary" : ""
+                  hasActiveChild ? "text-[#8B5CF6] font-medium" : ""
                 )}
                 style={{
                   animationDelay: `${index * 50}ms`,
@@ -177,7 +177,7 @@ export function SidebarNav() {
               </button>
               
               {isExpanded && (
-                <div className="ml-6 mt-1 flex flex-col gap-1 border-l pl-2 border-border/50">
+                <div className="ml-6 mt-1 flex flex-col gap-1 border-l pl-2 border-[#8B5CF6]/30">
                   {item.children.map((child, childIndex) => {
                     const isActive = location.pathname === child.href;
                     return (
@@ -186,7 +186,7 @@ export function SidebarNav() {
                         to={child.href || "#"}
                         className={cn(
                           "nav-link group",
-                          isActive ? "active" : ""
+                          isActive ? "bg-[#8B5CF6]/10 text-[#8B5CF6] font-medium" : ""
                         )}
                         style={{
                           animationDelay: `${(index + childIndex) * 50}ms`,
@@ -210,7 +210,7 @@ export function SidebarNav() {
               to={item.href || "#"}
               className={cn(
                 "nav-link group",
-                isActive ? "active" : ""
+                isActive ? "bg-[#8B5CF6]/10 text-[#8B5CF6] font-medium" : ""
               )}
               style={{
                 animationDelay: `${index * 50}ms`,

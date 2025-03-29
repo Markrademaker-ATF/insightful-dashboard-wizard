@@ -18,7 +18,7 @@ export function PageHeader({
     <div className="flex flex-col gap-4 mb-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-balance">{title}</h1>
+          <h1 className="text-2xl font-semibold tracking-tight vibrant-title">{title}</h1>
           {description && (
             <p className="text-muted-foreground mt-1 text-balance max-w-2xl">
               {description}
