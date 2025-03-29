@@ -16,7 +16,7 @@ const recommendationsData = [
     category: "campaign",
     date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
     summary: "Increasing bid adjustments for mobile devices by 15% could improve your search campaign conversion rate.",
-    impact: "medium",
+    impact: "medium" as const,
     metrics: {
       current: 2.8,
       projected: 3.2,
@@ -30,7 +30,7 @@ const recommendationsData = [
     category: "budget",
     date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 1 week ago
     summary: "Moving 20% of your display budget to social channels could increase overall ROAS by approximately 8% based on recent performance trends.",
-    impact: "high",
+    impact: "high" as const,
     metrics: {
       current: 3.4,
       projected: 3.7,
@@ -44,7 +44,7 @@ const recommendationsData = [
     category: "optimization",
     date: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000), // 2 weeks ago
     summary: "Mobile conversion rates are 32% lower than desktop. Optimizing your mobile landing pages could significantly improve performance.",
-    impact: "high",
+    impact: "high" as const,
     metrics: {
       current: 1.2,
       projected: 1.8,
@@ -58,7 +58,7 @@ const recommendationsData = [
     category: "audience",
     date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
     summary: "Testing a lookalike audience based on your top 5% of customers could expand your reach while maintaining conversion efficiency.",
-    impact: "medium",
+    impact: "medium" as const,
     metrics: {
       current: 240000,
       projected: 380000,
@@ -72,7 +72,7 @@ const recommendationsData = [
     category: "creative",
     date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
     summary: "Your top performing ad creative is showing fatigue with a 12% drop in CTR over the past week. Consider refreshing your creative assets.",
-    impact: "high",
+    impact: "high" as const,
     metrics: {
       current: 1.8,
       projected: 2.3,
@@ -86,7 +86,7 @@ const recommendationsData = [
     category: "channel",
     date: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
     summary: "Customers exposed to both video and display ads have a 28% higher conversion rate. Increasing cross-channel coordination could boost performance.",
-    impact: "medium",
+    impact: "medium" as const,
     metrics: {
       current: 2.4,
       projected: 3.1,
