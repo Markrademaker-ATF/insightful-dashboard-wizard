@@ -23,6 +23,7 @@ import FAQPage from "./pages/FAQPage";
 import MetricsGuidePage from "./pages/MetricsGuidePage";
 import GettingStartedPage from "./pages/GettingStartedPage";
 import ChatAIPage from "./pages/ChatAIPage";
+import RecommendationsPage from "./pages/RecommendationsPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -47,6 +48,7 @@ const App = () => (
             <Route path="/budget" element={<BudgetPage />} />
             <Route path="/ab-testing" element={<ABTestingPage />} />
             <Route path="/chat-ai" element={<ChatAIPage />} />
+            <Route path="/recommendations" element={<RecommendationsPage />} />
             <Route path="/guide" element={<GuidePage />} />
             <Route path="/faq" element={<FAQPage />} />
             <Route path="/metrics-guide" element={<MetricsGuidePage />} />
