@@ -39,16 +39,26 @@ interface CampaignEvent {
   };
 }
 
+interface Campaign {
+  id: string;
+  name: string;
+  events: CampaignEvent[];
+}
+
 interface CampaignTimelineProps {
   loading?: boolean;
   events?: CampaignEvent[];
   selectedCampaign?: string;
+  isOverview?: boolean;
+  campaigns?: Campaign[];
 }
 
 export const CampaignTimeline: React.FC<CampaignTimelineProps> = ({
   loading = false,
   events = [],
-  selectedCampaign
+  selectedCampaign,
+  isOverview = false,
+  campaigns = []
 }) => {
   const [expandedEvent, setExpandedEvent] = useState<string | null>(null);
   
@@ -276,12 +286,23 @@ export const CampaignTimeline: React.FC<CampaignTimelineProps> = ({
     }
   ];
   
-  // Get the current campaign based on selection
-  const activeCampaign = selectedCampaign 
-    ? defaultCampaigns.find(c => c.id === selectedCampaign) 
-    : defaultCampaigns[0];
+  // Get all campaigns or the selected one based on mode
+  const timelineCampaigns = isOverview 
+    ? (campaigns.length > 0 ? campaigns : defaultCampaigns) 
+    : selectedCampaign 
+      ? [defaultCampaigns.find(c => c.id === selectedCampaign) || defaultCampaigns[0]] 
+      : [defaultCampaigns[0]];
   
-  const timelineEvents = activeCampaign?.events || [];
+  // For single campaign view
+  const activeCampaign = timelineCampaigns[0];
+  const timelineEvents = !isOverview ? activeCampaign?.events || [] : [];
+  
+  // Sort campaigns by first event date for overview timeline
+  const sortedCampaigns = [...timelineCampaigns].sort((a, b) => {
+    const aDate = new Date(a.events[0]?.date || "");
+    const bDate = new Date(b.events[0]?.date || "");
+    return aDate.getTime() - bDate.getTime();
+  });
   
   // Get icon based on event type
   const getEventIcon = (type: string) => {
@@ -322,6 +343,23 @@ export const CampaignTimeline: React.FC<CampaignTimelineProps> = ({
     });
   };
 
+  // Calculate average ROAS for a campaign
+  const calculateAverageRoas = (campaign: Campaign) => {
+    const completedEvents = campaign.events.filter(e => e.status !== "upcoming" && e.performance?.roas);
+    if (completedEvents.length === 0) return 0;
+    
+    const totalRoas = completedEvents.reduce((sum, event) => sum + (event.performance?.roas || 0), 0);
+    return totalRoas / completedEvents.length;
+  };
+
+  // Get campaign color based on ROAS performance
+  const getCampaignColor = (roas: number) => {
+    if (roas >= 4.0) return "bg-green-500";
+    if (roas >= 3.0) return "bg-blue-500";
+    if (roas >= 2.0) return "bg-yellow-500";
+    return "bg-gray-500";
+  };
+
   if (loading) {
     return (
       <Card>
@@ -346,6 +384,98 @@ export const CampaignTimeline: React.FC<CampaignTimelineProps> = ({
     );
   }
 
+  // Overview timeline view - showing multiple campaigns
+  if (isOverview) {
+    return (
+      <Card className="shadow-sm border-border/40 overflow-hidden">
+        <div className="h-1 bg-gradient-to-r from-[#4361ee] to-[#7209b7]"></div>
+        <CardHeader className="pb-4">
+          <div className="flex items-center gap-2">
+            <div className="p-1.5 rounded-md bg-primary/10">
+              <CalendarDays className="h-5 w-5 text-primary" />
+            </div>
+            <CardTitle>Campaign Timeline Overview</CardTitle>
+          </div>
+          <CardDescription>
+            Timeline of all campaigns with performance metrics
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="relative pl-8">
+            {/* Timeline connector line */}
+            <div className="absolute left-4 top-0 bottom-0 w-1 bg-gradient-to-b from-primary via-purple-500 to-pink-500 rounded-full"></div>
+            
+            {/* Timeline events - one per campaign */}
+            <div className="space-y-6 pb-2">
+              {sortedCampaigns.map((campaign) => {
+                const startEvent = campaign.events[0];
+                const avgRoas = calculateAverageRoas(campaign);
+                const campaignStatus = campaign.events.some(e => e.status === "active") 
+                  ? "active" 
+                  : campaign.events.every(e => e.status === "completed") 
+                    ? "completed" 
+                    : "upcoming";
+                const roasColor = getCampaignColor(avgRoas);
+                
+                if (!startEvent) return null;
+                
+                return (
+                  <div 
+                    key={campaign.id}
+                    className={`relative ${
+                      campaignStatus === "active" ? "ring-2 ring-primary/10 rounded-lg p-3 -ml-3 bg-muted/10" : ""
+                    }`}
+                  >
+                    {/* Campaign marker */}
+                    <div className={`absolute -left-8 p-2 rounded-full ${roasColor}`}>
+                      <Flag className="h-4 w-4 text-white" />
+                    </div>
+                    
+                    {/* Campaign info */}
+                    <div className="ml-2">
+                      <div className="flex items-center text-xs text-muted-foreground mb-1">
+                        <Clock className="h-3 w-3 mr-1" />
+                        <span>{formatDate(startEvent.date)}</span>
+                        <Badge 
+                          variant="outline" 
+                          className={`ml-2 ${getStatusColor(campaignStatus)}`}
+                        >
+                          {campaignStatus}
+                        </Badge>
+                      </div>
+                    
+                      {/* Campaign title and metrics */}
+                      <div className="space-y-1">
+                        <h3 className="text-sm font-medium">{campaign.name}</h3>
+                        
+                        {/* Performance metrics */}
+                        {campaignStatus !== "upcoming" && (
+                          <div className="flex items-center gap-3 my-2 text-xs">
+                            <div className="flex items-center gap-1">
+                              <BarChart3 className="h-3 w-3 text-primary" />
+                              <span className="text-muted-foreground">ROAS:</span>
+                              <span className="font-medium">{avgRoas.toFixed(1)}x</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Calendar className="h-3 w-3 text-primary" />
+                              <span className="text-muted-foreground">Events:</span>
+                              <span className="font-medium">{campaign.events.length}</span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // Single campaign detailed view
   return (
     <Card className="shadow-sm border-border/40 overflow-hidden">
       <div className="h-1 bg-gradient-to-r from-[#4361ee] to-[#7209b7]"></div>
