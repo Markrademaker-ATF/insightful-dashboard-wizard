@@ -48,6 +48,26 @@ const ChannelDetailsPage = () => {
     { id: "camp5", name: "Black Friday" },
   ];
 
+  // Generate mock campaign metrics data
+  const generateCampaignMetricsData = () => {
+    return campaigns.map(campaign => {
+      const revenue = Math.round(50000 + Math.random() * 300000);
+      const cost = Math.round(20000 + Math.random() * 100000);
+      const conversionRate = parseFloat((1 + Math.random() * 8).toFixed(2));
+      
+      return {
+        id: campaign.id,
+        name: campaign.name,
+        revenue: revenue,
+        cost: cost,
+        roas: parseFloat((revenue / cost).toFixed(2)),
+        conversionRate: conversionRate
+      };
+    });
+  };
+
+  const [campaignMetricsData, setCampaignMetricsData] = useState<any[]>([]);
+
   useEffect(() => {
     // Simulate data loading
     const loadChannelData = async () => {
@@ -185,6 +205,10 @@ const ChannelDetailsPage = () => {
       } else {
         setCampaignData(null);
       }
+      
+      // Generate campaign metrics data
+      const campaignMetrics = generateCampaignMetricsData();
+      setCampaignMetricsData(campaignMetrics);
       
       // Generate journey analysis data
       const journeyChannels = [
@@ -375,6 +399,7 @@ const ChannelDetailsPage = () => {
               roasChange={2.1}
               conversionChange={4.3}
               loading={loading}
+              campaignData={campaignMetricsData}
             />
           )}
         </CardContent>
