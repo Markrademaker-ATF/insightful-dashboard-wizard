@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ExternalLink, ChevronRight, BarChart3, Users, Zap } from "lucide-react";
+import { LogIn, ExternalLink, ChevronRight, BarChart3, Users, Zap } from "lucide-react";
 import { Helmet } from "react-helmet";
 
 const LandingPage = () => {
@@ -135,7 +135,6 @@ const LandingPage = () => {
         </div>
       </header>
       
-      {/* Hero Section */}
       <main className="flex-grow text-white relative z-10">
         <div className="container mx-auto px-6 py-20 md:py-32">
           <div className="max-w-4xl mx-auto text-center mb-12">
@@ -158,7 +157,7 @@ const LandingPage = () => {
               className="bg-pink-500 hover:bg-pink-600 rounded-full px-8 py-6 text-white w-full md:w-auto"
             >
               <Link to="/login">
-                Get Started <ArrowRight className="ml-2 h-5 w-5" />
+                Login <LogIn className="ml-2 h-5 w-5" />
               </Link>
             </Button>
             <Button 
@@ -268,7 +267,6 @@ const LandingPage = () => {
         </div>
       </main>
       
-      {/* Footer */}
       <footer className="bg-transparent text-white py-6 px-6 relative z-10">
         <div className="container mx-auto text-center">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
