@@ -89,7 +89,7 @@ export default function ChannelsPage() {
       <Tabs value={mainTab} onValueChange={setMainTab} className="space-y-6">
         <TabsList className="justify-start">
           <TabsTrigger value="analysis" className="flex items-center gap-1">
-            <BarChart className="h-4 w-4" /> Channel Analysis
+            <BarChart className="h-4 w-4" /> Channel Overview
           </TabsTrigger>
           <TabsTrigger value="details" className="flex items-center gap-1">
             <TableIcon className="h-4 w-4" /> Channel Details
@@ -99,12 +99,12 @@ export default function ChannelsPage() {
           </TabsTrigger>
         </TabsList>
 
-        {/* Channel Analysis Tab Content */}
+        {/* Channel Overview Tab Content */}
         <TabsContent value="analysis" className="space-y-6 mt-6">
           <Card>
             <CardHeader className="flex flex-row items-center">
               <div className="flex flex-col space-y-1.5">
-                <CardTitle>Channel Analysis</CardTitle>
+                <CardTitle>Channel Overview</CardTitle>
                 <CardDescription>
                   Compare performance metrics across channels
                 </CardDescription>
@@ -118,7 +118,7 @@ export default function ChannelsPage() {
                 <div className="flex items-start gap-2">
                   <Info className="h-5 w-5 text-primary mt-0.5" />
                   <div>
-                    <h3 className="text-sm font-medium mb-1">About Channel Analysis</h3>
+                    <h3 className="text-sm font-medium mb-1">About Channel Overview</h3>
                     <p className="text-sm text-muted-foreground">
                       This dashboard provides a comprehensive view of your marketing channel performance. 
                       ROAS (Return on Ad Spend) is the primary metric used to evaluate efficiency across channels.
@@ -265,7 +265,7 @@ export default function ChannelsPage() {
               <div>
                 <h3 className="text-sm font-medium mb-1">About Geographic Analysis</h3>
                 <p className="text-sm text-muted-foreground">
-                  This heatmap visualizes marketing performance across European regions, showing how ROAS varies geographically.
+                  This visualization shows marketing performance across European regions, displaying how ROAS varies geographically.
                   Higher ROAS values (shown in deeper green) indicate stronger performance in those regions.
                   Click on any region to view a detailed breakdown of channel-specific performance for that area.
                   {selectedChannel && selectedChannel !== "all" && " The data is currently filtered to show only the selected channel's performance."}
