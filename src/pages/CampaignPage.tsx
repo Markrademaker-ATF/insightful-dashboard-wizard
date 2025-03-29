@@ -353,6 +353,37 @@ const ChannelDetailsPage = () => {
         </Tabs>
       </PageHeader>
 
+      {/* Key metrics section moved before tabs */}
+      <Card className="mb-6 overflow-hidden border-border/40 shadow-sm">
+        <div className="h-1 bg-gradient-to-r from-primary/80 to-primary/40"></div>
+        <CardHeader className="pb-3">
+          <CardTitle>Campaign Overview</CardTitle>
+          <CardDescription>Key performance metrics across all marketing campaigns</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {loading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <Skeleton className="h-28 w-full" />
+              <Skeleton className="h-28 w-full" />
+              <Skeleton className="h-28 w-full" />
+              <Skeleton className="h-28 w-full" />
+            </div>
+          ) : (
+            <KeyMetricsGrid
+              totalRevenue={totalRevenue}
+              totalCost={totalRevenue * 0.4}
+              totalRoas={2.5}
+              totalConversions={totalConversions}
+              revenueChange={5.2}
+              costChange={3.1}
+              roasChange={2.1}
+              conversionChange={4.3}
+              loading={loading}
+            />
+          )}
+        </CardContent>
+      </Card>
+
       {/* Main Tabs for Campaign Overview and Campaign Detailed - Moved to here */}
       <Tabs 
         defaultValue="overview" 
