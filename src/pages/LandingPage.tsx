@@ -582,4 +582,4 @@ const LandingPage = () => {
         <div className="container mx-auto px-6 py-16 md:py-32">
           <div className="max-w-4xl mx-auto bg-gradient-to-br from-purple-900/50 to-pink-900/50 backdrop-blur-lg rounded-3xl p-8 md:p-16 border border-white/10 shadow-2xl relative overflow-hidden">
             <div className="absolute -top-24 -right-24 w-64 h-64 bg-purple-500/30 rounded-full blur-3xl"></div>
-            <div className="absolute -bottom-24 -left-24 w-64 h-64 bg
+            <div className="absolute -bottom-24 -left-24 w-64 h-
