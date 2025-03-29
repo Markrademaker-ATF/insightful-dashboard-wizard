@@ -1,8 +1,7 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, Bot, User, PlusCircle } from "lucide-react";
+import { Send, Bot, User, PlusCircle, Sparkles } from "lucide-react";
 import { ChatMessage } from "./ChatMessage";
 import { SuggestionChip } from "./SuggestionChip";
 import { useToast } from "@/components/ui/use-toast";
@@ -14,13 +13,12 @@ type Message = {
   timestamp: Date;
 };
 
-// Sample suggestion questions
 const sampleQueries = [
   "What are the top performing channels this month?",
   "How has the conversion rate changed over time?",
   "Where should I focus my marketing budget?",
-  "What metrics are underperforming compared to last month?",
-  "Identify any anomalies in our recent campaign data",
+  "What metrics are underperforming?",
+  "Identify campaign anomalies",
 ];
 
 export function ChatInterface() {
@@ -37,7 +35,6 @@ export function ChatInterface() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
-  // Auto-scroll to bottom when messages change
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
@@ -49,7 +46,6 @@ export function ChatInterface() {
   const sendMessage = async () => {
     if (!input.trim()) return;
     
-    // Add user message
     const userMessage: Message = {
       id: messages.length,
       role: "user",
@@ -61,17 +57,14 @@ export function ChatInterface() {
     setInput("");
     setIsLoading(true);
     
-    // Simulate AI response (In a real app, this would call an API)
     setTimeout(() => {
       generateAIResponse(userMessage.content);
     }, 1000);
   };
   
   const generateAIResponse = (query: string) => {
-    // Mock AI response - replace with actual AI integration
     let aiResponse = "";
     
-    // Simple keyword matching for demo purposes
     if (query.toLowerCase().includes("top performing")) {
       aiResponse = "Based on the latest data, your top performing channel is Paid Search, which generated 42% of your total revenue this month. This is followed by Social Media (28%) and Email (18%).";
     } else if (query.toLowerCase().includes("conversion rate")) {
@@ -109,7 +102,7 @@ export function ChatInterface() {
   };
 
   return (
-    <div className="flex flex-col h-full min-h-[500px]">
+    <div className="flex flex-col h-full min-h-[500px] bg-gradient-to-br from-purple-50/50 to-blue-50/50">
       {/* Chat messages container */}
       <div className="flex-1 overflow-y-auto p-4">
         <div className="space-y-4">
@@ -118,8 +111,8 @@ export function ChatInterface() {
           ))}
           {isLoading && (
             <div className="flex items-center gap-2 text-muted-foreground animate-pulse">
-              <Bot className="h-4 w-4" />
-              <span>AI is thinking...</span>
+              <Sparkles className="h-4 w-4 text-primary" />
+              <span>AI is generating insights...</span>
             </div>
           )}
           <div ref={messagesEndRef} />
@@ -127,8 +120,11 @@ export function ChatInterface() {
       </div>
       
       {/* Suggestions */}
-      <div className="px-4 py-2 border-t">
-        <p className="text-xs text-muted-foreground mb-2">Suggested questions:</p>
+      <div className="px-4 py-2 border-t bg-white/30 backdrop-blur-sm">
+        <p className="text-xs text-muted-foreground mb-2 flex items-center gap-2">
+          <Sparkles className="h-3 w-3 text-primary" />
+          Suggested insights:
+        </p>
         <div className="flex flex-wrap gap-2 mb-3">
           {sampleQueries.map((query, index) => (
             <SuggestionChip 
@@ -141,26 +137,28 @@ export function ChatInterface() {
       </div>
       
       {/* Input area */}
-      <div className="border-t p-4">
+      <div className="border-t p-4 bg-white/50 backdrop-blur-sm">
         <div className="relative">
           <Textarea
-            placeholder="Ask a question about your analytics data..."
+            placeholder="Ask an intelligent question about your analytics..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             rows={3}
-            className="pr-12 resize-none"
+            className="pr-12 resize-none border-primary/20 focus:border-primary/50 transition-colors"
           />
           <Button
             size="icon"
-            className="absolute bottom-2 right-2"
+            variant="outline"
+            className="absolute bottom-2 right-2 bg-primary/10 hover:bg-primary/20 border-primary/20"
             onClick={sendMessage}
             disabled={!input.trim() || isLoading}
           >
-            <Send className="h-4 w-4" />
+            <Send className="h-4 w-4 text-primary" />
           </Button>
         </div>
-        <div className="text-xs text-muted-foreground mt-2">
+        <div className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
+          <Sparkles className="h-3 w-3 text-primary" />
           Press Enter to send, Shift+Enter for a new line
         </div>
       </div>
