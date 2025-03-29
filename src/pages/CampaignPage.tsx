@@ -609,6 +609,16 @@ const ChannelDetailsPage = () => {
               </div>
             </CardContent>
           </Card>
+
+          {/* Overview Section - Journey Analysis */}
+          <div className="space-y-6 mb-6">
+            {journeyData && (
+              <ChannelJourneyComparison 
+                data={journeyData || { channels: [] }} 
+                loading={loading} 
+              />
+            )}
+          </div>
         </TabsContent>
         
         {/* Campaign Detailed Tab Content */}
@@ -699,16 +709,6 @@ const ChannelDetailsPage = () => {
           </div>
         </TabsContent>
       </Tabs>
-
-      {/* Journey analysis moved to bottom */}
-      <div className="mb-10">
-        {journeyData && (
-          <ChannelJourneyComparison 
-            data={journeyData || { channels: [] }} 
-            loading={loading} 
-          />
-        )}
-      </div>
     </div>
   );
 };
