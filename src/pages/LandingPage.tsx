@@ -313,7 +313,7 @@ const LandingPage = () => {
           </div>
         </div>
 
-        {/* Client Logos Section - NEW SECTION */}
+        {/* Client Logos Section - Updated with real brands */}
         <div className={`container mx-auto px-6 py-16 md:py-24 transition-all duration-1000 ${isVisible.clientSection ? "opacity-100" : "opacity-0 translate-y-10"}`}>
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">Trusted by Leading Brands</h2>
@@ -322,15 +322,49 @@ const LandingPage = () => {
             </p>
           </div>
 
-          {/* Client logo grid with dynamic content */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-              <div key={i} className="flex items-center justify-center p-6 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/15 transition-all duration-300 group">
-                <div className="h-12 w-32 bg-gradient-to-r from-white/40 to-white/20 rounded-md group-hover:from-white/50 group-hover:to-white/30 flex items-center justify-center">
-                  <span className="font-bold text-white/70 group-hover:text-white transition-colors">BRAND {i}</span>
-                </div>
+          {/* Client logo grid with real brand logos */}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            {/* L'Oreal */}
+            <div className="flex items-center justify-center p-6 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/15 transition-all duration-300 group">
+              <div className="h-12 w-36 flex items-center justify-center">
+                <span className="font-bold text-white tracking-wide text-xl">L'ORÉAL</span>
               </div>
-            ))}
+            </div>
+            
+            {/* Hunkemoller */}
+            <div className="flex items-center justify-center p-6 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/15 transition-all duration-300 group">
+              <div className="h-12 w-36 flex items-center justify-center">
+                <span className="font-bold text-white tracking-wide text-xl">HUNKEMÖLLER</span>
+              </div>
+            </div>
+            
+            {/* Torrid */}
+            <div className="flex items-center justify-center p-6 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/15 transition-all duration-300 group">
+              <div className="h-12 w-36 flex items-center justify-center">
+                <span className="font-bold text-white tracking-wide text-xl">TORRID</span>
+              </div>
+            </div>
+            
+            {/* BNP Paribas */}
+            <div className="flex items-center justify-center p-6 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/15 transition-all duration-300 group">
+              <div className="h-12 w-36 flex items-center justify-center">
+                <span className="font-bold text-white tracking-wide text-lg">BNP PARIBAS</span>
+              </div>
+            </div>
+            
+            {/* Meta */}
+            <div className="flex items-center justify-center p-6 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/15 transition-all duration-300 group">
+              <div className="h-12 w-36 flex items-center justify-center">
+                <span className="font-bold text-white tracking-wide text-xl">META</span>
+              </div>
+            </div>
+            
+            {/* Samsung */}
+            <div className="flex items-center justify-center p-6 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/15 transition-all duration-300 group">
+              <div className="h-12 w-36 flex items-center justify-center">
+                <span className="font-bold text-white tracking-wide text-xl">SAMSUNG</span>
+              </div>
+            </div>
           </div>
 
           {/* Statistics Counter - Animated on scroll */}
@@ -354,7 +388,7 @@ const LandingPage = () => {
           </div>
         </div>
 
-        {/* Features Section - NEW SECTION with animations */}
+        {/* Features Section with dashboard preview image */}
         <div className={`container mx-auto px-6 py-16 md:py-24 transition-all duration-1000 ${isVisible.featuresSection ? "opacity-100" : "opacity-0 translate-y-10"}`}>
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-4">Powerful Platform Features</h2>
@@ -363,9 +397,9 @@ const LandingPage = () => {
             </p>
           </div>
 
-          {/* Feature blocks with images */}
+          {/* Feature blocks with dashboard preview image */}
           <div className="space-y-24">
-            {/* Feature 1 */}
+            {/* Feature 1 with dashboard preview */}
             <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16">
               <div className="md:w-1/2 order-2 md:order-1">
                 <h3 className="text-2xl font-bold mb-4">Real-time Analytics Dashboard</h3>
@@ -395,10 +429,12 @@ const LandingPage = () => {
               </div>
               <div className="md:w-1/2 order-1 md:order-2 relative">
                 <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/10">
-                  <div className="aspect-video bg-gradient-to-br from-indigo-900/70 to-purple-900/70 backdrop-blur-lg p-8 flex items-center justify-center">
-                    <div className="w-full h-full bg-black/40 rounded-lg flex items-center justify-center">
-                      <LineChart className="w-16 h-16 text-white/40" />
-                    </div>
+                  <div className="aspect-video bg-gradient-to-br from-indigo-900/70 to-purple-900/70 backdrop-blur-lg p-4 flex items-center justify-center">
+                    <img 
+                      src="/placeholder.svg"
+                      alt="Analytics Dashboard Preview" 
+                      className="w-full h-full object-cover rounded-lg"
+                    />
                   </div>
                 </div>
                 <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-pink-500/30 rounded-full blur-3xl"></div>
@@ -487,7 +523,7 @@ const LandingPage = () => {
           </div>
         </div>
 
-        {/* Testimonials Section - NEW SECTION */}
+        {/* Testimonials Section */}
         <div className={`container mx-auto px-6 py-16 md:py-24 transition-all duration-1000 ${isVisible.testimonialsSection ? "opacity-100" : "opacity-0 translate-y-10"}`}>
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold mb-4">What Our Clients Say</h2>
@@ -539,7 +575,7 @@ const LandingPage = () => {
           </div>
         </div>
 
-        {/* CTA Section - NEW SECTION */}
+        {/* CTA Section */}
         <div className="container mx-auto px-6 py-16 md:py-32">
           <div className="max-w-4xl mx-auto bg-gradient-to-br from-purple-900/50 to-pink-900/50 backdrop-blur-lg rounded-3xl p-8 md:p-16 border border-white/10 shadow-2xl relative overflow-hidden">
             <div className="absolute -top-24 -right-24 w-64 h-64 bg-purple-500/30 rounded-full blur-3xl"></div>
