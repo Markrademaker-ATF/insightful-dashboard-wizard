@@ -2,60 +2,17 @@
 import React from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { ChatInterface } from "@/components/chat/ChatInterface";
-import { Bot, BarChart3, Zap, TrendingUp, Lightbulb, UserRound } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Bot, BarChart3, Zap, TrendingUp, Lightbulb } from "lucide-react";
 
 const ChatAIPage = () => {
   return (
     <div className="animate-fade-in">
-      <div className="flex justify-between items-center mb-4">
-        <PageHeader
-          title="Analytics AI Assistant"
-          description="Unlock deeper insights and get intelligent recommendations from your marketing data."
-        >
-          <Bot className="h-6 w-6 text-primary" />
-        </PageHeader>
-        
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <button className="flex items-center gap-2 bg-white/70 hover:bg-white/90 rounded-full px-4 py-2 transition-all shadow-sm">
-              <span className="text-sm font-medium text-primary hidden md:inline">John Doe</span>
-              <Avatar className="h-8 w-8 border-2 border-primary/20">
-                <AvatarImage src="https://i.pravatar.cc/100" alt="@user" />
-                <AvatarFallback className="bg-primary/20 text-primary">JD</AvatarFallback>
-              </Avatar>
-            </button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <UserRound className="mr-2 h-4 w-4" />
-              <span>Profile</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Zap className="mr-2 h-4 w-4" />
-              <span>Activity</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <BarChart3 className="mr-2 h-4 w-4" />
-              <span>Analytics</span>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-red-500">
-              Logout
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
+      <PageHeader
+        title="Analytics AI Assistant"
+        description="Unlock deeper insights and get intelligent recommendations from your marketing data."
+      >
+        <Bot className="h-6 w-6 text-primary" />
+      </PageHeader>
       
       <div className="dashboard-card relative overflow-hidden mb-8 bg-gradient-to-br from-purple-50 to-blue-50">
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/80 to-primary/40"></div>
@@ -115,3 +72,4 @@ const FeatureCard = ({
 };
 
 export default ChatAIPage;
+
