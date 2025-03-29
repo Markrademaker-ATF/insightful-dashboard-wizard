@@ -157,7 +157,7 @@ const LandingPage = () => {
               variant="default" 
               className="bg-pink-500 hover:bg-pink-600 rounded-full px-8 py-6 text-white w-full md:w-auto"
             >
-              <Link to="/getting-started">
+              <Link to="/login">
                 Get Started <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
