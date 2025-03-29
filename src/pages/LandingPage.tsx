@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -313,7 +312,7 @@ const LandingPage = () => {
           </div>
         </div>
 
-        {/* Client Logos Section - NEW SECTION */}
+        {/* Client Logos Section - UPDATED SECTION */}
         <div className={`container mx-auto px-6 py-16 md:py-24 transition-all duration-1000 ${isVisible.clientSection ? "opacity-100" : "opacity-0 translate-y-10"}`}>
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">Trusted by Leading Brands</h2>
@@ -322,18 +321,82 @@ const LandingPage = () => {
             </p>
           </div>
 
-          {/* Client logo grid with dynamic content */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-              <div key={i} className="flex items-center justify-center p-6 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/15 transition-all duration-300 group">
-                <div className="h-12 w-32 bg-gradient-to-r from-white/40 to-white/20 rounded-md group-hover:from-white/50 group-hover:to-white/30 flex items-center justify-center">
-                  <span className="font-bold text-white/70 group-hover:text-white transition-colors">BRAND {i}</span>
-                </div>
+          {/* Updated client logo grid with real brands */}
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            {/* LVMH */}
+            <div className="flex items-center justify-center p-6 h-24 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/15 transition-all duration-300">
+              <div className="h-full flex items-center justify-center">
+                <img 
+                  src="/lovable-uploads/01047e08-e70b-49b7-98bf-a286f8220bb9.png" 
+                  alt="LVMH" 
+                  className="h-6 object-contain opacity-90"
+                  style={{ objectPosition: "0% 0%", objectFit: "none", transformOrigin: "left center", transform: "scale(0.7)" }}
+                />
               </div>
-            ))}
+            </div>
+            
+            {/* Essilor Luxottica */}
+            <div className="flex items-center justify-center p-6 h-24 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/15 transition-all duration-300">
+              <div className="h-full flex items-center justify-center">
+                <img 
+                  src="/lovable-uploads/01047e08-e70b-49b7-98bf-a286f8220bb9.png" 
+                  alt="Essilor Luxottica" 
+                  className="h-6 object-contain opacity-90"
+                  style={{ objectPosition: "13% 0%", objectFit: "none", transformOrigin: "center", transform: "scale(0.7)" }}
+                />
+              </div>
+            </div>
+            
+            {/* BNP Paribas */}
+            <div className="flex items-center justify-center p-6 h-24 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/15 transition-all duration-300">
+              <div className="h-full flex items-center justify-center">
+                <img 
+                  src="/lovable-uploads/01047e08-e70b-49b7-98bf-a286f8220bb9.png" 
+                  alt="BNP Paribas" 
+                  className="h-8 object-contain opacity-90"
+                  style={{ objectPosition: "28% 0%", objectFit: "none", transformOrigin: "center", transform: "scale(0.7)" }}
+                />
+              </div>
+            </div>
+            
+            {/* ba&sh */}
+            <div className="flex items-center justify-center p-6 h-24 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/15 transition-all duration-300">
+              <div className="h-full flex items-center justify-center">
+                <img 
+                  src="/lovable-uploads/01047e08-e70b-49b7-98bf-a286f8220bb9.png" 
+                  alt="ba&sh" 
+                  className="h-8 object-contain opacity-90"
+                  style={{ objectPosition: "43% 0%", objectFit: "none", transformOrigin: "center", transform: "scale(0.7)" }}
+                />
+              </div>
+            </div>
+            
+            {/* Torrid */}
+            <div className="flex items-center justify-center p-6 h-24 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/15 transition-all duration-300">
+              <div className="h-full flex items-center justify-center">
+                <img 
+                  src="/lovable-uploads/01047e08-e70b-49b7-98bf-a286f8220bb9.png" 
+                  alt="Torrid" 
+                  className="h-8 object-contain opacity-90"
+                  style={{ objectPosition: "59% 0%", objectFit: "none", transformOrigin: "center", transform: "scale(0.7)" }}
+                />
+              </div>
+            </div>
+            
+            {/* Decathlon */}
+            <div className="flex items-center justify-center p-6 h-24 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/15 transition-all duration-300">
+              <div className="h-full flex items-center justify-center">
+                <img 
+                  src="/lovable-uploads/01047e08-e70b-49b7-98bf-a286f8220bb9.png" 
+                  alt="Decathlon" 
+                  className="h-8 object-contain opacity-90"
+                  style={{ objectPosition: "75% 0%", objectFit: "none", transformOrigin: "center", transform: "scale(0.7)" }}
+                />
+              </div>
+            </div>
           </div>
 
-          {/* Statistics Counter - Animated on scroll */}
+          {/* Statistics Counter - kept from original */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-20 max-w-4xl mx-auto">
             <div className="text-center">
               <div className="text-4xl font-bold text-pink-300 mb-2">500+</div>
@@ -519,87 +582,3 @@ const LandingPage = () => {
               }
             ].map((testimonial, index) => (
               <div key={index} className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-8 shadow-lg relative overflow-hidden">
-                <div className={`absolute -top-12 -right-12 w-32 h-32 bg-${testimonial.color}-500/20 rounded-full blur-3xl`}></div>
-                <div className={`absolute -bottom-12 -left-12 w-32 h-32 bg-${testimonial.color}-500/10 rounded-full blur-3xl`}></div>
-                <div className="relative z-10">
-                  <div className="text-3xl text-white/20 mb-4">"</div>
-                  <p className="text-white/90 mb-8 italic">{testimonial.quote}</p>
-                  <div className="flex items-center">
-                    <div className={`w-10 h-10 rounded-full bg-${testimonial.color}-500/30 flex items-center justify-center mr-3`}>
-                      <Users className="h-5 w-5 text-white/70" />
-                    </div>
-                    <div>
-                      <p className="font-bold text-white">{testimonial.author}</p>
-                      <p className="text-white/70 text-sm">{testimonial.title}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* CTA Section - NEW SECTION */}
-        <div className="container mx-auto px-6 py-16 md:py-32">
-          <div className="max-w-4xl mx-auto bg-gradient-to-br from-purple-900/50 to-pink-900/50 backdrop-blur-lg rounded-3xl p-8 md:p-16 border border-white/10 shadow-2xl relative overflow-hidden">
-            <div className="absolute -top-24 -right-24 w-64 h-64 bg-purple-500/30 rounded-full blur-3xl"></div>
-            <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-pink-500/30 rounded-full blur-3xl"></div>
-            
-            <div className="relative z-10 text-center">
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to Transform Your Marketing Strategy?</h2>
-              <p className="text-xl text-white/80 mb-10 max-w-2xl mx-auto">
-                Join industry leaders using our platform to drive better marketing decisions and achieve exceptional results.
-              </p>
-              
-              <div className="flex flex-col sm:flex-row justify-center gap-6">
-                <Button 
-                  asChild
-                  variant="default" 
-                  className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 rounded-full px-8 py-6 text-white"
-                >
-                  <Link to="/login">
-                    Start Today <ChevronRight className="ml-2 h-5 w-5" />
-                  </Link>
-                </Button>
-                <Button 
-                  asChild
-                  variant="outline" 
-                  className="bg-transparent hover:bg-white/10 rounded-full px-8 py-6 text-white border-white"
-                >
-                  <a href="#" rel="noopener noreferrer">
-                    Schedule a Demo <Clock className="ml-2 h-5 w-5" />
-                  </a>
-                </Button>
-              </div>
-
-              <p className="mt-6 text-sm text-white/60">
-                No credit card required. Free trial available for qualified businesses.
-              </p>
-            </div>
-          </div>
-        </div>
-      </main>
-      
-      <footer className="bg-transparent text-white py-6 px-6 relative z-10">
-        <div className="container mx-auto text-center">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="flex items-center space-x-2">
-              <h2 className="text-xl font-bold">ARTEFACT</h2>
-              <p className="text-xs">AI IS ABOUT PEOPLE</p>
-            </div>
-            <div className="text-sm opacity-80">
-              © {new Date().getFullYear()} Artefact. All rights reserved.
-            </div>
-            <div className="flex gap-4">
-              <Button variant="ghost" size="sm" className="text-white hover:text-pink-300 hover:bg-transparent p-0">About</Button>
-              <Button variant="ghost" size="sm" className="text-white hover:text-pink-300 hover:bg-transparent p-0">Privacy</Button>
-              <Button variant="ghost" size="sm" className="text-white hover:text-pink-300 hover:bg-transparent p-0">Contact</Button>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>
-  );
-};
-
-export default LandingPage;
