@@ -30,7 +30,7 @@ export function ABTestScenarioSelector({
   }
 
   return (
-    <Card className="bg-gradient-to-r from-orange-50 via-amber-50 to-yellow-50 border-amber-100/50 shadow-sm">
+    <Card className="glass-card premium-shadow border-white/30 bg-gradient-to-r from-orange-50/80 via-amber-50/80 to-yellow-50/80 backdrop-blur-md">
       <CardContent className="p-5">
         <div className="flex items-center gap-4">
           <div className="p-2 rounded-full bg-amber-100">
@@ -38,7 +38,7 @@ export function ABTestScenarioSelector({
           </div>
           <div className="text-base font-medium text-amber-900">Select A/B Test Scenario:</div>
           <Select value={selectedTestId} onValueChange={onSelectTest}>
-            <SelectTrigger className="w-[300px] bg-white border-amber-200">
+            <SelectTrigger className="w-[300px] bg-white/80 backdrop-blur-sm border-amber-200">
               <SelectValue placeholder="Select a test" />
             </SelectTrigger>
             <SelectContent className="bg-white/95 backdrop-blur-sm border-amber-200">
