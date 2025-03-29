@@ -17,7 +17,8 @@ import {
   FileBarChart,
   Lightbulb,
   Home,
-  Rocket
+  Rocket,
+  Bot
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -57,6 +58,11 @@ const navItems: NavItem[] = [
         title: "Data Overview",
         href: "/data",
         icon: Layers,
+      },
+      {
+        title: "Chat AI Assistant",
+        href: "/chat-ai",
+        icon: Bot,
       },
     ]
   },
