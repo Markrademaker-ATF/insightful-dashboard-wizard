@@ -356,10 +356,6 @@ const ChannelDetailsPage = () => {
       {/* Key metrics section moved before tabs */}
       <Card className="mb-6 overflow-hidden border-border/40 shadow-sm">
         <div className="h-1 bg-gradient-to-r from-primary/80 to-primary/40"></div>
-        <CardHeader className="pb-3">
-          <CardTitle>Campaign Overview</CardTitle>
-          <CardDescription>Key performance metrics across all marketing campaigns</CardDescription>
-        </CardHeader>
         <CardContent>
           {loading ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
