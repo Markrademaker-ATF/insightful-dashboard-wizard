@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { BarChart, PieChart, LineChart as LineChartIcon, Filter, ArrowDown, ArrowUp, Table as TableIcon } from "lucide-react";
+import { BarChart, PieChart, LineChart as LineChartIcon, Filter, ArrowDown, ArrowUp, Table as TableIcon, Globe } from "lucide-react";
 import { ChannelPerformanceTable } from "@/components/channels/ChannelPerformanceTable";
 import { ChannelBreakdownChart } from "@/components/channels/ChannelBreakdownChart";
 import { ChannelTrendsChart } from "@/components/channels/ChannelTrendsChart";
@@ -15,6 +15,7 @@ import { generateChannelData, generateChannelTrendsData, channelColors, channelN
 import { FilterExportControls } from "@/components/channels/FilterExportControls";
 import { ChannelDetailView } from "@/components/channels/ChannelDetailView";
 import { RoasComparisonChart } from "@/components/channels/RoasComparisonChart";
+import { EuropeRoasHeatmap } from "@/components/channels/EuropeRoasHeatmap";
 
 export default function ChannelsPage() {
   const [mainTab, setMainTab] = useState("analysis");
@@ -92,6 +93,9 @@ export default function ChannelsPage() {
           </TabsTrigger>
           <TabsTrigger value="details" className="flex items-center gap-1">
             <TableIcon className="h-4 w-4" /> Channel Details
+          </TabsTrigger>
+          <TabsTrigger value="geography" className="flex items-center gap-1">
+            <Globe className="h-4 w-4" /> Geographic Analysis
           </TabsTrigger>
         </TabsList>
 
@@ -193,6 +197,11 @@ export default function ChannelsPage() {
               )}
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* Geographic Analysis Tab Content - New */}
+        <TabsContent value="geography" className="space-y-6 mt-6">
+          <EuropeRoasHeatmap loading={loading} selectedChannel={selectedChannel} />
         </TabsContent>
       </Tabs>
     </div>
