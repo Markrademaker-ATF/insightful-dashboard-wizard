@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useSearchParams, useLocation } from "react-router-dom";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -411,40 +412,6 @@ const ChannelDetailsPage = () => {
               }))} 
               loading={loading} 
             />
-          </div>
-          
-          {/* Campaign Performance Matrix - Moved here under Campaign Overview */}
-          <div className="mt-6">
-            <Card className="mb-6">
-              <CardHeader>
-                <CardTitle>Campaign Performance Matrix</CardTitle>
-                <CardDescription>
-                  Detailed performance analysis of marketing campaigns
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {/* Tab content for Performance Matrix */}
-                <Tabs 
-                  defaultValue="attribution" 
-                  className="w-full"
-                >
-                  <TabsList className="w-full md:w-auto">
-                    <TabsTrigger value="attribution">Attribution</TabsTrigger>
-                    <TabsTrigger value="performance">Performance</TabsTrigger>
-                    <TabsTrigger value="conversion">Conversion</TabsTrigger>
-                  </TabsList>
-                  <TabsContent value="attribution">
-                    <div className="py-2">Attribution content here</div>
-                  </TabsContent>
-                  <TabsContent value="performance">
-                    <div className="py-2">Performance content here</div>
-                  </TabsContent>
-                  <TabsContent value="conversion">
-                    <div className="py-2">Conversion content here</div>
-                  </TabsContent>
-                </Tabs>
-              </CardContent>
-            </Card>
           </div>
           
           {/* Data-Driven Attribution Section */}
