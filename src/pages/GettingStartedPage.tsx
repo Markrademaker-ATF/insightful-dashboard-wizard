@@ -1,13 +1,15 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight, BarChart2, CheckCircle, Clock, FileBarChart, Settings, Zap, TrendingUp, LineChart, DollarSign, TargetIcon, Target } from "lucide-react";
 import { Link } from "react-router-dom";
+import { FlowingBackground } from "@/components/ui/FlowingBackground";
 
 const GettingStartedPage = () => {
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 relative">
+      <FlowingBackground className="opacity-20" />
+      
       {/* Hero section with value proposition */}
       <div className="bg-gradient-to-br from-blue-50 via-indigo-50/40 to-purple-50/30 rounded-2xl p-8 border border-indigo-100/50 shadow-lg">
         <div className="space-y-6 max-w-3xl mx-auto">
@@ -22,7 +24,7 @@ const GettingStartedPage = () => {
           </p>
         </div>
       </div>
-
+      
       {/* Business Impact Section */}
       <Card>
         <CardHeader>
