@@ -36,7 +36,7 @@ const ChannelDetailsPage = () => {
   const [activeTab, setActiveTab] = useState("overview");
   const [campaignData, setCampaignData] = useState<any | null>(null);
   const [journeyData, setJourneyData] = useState<any | null>(null);
-  const [mainTab, setMainTab] = useState("overview"); // New state for main tab navigation
+  const [mainTab, setMainTab] = useState("overview"); // For main tab navigation
 
   // Mock campaigns for the filter
   const campaigns = [
@@ -353,49 +353,7 @@ const ChannelDetailsPage = () => {
         </Tabs>
       </PageHeader>
 
-      {/* Campaign Overview Section - Key Metrics */}
-      <Card className="mb-6 overflow-hidden border-border/40 shadow-sm">
-        <div className="h-1 bg-gradient-to-r from-primary/80 to-primary/40"></div>
-        <CardHeader className="pb-3">
-          <CardTitle>Campaign Overview</CardTitle>
-          <CardDescription>Key performance metrics across all marketing campaigns</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <Skeleton className="h-28 w-full" />
-              <Skeleton className="h-28 w-full" />
-              <Skeleton className="h-28 w-full" />
-              <Skeleton className="h-28 w-full" />
-            </div>
-          ) : (
-            <KeyMetricsGrid
-              totalRevenue={totalRevenue}
-              totalCost={totalRevenue * 0.4}
-              totalRoas={2.5}
-              totalConversions={totalConversions}
-              revenueChange={5.2}
-              costChange={3.1}
-              roasChange={2.1}
-              conversionChange={4.3}
-              loading={loading}
-            />
-          )}
-        </CardContent>
-      </Card>
-
-      {/* ROAS vs Cost and Incremental Outcome Chart */}
-      <div className="mb-6">
-        <RoasComparisonChart 
-          channelData={generateChannelData("Q2").map(channel => ({
-            ...channel,
-            incremental: Math.round(channel.revenue - channel.cost)
-          }))} 
-          loading={loading} 
-        />
-      </div>
-      
-      {/* Main Tabs for Campaign Overview and Campaign Detailed */}
+      {/* Main Tabs for Campaign Overview and Campaign Detailed - Moved to top */}
       <Tabs 
         defaultValue="overview" 
         value={mainTab} 
@@ -410,43 +368,85 @@ const ChannelDetailsPage = () => {
             Campaign Detailed
           </TabsTrigger>
         </TabsList>
-      
-        {/* Campaign Performance Matrix - renamed from Channel Performance Matrix */}
-        <div className="mt-6">
-          <Card className="mb-6">
-            <CardHeader>
-              <CardTitle>Campaign Performance Matrix</CardTitle>
-              <CardDescription>
-                Detailed performance analysis of marketing campaigns
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              {/* Tab content for Performance Matrix */}
-              <Tabs 
-                defaultValue="attribution" 
-                className="w-full"
-              >
-                <TabsList className="w-full md:w-auto">
-                  <TabsTrigger value="attribution">Attribution</TabsTrigger>
-                  <TabsTrigger value="performance">Performance</TabsTrigger>
-                  <TabsTrigger value="conversion">Conversion</TabsTrigger>
-                </TabsList>
-                <TabsContent value="attribution">
-                  <div className="py-2">Attribution content here</div>
-                </TabsContent>
-                <TabsContent value="performance">
-                  <div className="py-2">Performance content here</div>
-                </TabsContent>
-                <TabsContent value="conversion">
-                  <div className="py-2">Conversion content here</div>
-                </TabsContent>
-              </Tabs>
-            </CardContent>
-          </Card>
-        </div>
-        
+
         {/* Campaign Overview Tab Content */}
         <TabsContent value="overview" className="space-y-8 mt-6">
+          {/* Campaign Overview Section - Key Metrics */}
+          <Card className="mb-6 overflow-hidden border-border/40 shadow-sm">
+            <div className="h-1 bg-gradient-to-r from-primary/80 to-primary/40"></div>
+            <CardHeader className="pb-3">
+              <CardTitle>Campaign Overview</CardTitle>
+              <CardDescription>Key performance metrics across all marketing campaigns</CardDescription>
+            </CardHeader>
+            <CardContent>
+              {loading ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  <Skeleton className="h-28 w-full" />
+                  <Skeleton className="h-28 w-full" />
+                  <Skeleton className="h-28 w-full" />
+                  <Skeleton className="h-28 w-full" />
+                </div>
+              ) : (
+                <KeyMetricsGrid
+                  totalRevenue={totalRevenue}
+                  totalCost={totalRevenue * 0.4}
+                  totalRoas={2.5}
+                  totalConversions={totalConversions}
+                  revenueChange={5.2}
+                  costChange={3.1}
+                  roasChange={2.1}
+                  conversionChange={4.3}
+                  loading={loading}
+                />
+              )}
+            </CardContent>
+          </Card>
+
+          {/* ROAS vs Cost and Incremental Outcome Chart */}
+          <div className="mb-6">
+            <RoasComparisonChart 
+              channelData={generateChannelData("Q2").map(channel => ({
+                ...channel,
+                incremental: Math.round(channel.revenue - channel.cost)
+              }))} 
+              loading={loading} 
+            />
+          </div>
+          
+          {/* Campaign Performance Matrix - Moved here under Campaign Overview */}
+          <div className="mt-6">
+            <Card className="mb-6">
+              <CardHeader>
+                <CardTitle>Campaign Performance Matrix</CardTitle>
+                <CardDescription>
+                  Detailed performance analysis of marketing campaigns
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {/* Tab content for Performance Matrix */}
+                <Tabs 
+                  defaultValue="attribution" 
+                  className="w-full"
+                >
+                  <TabsList className="w-full md:w-auto">
+                    <TabsTrigger value="attribution">Attribution</TabsTrigger>
+                    <TabsTrigger value="performance">Performance</TabsTrigger>
+                    <TabsTrigger value="conversion">Conversion</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="attribution">
+                    <div className="py-2">Attribution content here</div>
+                  </TabsContent>
+                  <TabsContent value="performance">
+                    <div className="py-2">Performance content here</div>
+                  </TabsContent>
+                  <TabsContent value="conversion">
+                    <div className="py-2">Conversion content here</div>
+                  </TabsContent>
+                </Tabs>
+              </CardContent>
+            </Card>
+          </div>
+          
           {/* Data-Driven Attribution Section */}
           <Card className="mb-6 overflow-hidden shadow-sm border-border/40">
             <div className="h-1 bg-gradient-to-r from-[#4361ee] to-[#7209b7]"></div>
