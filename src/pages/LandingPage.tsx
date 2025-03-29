@@ -1,11 +1,50 @@
-import React, { useEffect, useRef } from "react";
+
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { LogIn, ExternalLink, ChevronRight, BarChart3, Users, Zap } from "lucide-react";
+import { 
+  LogIn, 
+  ExternalLink, 
+  ChevronRight, 
+  BarChart3, 
+  Users, 
+  Zap, 
+  LineChart, 
+  Lightbulb, 
+  TrendingUp, 
+  Globe, 
+  Award, 
+  Clock, 
+  ScrollIcon
+} from "lucide-react";
 import { Helmet } from "react-helmet";
 
 const LandingPage = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const [isVisible, setIsVisible] = useState({
+    clientSection: false,
+    featuresSection: false,
+    testimonialsSection: false
+  });
+  
+  // Handle scroll position
+  useEffect(() => {
+    const handleScroll = () => {
+      const position = window.scrollY;
+      setScrollPosition(position);
+      
+      // Check visibility of sections based on scroll position
+      setIsVisible({
+        clientSection: position > 500,
+        featuresSection: position > 1100,
+        testimonialsSection: position > 1800
+      });
+    };
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
   
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -171,7 +210,15 @@ const LandingPage = () => {
             </Button>
           </div>
 
-          {/* 3D Visual Elements - Updated with the requested marketing analytics solutions */}
+          {/* Scroll indicator */}
+          <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <div className="flex flex-col items-center">
+              <p className="mb-2 text-sm opacity-80">Scroll to discover</p>
+              <ScrollIcon className="h-6 w-6" />
+            </div>
+          </div>
+
+          {/* 3D Visual Elements */}
           <div className="mt-20 relative max-w-4xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Marketing Mix Modelling */}
@@ -265,6 +312,272 @@ const LandingPage = () => {
             </div>
           </div>
         </div>
+
+        {/* Client Logos Section - NEW SECTION */}
+        <div className={`container mx-auto px-6 py-16 md:py-24 transition-all duration-1000 ${isVisible.clientSection ? "opacity-100" : "opacity-0 translate-y-10"}`}>
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">Trusted by Leading Brands</h2>
+            <p className="text-lg text-white/80 max-w-2xl mx-auto">
+              Join hundreds of forward-thinking companies leveraging our platform for data-driven marketing decisions
+            </p>
+          </div>
+
+          {/* Client logo grid with dynamic content */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+              <div key={i} className="flex items-center justify-center p-6 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/15 transition-all duration-300 group">
+                <div className="h-12 w-32 bg-gradient-to-r from-white/40 to-white/20 rounded-md group-hover:from-white/50 group-hover:to-white/30 flex items-center justify-center">
+                  <span className="font-bold text-white/70 group-hover:text-white transition-colors">BRAND {i}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Statistics Counter - Animated on scroll */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-20 max-w-4xl mx-auto">
+            <div className="text-center">
+              <div className="text-4xl font-bold text-pink-300 mb-2">500+</div>
+              <p className="text-white/80">Active Customers</p>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-blue-300 mb-2">$1.2B+</div>
+              <p className="text-white/80">Media Spend Optimized</p>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-purple-300 mb-2">15+</div>
+              <p className="text-white/80">Countries Served</p>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-indigo-300 mb-2">24%</div>
+              <p className="text-white/80">Avg. ROI Improvement</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Features Section - NEW SECTION with animations */}
+        <div className={`container mx-auto px-6 py-16 md:py-24 transition-all duration-1000 ${isVisible.featuresSection ? "opacity-100" : "opacity-0 translate-y-10"}`}>
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4">Powerful Platform Features</h2>
+            <p className="text-lg text-white/80 max-w-2xl mx-auto">
+              Our comprehensive suite of tools provides everything you need to transform your marketing strategy
+            </p>
+          </div>
+
+          {/* Feature blocks with images */}
+          <div className="space-y-24">
+            {/* Feature 1 */}
+            <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16">
+              <div className="md:w-1/2 order-2 md:order-1">
+                <h3 className="text-2xl font-bold mb-4">Real-time Analytics Dashboard</h3>
+                <p className="text-lg text-white/80 mb-6">
+                  Monitor your marketing performance with customizable dashboards that provide real-time insights into your campaigns, channels, and audience behavior.
+                </p>
+                <ul className="space-y-3">
+                  <li className="flex items-center">
+                    <div className="p-1 rounded-full bg-green-500/30 mr-3">
+                      <TrendingUp className="h-4 w-4 text-green-400" />
+                    </div>
+                    <span className="text-white/90">Live performance tracking across channels</span>
+                  </li>
+                  <li className="flex items-center">
+                    <div className="p-1 rounded-full bg-green-500/30 mr-3">
+                      <TrendingUp className="h-4 w-4 text-green-400" />
+                    </div>
+                    <span className="text-white/90">Customizable KPI visualization</span>
+                  </li>
+                  <li className="flex items-center">
+                    <div className="p-1 rounded-full bg-green-500/30 mr-3">
+                      <TrendingUp className="h-4 w-4 text-green-400" />
+                    </div>
+                    <span className="text-white/90">Automated performance alerts</span>
+                  </li>
+                </ul>
+              </div>
+              <div className="md:w-1/2 order-1 md:order-2 relative">
+                <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/10">
+                  <div className="aspect-video bg-gradient-to-br from-indigo-900/70 to-purple-900/70 backdrop-blur-lg p-8 flex items-center justify-center">
+                    <div className="w-full h-full bg-black/40 rounded-lg flex items-center justify-center">
+                      <LineChart className="w-16 h-16 text-white/40" />
+                    </div>
+                  </div>
+                </div>
+                <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-pink-500/30 rounded-full blur-3xl"></div>
+              </div>
+            </div>
+
+            {/* Feature 2 */}
+            <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16">
+              <div className="md:w-1/2 relative">
+                <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/10">
+                  <div className="aspect-video bg-gradient-to-br from-blue-900/70 to-indigo-900/70 backdrop-blur-lg p-8 flex items-center justify-center">
+                    <div className="w-full h-full bg-black/40 rounded-lg flex items-center justify-center">
+                      <Globe className="w-16 h-16 text-white/40" />
+                    </div>
+                  </div>
+                </div>
+                <div className="absolute -top-6 -left-6 w-32 h-32 bg-blue-500/30 rounded-full blur-3xl"></div>
+              </div>
+              <div className="md:w-1/2">
+                <h3 className="text-2xl font-bold mb-4">Global Marketing Intelligence</h3>
+                <p className="text-lg text-white/80 mb-6">
+                  Gain insights from markets around the world with our comprehensive global data integration and analysis tools.
+                </p>
+                <ul className="space-y-3">
+                  <li className="flex items-center">
+                    <div className="p-1 rounded-full bg-blue-500/30 mr-3">
+                      <Award className="h-4 w-4 text-blue-400" />
+                    </div>
+                    <span className="text-white/90">Multi-market performance comparison</span>
+                  </li>
+                  <li className="flex items-center">
+                    <div className="p-1 rounded-full bg-blue-500/30 mr-3">
+                      <Award className="h-4 w-4 text-blue-400" />
+                    </div>
+                    <span className="text-white/90">Regional trend analysis</span>
+                  </li>
+                  <li className="flex items-center">
+                    <div className="p-1 rounded-full bg-blue-500/30 mr-3">
+                      <Award className="h-4 w-4 text-blue-400" />
+                    </div>
+                    <span className="text-white/90">Cross-market opportunities</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            {/* Feature 3 */}
+            <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16">
+              <div className="md:w-1/2 order-2 md:order-1">
+                <h3 className="text-2xl font-bold mb-4">AI-Powered Recommendations</h3>
+                <p className="text-lg text-white/80 mb-6">
+                  Let our artificial intelligence analyze your data and provide actionable recommendations to optimize your marketing strategy.
+                </p>
+                <ul className="space-y-3">
+                  <li className="flex items-center">
+                    <div className="p-1 rounded-full bg-purple-500/30 mr-3">
+                      <Lightbulb className="h-4 w-4 text-purple-400" />
+                    </div>
+                    <span className="text-white/90">Channel optimization suggestions</span>
+                  </li>
+                  <li className="flex items-center">
+                    <div className="p-1 rounded-full bg-purple-500/30 mr-3">
+                      <Lightbulb className="h-4 w-4 text-purple-400" />
+                    </div>
+                    <span className="text-white/90">Budget allocation recommendations</span>
+                  </li>
+                  <li className="flex items-center">
+                    <div className="p-1 rounded-full bg-purple-500/30 mr-3">
+                      <Lightbulb className="h-4 w-4 text-purple-400" />
+                    </div>
+                    <span className="text-white/90">Performance improvement insights</span>
+                  </li>
+                </ul>
+              </div>
+              <div className="md:w-1/2 order-1 md:order-2 relative">
+                <div className="relative rounded-2xl overflow-hidden shadow-2xl border border-white/10">
+                  <div className="aspect-video bg-gradient-to-br from-purple-900/70 to-pink-900/70 backdrop-blur-lg p-8 flex items-center justify-center">
+                    <div className="w-full h-full bg-black/40 rounded-lg flex items-center justify-center">
+                      <Lightbulb className="w-16 h-16 text-white/40" />
+                    </div>
+                  </div>
+                </div>
+                <div className="absolute -bottom-6 -left-6 w-32 h-32 bg-purple-500/30 rounded-full blur-3xl"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Testimonials Section - NEW SECTION */}
+        <div className={`container mx-auto px-6 py-16 md:py-24 transition-all duration-1000 ${isVisible.testimonialsSection ? "opacity-100" : "opacity-0 translate-y-10"}`}>
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4">What Our Clients Say</h2>
+            <p className="text-lg text-white/80 max-w-2xl mx-auto">
+              Discover how our platform has transformed marketing strategies for businesses around the world
+            </p>
+          </div>
+
+          {/* Testimonial cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {[
+              {
+                quote: "The insights we've gained have completely transformed our marketing approach. We've seen a 32% increase in ROAS since implementing Artefact's recommendations.",
+                author: "Sarah Johnson",
+                title: "CMO, Global Retail Brand",
+                color: "blue"
+              },
+              {
+                quote: "Artefact's platform gives us clarity on which channels are truly driving results. We've reallocated our budget based on their analysis and seen immediate improvements.",
+                author: "Michael Chen",
+                title: "Head of Digital, Tech Company",
+                color: "purple"
+              },
+              {
+                quote: "The multi-touch attribution model has given us visibility into the customer journey we never had before. It's changed how we think about our entire marketing strategy.",
+                author: "Emma Rodriguez",
+                title: "Marketing Director, E-commerce",
+                color: "pink"
+              }
+            ].map((testimonial, index) => (
+              <div key={index} className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-8 shadow-lg relative overflow-hidden">
+                <div className={`absolute -top-12 -right-12 w-32 h-32 bg-${testimonial.color}-500/20 rounded-full blur-3xl`}></div>
+                <div className={`absolute -bottom-12 -left-12 w-32 h-32 bg-${testimonial.color}-500/10 rounded-full blur-3xl`}></div>
+                <div className="relative z-10">
+                  <div className="text-3xl text-white/20 mb-4">"</div>
+                  <p className="text-white/90 mb-8 italic">{testimonial.quote}</p>
+                  <div className="flex items-center">
+                    <div className={`w-10 h-10 rounded-full bg-${testimonial.color}-500/30 flex items-center justify-center mr-3`}>
+                      <Users className="h-5 w-5 text-white/70" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-white">{testimonial.author}</p>
+                      <p className="text-white/70 text-sm">{testimonial.title}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* CTA Section - NEW SECTION */}
+        <div className="container mx-auto px-6 py-16 md:py-32">
+          <div className="max-w-4xl mx-auto bg-gradient-to-br from-purple-900/50 to-pink-900/50 backdrop-blur-lg rounded-3xl p-8 md:p-16 border border-white/10 shadow-2xl relative overflow-hidden">
+            <div className="absolute -top-24 -right-24 w-64 h-64 bg-purple-500/30 rounded-full blur-3xl"></div>
+            <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-pink-500/30 rounded-full blur-3xl"></div>
+            
+            <div className="relative z-10 text-center">
+              <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to Transform Your Marketing Strategy?</h2>
+              <p className="text-xl text-white/80 mb-10 max-w-2xl mx-auto">
+                Join industry leaders using our platform to drive better marketing decisions and achieve exceptional results.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row justify-center gap-6">
+                <Button 
+                  asChild
+                  variant="default" 
+                  className="bg-gradient-to-r from-pink-500 to-purple-500 hover:from-pink-600 hover:to-purple-600 rounded-full px-8 py-6 text-white"
+                >
+                  <Link to="/login">
+                    Start Today <ChevronRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
+                <Button 
+                  asChild
+                  variant="outline" 
+                  className="bg-transparent hover:bg-white/10 rounded-full px-8 py-6 text-white border-white"
+                >
+                  <a href="#" rel="noopener noreferrer">
+                    Schedule a Demo <Clock className="ml-2 h-5 w-5" />
+                  </a>
+                </Button>
+              </div>
+
+              <p className="mt-6 text-sm text-white/60">
+                No credit card required. Free trial available for qualified businesses.
+              </p>
+            </div>
+          </div>
+        </div>
       </main>
       
       <footer className="bg-transparent text-white py-6 px-6 relative z-10">
@@ -275,7 +588,7 @@ const LandingPage = () => {
               <p className="text-xs">AI IS ABOUT PEOPLE</p>
             </div>
             <div className="text-sm opacity-80">
-              © 2023 Artefact. All rights reserved.
+              © {new Date().getFullYear()} Artefact. All rights reserved.
             </div>
             <div className="flex gap-4">
               <Button variant="ghost" size="sm" className="text-white hover:text-pink-300 hover:bg-transparent p-0">About</Button>
