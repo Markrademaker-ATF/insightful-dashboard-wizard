@@ -708,14 +708,14 @@ const ChannelDetailsPage = () => {
                 />
               </div>
             )}
+            
+            {/* Campaign Timeline - Only shown in Campaign Detailed tab */}
+            <div className="mt-6">
+              <CampaignTimeline loading={loading} />
+            </div>
           </div>
         </TabsContent>
       </Tabs>
-
-      {/* Campaign Timeline - Added at the bottom of the page */}
-      <div className="mt-8">
-        <CampaignTimeline loading={loading} />
-      </div>
     </div>
   );
 };
