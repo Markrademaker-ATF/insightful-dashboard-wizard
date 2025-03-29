@@ -71,7 +71,7 @@ export const CampaignTimeline: React.FC<CampaignTimelineProps> = ({
   };
   
   // Campaign data for timeline - representing the same campaigns as in filter
-  const defaultCampaigns = [
+  const defaultCampaigns: Campaign[] = [
     {
       id: "summer-2023",
       name: "Summer 2023 Campaign",
@@ -305,7 +305,7 @@ export const CampaignTimeline: React.FC<CampaignTimelineProps> = ({
   });
   
   // Get icon based on event type
-  const getEventIcon = (type: string) => {
+  const getEventIcon = (type: "launch" | "milestone" | "update" | "report") => {
     switch (type) {
       case "launch":
         return <Flag className="h-4 w-4" />;
@@ -594,3 +594,4 @@ export const CampaignTimeline: React.FC<CampaignTimelineProps> = ({
     </Card>
   );
 };
+
