@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { BarChart, PieChart, LineChart as LineChartIcon, Filter, ArrowDown, ArrowUp, Table as TableIcon, Globe } from "lucide-react";
+import { BarChart, PieChart, LineChart as LineChartIcon, Filter, ArrowDown, ArrowUp, Table as TableIcon, Globe, Info } from "lucide-react";
 import { ChannelPerformanceTable } from "@/components/channels/ChannelPerformanceTable";
 import { ChannelBreakdownChart } from "@/components/channels/ChannelBreakdownChart";
 import { ChannelTrendsChart } from "@/components/channels/ChannelTrendsChart";
@@ -114,7 +114,27 @@ export default function ChannelsPage() {
               </div>
             </CardHeader>
             <CardContent>
-              <RoasComparisonChart channelData={channelData} loading={loading} />
+              <div className="mb-6 p-4 bg-muted/30 rounded-lg">
+                <div className="flex items-start gap-2">
+                  <Info className="h-5 w-5 text-primary mt-0.5" />
+                  <div>
+                    <h3 className="text-sm font-medium mb-1">About Channel Analysis</h3>
+                    <p className="text-sm text-muted-foreground">
+                      This dashboard provides a comprehensive view of your marketing channel performance. 
+                      ROAS (Return on Ad Spend) is the primary metric used to evaluate efficiency across channels.
+                      Use the tabs below to explore different visualizations and insights about your marketing mix.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mb-6">
+                <h3 className="text-lg font-medium mb-3">ROAS by Channel</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Compare the return on ad spend across your marketing channels. Higher values indicate more efficient spending.
+                </p>
+                <RoasComparisonChart channelData={channelData} loading={loading} />
+              </div>
               
               <Tabs value={activeTab} onValueChange={setActiveTab}>
                 <TabsList className="w-full md:w-auto">
@@ -131,6 +151,30 @@ export default function ChannelsPage() {
                     <BarChart className="h-4 w-4" /> Comparison
                   </TabsTrigger>
                 </TabsList>
+                
+                <div className="mt-2 mb-4">
+                  {activeTab === "performance" && (
+                    <p className="text-sm text-muted-foreground">
+                      View detailed performance metrics for each channel in a tabular format.
+                    </p>
+                  )}
+                  {activeTab === "breakdown" && (
+                    <p className="text-sm text-muted-foreground">
+                      Visualize the contribution of each channel to your overall marketing performance.
+                    </p>
+                  )}
+                  {activeTab === "trends" && (
+                    <p className="text-sm text-muted-foreground">
+                      Track how channel performance has evolved over time to identify patterns and opportunities.
+                    </p>
+                  )}
+                  {activeTab === "comparison" && (
+                    <p className="text-sm text-muted-foreground">
+                      Compare multiple metrics across channels to understand relative strengths and weaknesses.
+                    </p>
+                  )}
+                </div>
+                
                 <TabsContent value="performance" className="border-none p-0 pt-4">
                   <ChannelPerformanceTable data={channelData} loading={loading} />
                 </TabsContent>
@@ -165,6 +209,20 @@ export default function ChannelsPage() {
               </div>
             </CardHeader>
             <CardContent>
+              <div className="mb-6 p-4 bg-muted/30 rounded-lg">
+                <div className="flex items-start gap-2">
+                  <Info className="h-5 w-5 text-primary mt-0.5" />
+                  <div>
+                    <h3 className="text-sm font-medium mb-1">About Channel Details</h3>
+                    <p className="text-sm text-muted-foreground">
+                      This section provides in-depth analysis for individual marketing channels. 
+                      Select a specific channel from the options below to view its detailed metrics, performance trends, 
+                      and saturation analysis. Use these insights to optimize your strategy for each channel.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
               {/* Channel Filter Section */}
               <div className="mb-6 p-4 bg-muted/30 rounded-lg">
                 <h3 className="text-sm font-medium mb-3">Channel Filter</h3>
@@ -199,8 +257,22 @@ export default function ChannelsPage() {
           </Card>
         </TabsContent>
 
-        {/* Geographic Analysis Tab Content - New */}
+        {/* Geographic Analysis Tab Content */}
         <TabsContent value="geography" className="space-y-6 mt-6">
+          <div className="mb-6 p-4 bg-muted/30 rounded-lg">
+            <div className="flex items-start gap-2">
+              <Info className="h-5 w-5 text-primary mt-0.5" />
+              <div>
+                <h3 className="text-sm font-medium mb-1">About Geographic Analysis</h3>
+                <p className="text-sm text-muted-foreground">
+                  This heatmap visualizes marketing performance across European regions, showing how ROAS varies geographically.
+                  Higher ROAS values (shown in deeper green) indicate stronger performance in those regions.
+                  Click on any region to view a detailed breakdown of channel-specific performance for that area.
+                  {selectedChannel && selectedChannel !== "all" && " The data is currently filtered to show only the selected channel's performance."}
+                </p>
+              </div>
+            </div>
+          </div>
           <EuropeRoasHeatmap loading={loading} selectedChannel={selectedChannel} />
         </TabsContent>
       </Tabs>

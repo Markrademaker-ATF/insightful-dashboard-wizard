@@ -280,6 +280,19 @@ export function EuropeRoasHeatmap({ loading = false, selectedChannel }: EuropeRo
                   </div>
                 </div>
 
+                <div className="p-4 bg-muted/30 rounded-lg mb-6">
+                  <div className="flex items-start gap-2">
+                    <Info className="h-4 w-4 text-primary mt-0.5" />
+                    <div>
+                      <p className="text-sm text-muted-foreground">
+                        The table below shows ROAS for each marketing channel in {selectedRegion.region}. 
+                        Higher values indicate better performance. Use this data to optimize your 
+                        channel mix and budget allocation for this region.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="space-y-4">
                   <div className="text-sm font-medium">ROAS by Channel</div>
                   <Table>
