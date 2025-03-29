@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useSearchParams, useLocation } from "react-router-dom";
 import { PageHeader } from "@/components/layout/PageHeader";
@@ -20,6 +21,7 @@ import { Cpu, Database, BarChart4, Info } from "lucide-react";
 import { ChannelJourneyComparison } from "@/components/campaigns/ChannelJourneyComparison";
 import { KeyMetricsGrid } from "@/components/dashboard/KeyMetricsGrid";
 import { RoasComparisonChart } from "@/components/channels/RoasComparisonChart";
+import { CampaignTimeline } from "@/components/campaigns/CampaignTimeline";
 
 const ChannelDetailsPage = () => {
   const [searchParams] = useSearchParams();
@@ -709,6 +711,11 @@ const ChannelDetailsPage = () => {
           </div>
         </TabsContent>
       </Tabs>
+
+      {/* Campaign Timeline - Added at the bottom of the page */}
+      <div className="mt-8">
+        <CampaignTimeline loading={loading} />
+      </div>
     </div>
   );
 };
