@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,6 +15,7 @@ import { PerformanceChart } from "@/components/dashboard/PerformanceChart";
 import { CorrelationMatrix } from "@/components/channels/CorrelationMatrix";
 import { MetricDistributionChart } from "@/components/channels/MetricDistributionChart";
 import { MetricScatterPlot } from "@/components/channels/MetricScatterPlot";
+import { FilterExportControls } from "@/components/channels/FilterExportControls";
 
 const MetricsPage = () => {
   const [loading, setLoading] = useState(true);
@@ -65,15 +65,17 @@ const MetricsPage = () => {
         description="Discover hidden patterns, correlations, and insights across your marketing channels and metrics"
       >
         <div className="flex flex-wrap gap-2">
-          <Button variant="outline" size="sm" className="gap-1 hover:bg-primary/10 transition-colors">
-            <Download className="h-4 w-4" />
-            Export
-          </Button>
+          <FilterExportControls 
+            filterOptions={{ metrics: true, channels: false }}
+            data={channelData}
+            exportFileName="metrics-analysis"
+            contentId="metrics-content"
+          />
         </div>
       </PageHeader>
 
       {/* Key Metrics Overview - Enhanced with better styling */}
-      <div className="mb-8 w-full bg-gradient-to-br from-primary/5 to-transparent p-6 rounded-lg border border-primary/10">
+      <div id="metrics-overview" className="mb-8 w-full bg-gradient-to-br from-primary/5 to-transparent p-6 rounded-lg border border-primary/10">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-xl font-semibold flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-primary animate-pulse" />
@@ -87,7 +89,7 @@ const MetricsPage = () => {
       </div>
 
       {/* Exploratory Data Analysis Section - Enhanced with eda-card class */}
-      <div className="eda-card mb-8 p-6">
+      <div id="metrics-content" className="eda-card mb-8 p-6">
         <div className="flex justify-between items-center mb-6">
           <div className="flex items-center gap-2">
             <FileBarChart className="h-5 w-5 text-primary" />
@@ -160,7 +162,7 @@ const MetricsPage = () => {
       </div>
 
       {/* Comparison controls - Enhanced with animated entries */}
-      <div className="eda-card mb-8 p-6">
+      <div id="metrics-comparison" className="eda-card mb-8 p-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <div className="flex items-center gap-2 animate-entry" style={{ '--entry-delay': '0' } as React.CSSProperties}>
             <GitCompare className="h-5 w-5 text-primary" />
@@ -277,7 +279,7 @@ const MetricsPage = () => {
       </div>
 
       {/* Correlation Analysis - Enhanced with improved card styling */}
-      <div className="eda-card p-6">
+      <div id="metrics-insights" className="eda-card p-6">
         <div className="flex justify-between items-center mb-6">
           <div>
             <h3 className="text-lg font-medium flex items-center gap-2">

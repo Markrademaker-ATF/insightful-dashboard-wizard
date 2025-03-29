@@ -3,6 +3,7 @@ import React from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { ChatInterface } from "@/components/chat/ChatInterface";
 import { Bot, BarChart3, Zap, TrendingUp, Lightbulb } from "lucide-react";
+import { FilterExportControls } from "@/components/channels/FilterExportControls";
 
 const ChatAIPage = () => {
   return (
@@ -11,7 +12,11 @@ const ChatAIPage = () => {
         title="Analytics AI Assistant"
         description="Unlock deeper insights and get intelligent recommendations from your marketing data."
       >
-        <Bot className="h-6 w-6 text-primary" />
+        <FilterExportControls
+          filterOptions={{ channels: false, metrics: false }}
+          exportFileName="ai-conversation"
+          contentId="chat-content"
+        />
       </PageHeader>
       
       <div className="dashboard-card relative overflow-hidden mb-8 bg-gradient-to-br from-purple-50 to-blue-50">
@@ -41,7 +46,7 @@ const ChatAIPage = () => {
         </div>
       </div>
 
-      <div className="dashboard-card relative overflow-hidden" style={{minHeight: "500px"}}>
+      <div id="chat-content" className="dashboard-card relative overflow-hidden" style={{minHeight: "500px"}}>
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/80 to-primary/40"></div>
         <ChatInterface />
       </div>
@@ -72,4 +77,3 @@ const FeatureCard = ({
 };
 
 export default ChatAIPage;
-

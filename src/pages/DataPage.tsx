@@ -9,6 +9,7 @@ import { SummaryMetricsCards } from "@/components/data/SummaryMetricsCards";
 import { DateRangeInfo } from "@/components/data/DateRangeInfo";
 import { MetricsSelector } from "@/components/data/MetricsSelector";
 import { DataVisualization } from "@/components/data/DataVisualization";
+import { FilterExportControls } from "@/components/channels/FilterExportControls";
 
 const DataPage = () => {
   const [timeframe, setTimeframe] = useState("30d");
@@ -72,14 +73,11 @@ const DataPage = () => {
         description="Explore and analyze your raw marketing data across all channels and timeframes. Use the tools below to customize your view and identify performance trends."
       >
         <div className="flex flex-wrap gap-2">
-          <Button size="sm" variant="outline" className="gap-1">
-            <Download className="h-4 w-4" />
-            Export
-          </Button>
-          <Button size="sm" variant="outline" className="gap-1">
-            <Filter className="h-4 w-4" />
-            Filter
-          </Button>
+          <FilterExportControls 
+            data={aggregatedData}
+            exportFileName="data-overview"
+            contentId="data-visualization-content"
+          />
         </div>
       </PageHeader>
 
@@ -91,10 +89,12 @@ const DataPage = () => {
       />
 
       {/* Summary Metrics Cards */}
-      <SummaryMetricsCards 
-        summaryMetrics={summaryMetrics} 
-        loading={loading} 
-      />
+      <div id="summary-metrics-content">
+        <SummaryMetricsCards 
+          summaryMetrics={summaryMetrics} 
+          loading={loading} 
+        />
+      </div>
 
       <div className="dashboard-card">
         <div className="mb-6">
@@ -129,17 +129,19 @@ const DataPage = () => {
         />
 
         {/* Data Visualization (Chart or Table) */}
-        <DataVisualization 
-          loading={loading}
-          view={view}
-          selectedMetrics={selectedMetrics}
-          aggregatedData={aggregatedData}
-          showAllMetrics={showAllMetrics}
-          availableMetrics={availableMetrics}
-          getMetricDisplayName={getMetricDisplayName}
-          formatValue={formatValue}
-          getChartLines={getChartLines}
-        />
+        <div id="data-visualization-content">
+          <DataVisualization 
+            loading={loading}
+            view={view}
+            selectedMetrics={selectedMetrics}
+            aggregatedData={aggregatedData}
+            showAllMetrics={showAllMetrics}
+            availableMetrics={availableMetrics}
+            getMetricDisplayName={getMetricDisplayName}
+            formatValue={formatValue}
+            getChartLines={getChartLines}
+          />
+        </div>
       </div>
     </div>
   );

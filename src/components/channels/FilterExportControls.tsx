@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Download, Filter, ArrowDownToLine, FileDown, SlidersHorizontal, Check } from "lucide-react";
@@ -5,7 +6,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -14,6 +15,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
+import { exportAsImage, exportAsCSV, exportAsPDF } from "@/utils/exportUtils";
 
 type FilterExportControlsProps = {
   onFilterChange?: (filters: {channels?: string[], metrics?: string[]}) => void;
@@ -23,6 +25,9 @@ type FilterExportControlsProps = {
     date?: boolean;
   };
   className?: string;
+  data?: any[];
+  exportFileName?: string;
+  contentId?: string;
 };
 
 export const FilterExportControls = ({ 
@@ -32,7 +37,10 @@ export const FilterExportControls = ({
     metrics: true, 
     date: false 
   },
-  className 
+  className,
+  data = [],
+  exportFileName = "analytics-export",
+  contentId = "content-to-export"
 }: FilterExportControlsProps) => {
   const { toast } = useToast();
   const [channelFilters, setChannelFilters] = useState<string[]>([
@@ -98,46 +106,79 @@ export const FilterExportControls = ({
     });
   };
 
-  const handleExportCSV = () => {
+  const handleExportCSV = async () => {
     toast({
       title: "Export Started",
       description: "Your data is being prepared for download",
     });
-    // In a real app, this would generate and download a CSV file
-    setTimeout(() => {
+    
+    const success = await exportAsCSV(data.length > 0 ? data : generateSampleData(), exportFileName);
+    
+    if (success) {
       toast({
         title: "Export Complete",
-        description: "Your data has been exported successfully",
+        description: "Your data has been exported as CSV",
       });
-    }, 1500);
+    } else {
+      toast({
+        title: "Export Failed",
+        description: "There was an error exporting your data",
+        variant: "destructive"
+      });
+    }
   };
 
-  const handleExportPDF = () => {
+  const handleExportPDF = async () => {
     toast({
       title: "PDF Export Started",
       description: "Your chart is being prepared as PDF",
     });
-    // In a real app, this would generate and download a PDF file
-    setTimeout(() => {
+    
+    const success = await exportAsPDF(contentId, exportFileName);
+    
+    if (success) {
       toast({
         title: "Export Complete",
         description: "Your chart has been exported as PDF",
       });
-    }, 1500);
+    } else {
+      toast({
+        title: "Export Failed",
+        description: "There was an error exporting your chart",
+        variant: "destructive"
+      });
+    }
   };
 
-  const handleExportImage = () => {
+  const handleExportImage = async () => {
     toast({
       title: "Image Export Started",
       description: "Your chart is being prepared as PNG image",
     });
-    // In a real app, this would generate and download a PNG file
-    setTimeout(() => {
+    
+    const success = await exportAsImage(contentId, exportFileName);
+    
+    if (success) {
       toast({
         title: "Export Complete",
         description: "Your chart has been exported as PNG",
       });
-    }, 1500);
+    } else {
+      toast({
+        title: "Export Failed",
+        description: "There was an error exporting your chart",
+        variant: "destructive"
+      });
+    }
+  };
+
+  // Generate sample data if no data is provided
+  const generateSampleData = () => {
+    return [
+      { date: "2023-01-01", revenue: 1000, cost: 500, roas: 2.0, clicks: 1200 },
+      { date: "2023-01-02", revenue: 1200, cost: 600, roas: 2.0, clicks: 1500 },
+      { date: "2023-01-03", revenue: 900, cost: 400, roas: 2.25, clicks: 1100 },
+    ];
   };
 
   return (

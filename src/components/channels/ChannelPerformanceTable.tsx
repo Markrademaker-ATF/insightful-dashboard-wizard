@@ -110,9 +110,12 @@ export function ChannelPerformanceTable({ data, loading }: ChannelPerformanceTab
         <FilterExportControls 
           filterOptions={{ channels: true, metrics: true }} 
           onFilterChange={handleFilterChange}
+          data={filteredData}
+          exportFileName="channel-performance"
+          contentId="channel-table"
         />
       </div>
-      <div className="w-full overflow-auto">
+      <div id="channel-table" className="w-full overflow-auto">
         <Table>
           <TableHeader>
             <TableRow>
