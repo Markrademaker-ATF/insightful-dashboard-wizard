@@ -182,9 +182,6 @@ const LandingPage = () => {
                 <div className="relative z-10">
                   <h3 className="text-xl font-bold mb-2">Marketing Mix Modelling</h3>
                   <p className="text-white/80">Optimize your marketing budget allocation with advanced statistical analysis</p>
-                  <Link to="/login?redirectTo=/channels" className="inline-flex items-center mt-4 text-pink-300 hover:text-pink-100">
-                    Channel Analysis <ChevronRight className="h-4 w-4 ml-1" />
-                  </Link>
                 </div>
               </div>
 
@@ -195,9 +192,6 @@ const LandingPage = () => {
                 <div className="relative z-10">
                   <h3 className="text-xl font-bold mb-2">Multi-Touch Attribution</h3>
                   <p className="text-white/80">Understand the customer journey by analyzing each touchpoint's contribution</p>
-                  <Link to="/login?redirectTo=/campaign" className="inline-flex items-center mt-4 text-pink-300 hover:text-pink-100">
-                    Campaign Analysis <ChevronRight className="h-4 w-4 ml-1" />
-                  </Link>
                 </div>
               </div>
 
@@ -208,9 +202,6 @@ const LandingPage = () => {
                 <div className="relative z-10">
                   <h3 className="text-xl font-bold mb-2">Incrementality Testing</h3>
                   <p className="text-white/80">Measure the true impact of your marketing efforts through controlled experiments</p>
-                  <Link to="/login?redirectTo=/ab-testing" className="inline-flex items-center mt-4 text-pink-300 hover:text-pink-100">
-                    A/B Testing <ChevronRight className="h-4 w-4 ml-1" />
-                  </Link>
                 </div>
               </div>
             </div>
@@ -243,16 +234,6 @@ const LandingPage = () => {
                 <p className="mb-6 text-white/80 flex-grow">
                   Optimize your marketing budget allocation with advanced statistical analysis to determine the impact of different marketing channels on your business outcomes.
                 </p>
-                <Button 
-                  asChild
-                  variant="outline" 
-                  className="mt-4 bg-blue-500/20 border border-blue-400/30 hover:bg-blue-500/40 transition-colors text-white w-full justify-between"
-                >
-                  <Link to="/login?redirectTo=/channels">
-                    <span>Channel Analysis</span>
-                    <ChevronRight className="h-4 w-4" />
-                  </Link>
-                </Button>
               </div>
             </div>
 
@@ -267,16 +248,6 @@ const LandingPage = () => {
                 <p className="mb-6 text-white/80 flex-grow">
                   Understand the customer journey with precision by analyzing each touchpoint's contribution to conversion, helping you allocate budget to the most effective channels.
                 </p>
-                <Button 
-                  asChild
-                  variant="outline" 
-                  className="mt-4 bg-purple-500/20 border border-purple-400/30 hover:bg-purple-500/40 transition-colors text-white w-full justify-between"
-                >
-                  <Link to="/login?redirectTo=/campaign">
-                    <span>Campaign Analysis</span>
-                    <ChevronRight className="h-4 w-4" />
-                  </Link>
-                </Button>
               </div>
             </div>
 
@@ -291,16 +262,6 @@ const LandingPage = () => {
                 <p className="mb-6 text-white/80 flex-grow">
                   Measure the true impact of your marketing efforts by conducting controlled experiments to determine how much value each channel adds compared to no marketing activity.
                 </p>
-                <Button 
-                  asChild
-                  variant="outline" 
-                  className="mt-4 bg-pink-500/20 border border-pink-400/30 hover:bg-pink-500/40 transition-colors text-white w-full justify-between"
-                >
-                  <Link to="/login?redirectTo=/ab-testing">
-                    <span>A/B Testing</span>
-                    <ChevronRight className="h-4 w-4" />
-                  </Link>
-                </Button>
               </div>
             </div>
           </div>
