@@ -260,23 +260,40 @@ export default function ChannelsPage() {
 
         {/* Geographic Analysis Tab Content */}
         <TabsContent value="geography" className="space-y-6 mt-6">
-          <div className="mb-6 p-4 bg-muted/30 rounded-lg">
-            <div className="flex items-start gap-2">
-              <Info className="h-5 w-5 text-primary mt-0.5" />
-              <div>
-                <h3 className="text-sm font-medium mb-1 flex items-center gap-2">
-                  <Globe className="h-4 w-4" /> Geographic Analysis
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  This visualization shows marketing performance across European regions, displaying how ROAS varies geographically.
-                  Higher ROAS values (shown in deeper green) indicate stronger performance in those regions.
-                  Click on any region to view a detailed breakdown of channel-specific performance for that area.
-                  {selectedChannel && selectedChannel !== "all" && " The data is currently filtered to show only the selected channel's performance."}
-                </p>
+          <Card>
+            <CardHeader>
+              <div className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2">
+                    <Globe className="h-5 w-5" /> 
+                    Geographic Analysis
+                  </CardTitle>
+                  <CardDescription>
+                    Marketing performance across European regions
+                  </CardDescription>
+                </div>
               </div>
-            </div>
-          </div>
-          <EuropeRoasHeatmap loading={loading} selectedChannel={selectedChannel} />
+            </CardHeader>
+            <CardContent>
+              <div className="mb-6 p-4 bg-muted/30 rounded-lg">
+                <div className="flex items-start gap-2">
+                  <Info className="h-5 w-5 text-primary mt-0.5" />
+                  <div>
+                    <h3 className="text-sm font-medium mb-1 flex items-center gap-2">
+                      <Globe className="h-4 w-4" /> Geographic Analysis
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      This visualization shows marketing performance across European regions, displaying how ROAS varies geographically.
+                      Higher ROAS values (shown in deeper green) indicate stronger performance in those regions.
+                      Click on any region to view a detailed breakdown of channel-specific performance for that area.
+                      {selectedChannel && selectedChannel !== "all" && " The data is currently filtered to show only the selected channel's performance."}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <EuropeRoasHeatmap loading={loading} selectedChannel={selectedChannel} />
+            </CardContent>
+          </Card>
         </TabsContent>
       </Tabs>
     </div>
