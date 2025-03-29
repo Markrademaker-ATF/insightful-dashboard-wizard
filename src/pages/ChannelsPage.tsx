@@ -269,7 +269,7 @@ export default function ChannelsPage() {
                     Geographic Analysis
                   </CardTitle>
                   <CardDescription>
-                    Marketing performance across European regions
+                    Explore regional marketing performance and ROAS variations across Europe
                   </CardDescription>
                 </div>
               </div>
@@ -280,13 +280,16 @@ export default function ChannelsPage() {
                   <Info className="h-5 w-5 text-primary mt-0.5" />
                   <div>
                     <h3 className="text-sm font-medium mb-1 flex items-center gap-2">
-                      <Globe className="h-4 w-4" /> Geographic Analysis
+                      <Globe className="h-4 w-4" /> Geographic Performance Insights
                     </h3>
                     <p className="text-sm text-muted-foreground">
-                      This visualization shows marketing performance across European regions, displaying how ROAS varies geographically.
-                      Higher ROAS values (shown in deeper green) indicate stronger performance in those regions.
-                      Click on any region to view a detailed breakdown of channel-specific performance for that area.
-                      {selectedChannel && selectedChannel !== "all" && " The data is currently filtered to show only the selected channel's performance."}
+                      Dive deep into your marketing performance across European markets. This geographic analysis provides a comprehensive view of Return on Ad Spend (ROAS) by region, helping you understand:
+                      • Regional variations in marketing efficiency
+                      • Top-performing countries and channels
+                      • Potential opportunities for targeted marketing strategies
+                      • Comparative performance across different European markets
+
+                      Use this visualization to make data-driven decisions about geographic marketing investments and resource allocation.
                     </p>
                   </div>
                 </div>
