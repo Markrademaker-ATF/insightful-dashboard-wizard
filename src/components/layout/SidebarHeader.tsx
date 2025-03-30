@@ -15,7 +15,10 @@ export function SidebarHeader({ collapsed, setCollapsed }: SidebarHeaderProps) {
       "flex items-center transition-all duration-300",
       collapsed ? "justify-center py-4 px-2" : "justify-between py-5 px-4"
     )}>
-      <div className="flex items-center justify-center">
+      <div className={cn(
+        "flex items-center justify-center w-full",
+        !collapsed && "px-2"
+      )}>
         <div className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-lg p-0.5">
           <img 
             src="/lovable-uploads/c91593ad-aa3a-4f49-b9f4-86d049161286.png" 
