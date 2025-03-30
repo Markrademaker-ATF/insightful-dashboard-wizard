@@ -40,16 +40,21 @@ const generateSaturationData = (channelId: string, activeScenario: string, custo
   // New spend point based on the active scenario
   const newSpend = customBudgets[activeScenario]?.[channelId] || currentSpend;
   
+  // Get BAU spend for comparison
+  const bauSpend = customBudgets["bau"]?.[channelId] || currentSpend;
+  
   // Calculate maximum saturation point (where marginal returns become negative)
   const maxSaturationSpend = saturationPoint * 1.5;
   
   // Calculate ROAS/outcomes for key points
   const currentRoas = calculateRoas(currentSpend, maxRoas, saturationPoint);
   const newRoas = calculateRoas(newSpend, maxRoas, saturationPoint);
+  const bauRoas = calculateRoas(bauSpend, maxRoas, saturationPoint);
   const maxSaturationRoas = calculateRoas(maxSaturationSpend, maxRoas, saturationPoint);
   
   const currentRevenue = currentSpend * currentRoas;
   const newRevenue = newSpend * newRoas;
+  const bauRevenue = bauSpend * bauRoas;
   const maxSaturationRevenue = maxSaturationSpend * maxSaturationRoas;
   
   // Points for the curve - create a hill shape curve
@@ -64,6 +69,7 @@ const generateSaturationData = (channelId: string, activeScenario: string, custo
       revenue: spend * roas,
       // Mark the points
       isCurrent: Math.abs(spend - currentSpend) < baseSpend / 20,
+      isBau: Math.abs(spend - bauSpend) < baseSpend / 20,
       isNew: Math.abs(spend - newSpend) < baseSpend / 20,
       isMaxSaturation: Math.abs(spend - maxSaturationSpend) < baseSpend / 20
     });
@@ -72,6 +78,7 @@ const generateSaturationData = (channelId: string, activeScenario: string, custo
   return { 
     points, 
     currentPoint: { roas: currentRoas, spend: currentSpend, revenue: currentRevenue, incrementalOutcome: calculateIncrementalOutcome(currentSpend, maxRoas, saturationPoint) },
+    bauPoint: { roas: bauRoas, spend: bauSpend, revenue: bauRevenue, incrementalOutcome: calculateIncrementalOutcome(bauSpend, maxRoas, saturationPoint) },
     newPoint: { roas: newRoas, spend: newSpend, revenue: newRevenue, incrementalOutcome: calculateIncrementalOutcome(newSpend, maxRoas, saturationPoint) },
     maxSaturationPoint: { roas: maxSaturationRoas, spend: maxSaturationSpend, revenue: maxSaturationRevenue, incrementalOutcome: calculateIncrementalOutcome(maxSaturationSpend, maxRoas, saturationPoint) }
   };
@@ -97,7 +104,7 @@ const calculateIncrementalOutcome = (spend: number, maxRoas: number, saturationP
 const CustomTooltip = ({ active, payload, label }: TooltipProps<string | number, string>) => {
   if (active && payload && payload.length) {
     const data = payload[0]?.payload;
-    const isSpecialPoint = data?.isCurrent || data?.isNew || data?.isMaxSaturation;
+    const isSpecialPoint = data?.isCurrent || data?.isNew || data?.isMaxSaturation || data?.isBau;
     
     return (
       <div className="bg-white p-3 border rounded-md shadow-md">
@@ -108,6 +115,7 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps<string | number,
         {isSpecialPoint && (
           <p className="font-bold mt-1 text-primary">
             {data?.isCurrent ? "Current Spend Point" : 
+             data?.isBau ? "Business As Usual" :
              data?.isNew ? "New Recommended Spend" : 
              "Maximum Saturation Point"}
           </p>
@@ -134,7 +142,13 @@ export function ChannelSaturationCurve({
   customBudgets
 }: ChannelSaturationCurveProps) {
   // Generate data for the curve
-  const { points, currentPoint, newPoint, maxSaturationPoint } = generateSaturationData(channelId, activeScenario, customBudgets);
+  const { points, currentPoint, bauPoint, newPoint, maxSaturationPoint } = generateSaturationData(channelId, activeScenario, customBudgets);
+
+  // Calculate difference between BAU and active scenario
+  const isBauActive = activeScenario === "bau";
+  const spendChange = !isBauActive ? newPoint.spend - bauPoint.spend : 0;
+  const outcomeChange = !isBauActive ? newPoint.incrementalOutcome - bauPoint.incrementalOutcome : 0;
+  const isPositiveChange = outcomeChange > 0;
   
   return (
     <div className="space-y-6">
@@ -196,6 +210,24 @@ export function ChannelSaturationCurve({
                   </svg>
                 </Scatter>
                 
+                {/* Business As Usual point marker */}
+                <Scatter
+                  yAxisId="left"
+                  data={[{ 
+                    spend: bauPoint.spend, 
+                    incrementalOutcome: bauPoint.incrementalOutcome 
+                  }]}
+                  fill="#3B82F6"  // Blue
+                  stroke="#FFFFFF"
+                  strokeWidth={2}
+                  shape="circle"
+                  name="BAU Spend"
+                >
+                  <svg width={20} height={20}>
+                    <circle cx={10} cy={10} r={10} fill="#3B82F6" stroke="#FFFFFF" strokeWidth={2} />
+                  </svg>
+                </Scatter>
+                
                 {/* New point marker - Enhanced visibility with larger size and different shape */}
                 <Scatter
                   yAxisId="left"
@@ -233,9 +265,22 @@ export function ChannelSaturationCurve({
                 </Scatter>
                 
                 {/* Reference lines for key points */}
-                <ReferenceLine x={currentPoint.spend} yAxisId="left" stroke="#FF8C00" strokeDasharray="3 3" />
+                <ReferenceLine x={bauPoint.spend} yAxisId="left" stroke="#3B82F6" strokeDasharray="3 3" />
                 <ReferenceLine x={newPoint.spend} yAxisId="left" stroke="#4CAF50" strokeDasharray="3 3" />
-                <ReferenceLine x={maxSaturationPoint.spend} yAxisId="left" stroke="#9C27B0" strokeDasharray="3 3" />
+                
+                {/* Show the change between BAU and scenario with colored area */}
+                {!isBauActive && (
+                  <ReferenceArea 
+                    x1={bauPoint.spend} 
+                    x2={newPoint.spend} 
+                    yAxisId="left"
+                    y1={0}
+                    y2={Math.max(bauPoint.incrementalOutcome, newPoint.incrementalOutcome)}
+                    stroke={isPositiveChange ? "#4CAF50" : "#ef4444"}
+                    strokeOpacity={0.3}
+                    fill={isPositiveChange ? "rgba(76, 175, 80, 0.1)" : "rgba(239, 68, 68, 0.1)"}
+                  />
+                )}
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -244,6 +289,10 @@ export function ChannelSaturationCurve({
             <div className="flex items-center gap-2">
               <div className="h-3 w-3 rounded-full" style={{ backgroundColor: color }}></div>
               <span>Incremental Outcome</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="h-3 w-3 rounded-full bg-blue-500"></div>
+              <span>Business As Usual (${bauPoint.spend.toLocaleString()})</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="h-3 w-3 rounded-full bg-orange-500"></div>
@@ -258,6 +307,23 @@ export function ChannelSaturationCurve({
               <span>Maximum Saturation (${maxSaturationPoint.spend.toLocaleString()})</span>
             </div>
           </div>
+          
+          {/* Scenario difference indicator */}
+          {!isBauActive && (
+            <div className={`mt-4 p-3 border rounded-lg ${isPositiveChange ? 'border-green-200 bg-green-50' : 'border-red-200 bg-red-50'}`}>
+              <div className="flex items-center gap-2">
+                <div className={`h-3 w-3 rounded-full ${isPositiveChange ? 'bg-green-500' : 'bg-red-500'}`}></div>
+                <span className={`font-medium ${isPositiveChange ? 'text-green-700' : 'text-red-700'}`}>
+                  {isPositiveChange ? 'Improvement over BAU' : 'Decrease from BAU'}:
+                </span>
+                <span>
+                  {spendChange > 0 ? '+' : ''}{spendChange.toLocaleString()} spend, 
+                  {outcomeChange > 0 ? '+' : ''}{outcomeChange.toLocaleString()} outcome
+                  ({Math.abs(Math.round(outcomeChange / bauPoint.incrementalOutcome * 100))}% {isPositiveChange ? 'increase' : 'decrease'})
+                </span>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
       
@@ -273,16 +339,20 @@ export function ChannelSaturationCurve({
               <ul className="space-y-2 text-sm">
                 <li>Current spend: <span className="font-medium">${currentPoint.spend.toLocaleString()}</span> with outcome of <span className="font-medium">${currentPoint.incrementalOutcome.toLocaleString()}</span></li>
                 <li>
-                  {newPoint.spend > currentPoint.spend 
-                    ? `Increasing spend to $${newPoint.spend.toLocaleString()} would increase outcomes by ${((newPoint.incrementalOutcome - currentPoint.incrementalOutcome) / currentPoint.incrementalOutcome * 100).toFixed(1)}%`
-                    : `Decreasing spend to $${newPoint.spend.toLocaleString()} would decrease outcomes by ${((currentPoint.incrementalOutcome - newPoint.incrementalOutcome) / currentPoint.incrementalOutcome * 100).toFixed(1)}%`
-                  }
+                  {!isBauActive && (
+                    <>
+                      {isPositiveChange 
+                        ? `Moving from BAU ($${bauPoint.spend.toLocaleString()}) to $${newPoint.spend.toLocaleString()} improves outcomes by ${Math.abs(Math.round(outcomeChange / bauPoint.incrementalOutcome * 100))}%`
+                        : `Moving from BAU ($${bauPoint.spend.toLocaleString()}) to $${newPoint.spend.toLocaleString()} reduces outcomes by ${Math.abs(Math.round(outcomeChange / bauPoint.incrementalOutcome * 100))}%`
+                      }
+                    </>
+                  )}
                 </li>
                 <li>
                   Maximum saturation point at <span className="font-medium">${maxSaturationPoint.spend.toLocaleString()}</span> where incremental returns start declining
                 </li>
                 <li className="font-medium">
-                  {newPoint.spend < maxSaturationPoint.spend && newPoint.spend > currentPoint.spend
+                  {newPoint.spend < maxSaturationPoint.spend && newPoint.spend > bauPoint.spend
                     ? "Recommendation: Continue increasing spend up to optimization point"
                     : newPoint.spend > maxSaturationPoint.spend
                     ? "Recommendation: Consider reducing spend to improve efficiency"

@@ -28,6 +28,9 @@ export function BudgetAllocationChart({ data, loading = false, title }: BudgetAl
     return acc;
   }, {} as Record<string, { color: string }>);
 
+  // Calculate total for percentages
+  const total = data.reduce((sum, item) => sum + item.value, 0);
+
   return (
     <div className="h-64">
       <ChartContainer config={colorConfig} className="w-full h-full">
@@ -44,9 +47,34 @@ export function BudgetAllocationChart({ data, loading = false, title }: BudgetAl
             animationBegin={0}
             stroke="#111"
             strokeWidth={1}
+            // Add labels with percentage and names
+            label={({ cx, cy, midAngle, innerRadius, outerRadius, percent, name }) => {
+              const RADIAN = Math.PI / 180;
+              const radius = innerRadius + (outerRadius - innerRadius) * 1.3;
+              const x = cx + radius * Math.cos(-midAngle * RADIAN);
+              const y = cy + radius * Math.sin(-midAngle * RADIAN);
+              
+              return (
+                <text
+                  x={x}
+                  y={y}
+                  className="text-[10px]"
+                  textAnchor={x > cx ? 'start' : 'end'}
+                  dominantBaseline="central"
+                  fill="#888888"
+                >
+                  {`${(percent * 100).toFixed(0)}%`}
+                </text>
+              );
+            }}
           >
             {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.color} style={{ filter: 'drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.1))' }} />
+              <Cell 
+                key={`cell-${index}`} 
+                fill={entry.color} 
+                style={{ filter: 'drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.1))' }} 
+                className="hover:opacity-80 transition-opacity cursor-pointer"
+              />
             ))}
           </Pie>
           <Tooltip 
@@ -54,12 +82,19 @@ export function BudgetAllocationChart({ data, loading = false, title }: BudgetAl
               if (!props.active || !props.payload?.length) {
                 return null;
               }
+              
+              const currentItem = props.payload[0].payload;
+              const percentage = ((currentItem.value / total) * 100).toFixed(1);
+              
               return (
                 <ChartTooltipContent
                   active={props.active}
                   payload={props.payload}
                   label={props.label}
-                  formatter={(value) => `$${Number(value).toLocaleString()}`}
+                  formatter={(value) => [
+                    `$${Number(value).toLocaleString()} (${percentage}%)`, 
+                    "Budget"
+                  ]}
                 />
               );
             }}
