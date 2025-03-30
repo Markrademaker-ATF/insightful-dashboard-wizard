@@ -1,7 +1,8 @@
+
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, Bot, User, PlusCircle, Sparkles } from "lucide-react";
+import { Send, Bot, User, PlusCircle, Sparkles, ArrowRight } from "lucide-react";
 import { ChatMessage } from "./ChatMessage";
 import { SuggestionChip } from "./SuggestionChip";
 import { useToast } from "@/components/ui/use-toast";
@@ -99,18 +100,25 @@ export function ChatInterface() {
 
   const handleSuggestionClick = (query: string) => {
     setInput(query);
+    
+    // Optionally auto-send the suggestion after a short delay
+    setTimeout(() => {
+      if (query) {
+        sendMessage();
+      }
+    }, 300);
   };
 
   return (
-    <div className="flex flex-col h-full min-h-[500px] bg-gradient-to-br from-purple-50/50 to-blue-50/50">
+    <div className="flex flex-col h-full min-h-[600px] bg-gradient-to-br from-purple-50/70 to-blue-50/70">
       {/* Chat messages container */}
-      <div className="flex-1 overflow-y-auto p-4">
-        <div className="space-y-4">
+      <div className="flex-1 overflow-y-auto p-6">
+        <div className="space-y-6">
           {messages.map((message) => (
             <ChatMessage key={message.id} message={message} />
           ))}
           {isLoading && (
-            <div className="flex items-center gap-2 text-muted-foreground animate-pulse">
+            <div className="flex items-center gap-2 text-primary animate-pulse p-4 rounded-lg bg-accent/30">
               <Sparkles className="h-4 w-4 text-primary" />
               <span>AI is generating insights...</span>
             </div>
@@ -120,7 +128,7 @@ export function ChatInterface() {
       </div>
       
       {/* Suggestions */}
-      <div className="px-4 py-2 border-t bg-white/30 backdrop-blur-sm">
+      <div className="px-6 py-3 border-t bg-white/40 backdrop-blur-sm">
         <p className="text-xs text-muted-foreground mb-2 flex items-center gap-2">
           <Sparkles className="h-3 w-3 text-primary" />
           Suggested insights:
@@ -137,7 +145,7 @@ export function ChatInterface() {
       </div>
       
       {/* Input area */}
-      <div className="border-t p-4 bg-white/50 backdrop-blur-sm">
+      <div className="border-t p-4 bg-white/60 backdrop-blur-sm">
         <div className="relative">
           <Textarea
             placeholder="Ask an intelligent question about your analytics..."
@@ -145,16 +153,15 @@ export function ChatInterface() {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             rows={3}
-            className="pr-12 resize-none border-primary/20 focus:border-primary/50 transition-colors"
+            className="pr-12 resize-none border-primary/30 focus:border-primary/70 transition-colors shadow-sm bg-white/80"
           />
           <Button
             size="icon"
-            variant="outline"
-            className="absolute bottom-2 right-2 bg-primary/10 hover:bg-primary/20 border-primary/20"
+            className="absolute bottom-2 right-2 bg-primary hover:bg-primary/90 text-white shadow-sm"
             onClick={sendMessage}
             disabled={!input.trim() || isLoading}
           >
-            <Send className="h-4 w-4 text-primary" />
+            <Send className="h-4 w-4" />
           </Button>
         </div>
         <div className="text-xs text-muted-foreground mt-2 flex items-center gap-1">

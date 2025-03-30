@@ -65,7 +65,7 @@ export function HeaderBanner() {
       case "/ab-testing":
         return "Test and experiment analysis";
       case "/chat-ai":
-        return "AI-powered insights and assistance";
+        return "AI-powered insights and recommendations";
       case "/recommendations":
         return "Actionable marketing recommendations";
       case "/methodologies":
@@ -103,8 +103,15 @@ export function HeaderBanner() {
       
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
-          <h1 className="text-2xl font-bold text-gray-800">{getPageTitle()}</h1>
-          <div className="h-2 w-2 rounded-full bg-primary/70 animate-pulse hidden sm:block"></div>
+          <h1 className="text-2xl font-bold text-gray-800">
+            {getPageTitle()}
+            {location.pathname === "/chat-ai" && (
+              <span className="ml-2 text-xs font-medium px-2 py-0.5 bg-primary/10 text-primary rounded-full">
+                Beta
+              </span>
+            )}
+          </h1>
+          <div className={`h-2 w-2 rounded-full ${location.pathname === "/chat-ai" ? "bg-primary animate-pulse" : "bg-primary/70 animate-pulse"} hidden sm:block`}></div>
         </div>
         <p className="text-sm text-muted-foreground">{getPageDescription()}</p>
       </div>
