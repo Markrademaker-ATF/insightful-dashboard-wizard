@@ -68,7 +68,25 @@ export function MediaTypeAnalysisSection({
     };
   };
 
+  // Get media groups to display based on selected media type
+  const getMediaGroupsToDisplay = () => {
+    const allGroups = [
+      { dataKey: "baseline", color: mediaGroupColors.baseline, label: "Baseline" },
+      { dataKey: "nonPaid", color: mediaGroupColors.nonPaid, label: "Non-Paid Media" },
+      { dataKey: "organic", color: mediaGroupColors.organic, label: "Organic Media" },
+      { dataKey: "paid", color: mediaGroupColors.paid, label: "Paid Media" }
+    ];
+    
+    if (mediaType === "all") {
+      return allGroups;
+    } else {
+      // Return only the selected media type
+      return allGroups.filter(group => group.dataKey === mediaType);
+    }
+  };
+
   const mediaTypeMetrics = getMetricsForMediaType();
+  const mediaGroupsToDisplay = getMediaGroupsToDisplay();
   
   return (
     <Card className="mb-8">
@@ -164,12 +182,7 @@ export function MediaTypeAnalysisSection({
           <TabsContent value="breakdown" className="mt-0">
             <MediaGroupBreakdownChart
               data={mediaGroupData}
-              mediaGroups={[
-                { dataKey: "baseline", color: mediaGroupColors.baseline, label: "Baseline" },
-                { dataKey: "nonPaid", color: mediaGroupColors.nonPaid, label: "Non-Paid Media" },
-                { dataKey: "organic", color: mediaGroupColors.organic, label: "Organic Media" },
-                { dataKey: "paid", color: mediaGroupColors.paid, label: "Paid Media" }
-              ]}
+              mediaGroups={mediaGroupsToDisplay}
               loading={loading}
               height={400}
               stacked={true}
@@ -177,22 +190,17 @@ export function MediaTypeAnalysisSection({
             <div className="mt-4 text-sm text-muted-foreground">
               <p className="flex items-center gap-2">
                 <Info className="h-4 w-4 text-primary" /> 
-                This chart shows the monthly contribution of each media type to total revenue.
+                This chart shows the monthly contribution of {mediaType === "all" ? "each media type" : "the selected media type"} to total revenue.
                 {selectedChannel !== "all" && " Filtered by selected channel."}
               </p>
             </div>
           </TabsContent>
 
-          {/* Trends Over Time Chart (New) */}
+          {/* Trends Over Time Chart */}
           <TabsContent value="trends" className="mt-0">
             <StackedAreaChart 
               data={timeSeriesData}
-              areaGroups={[
-                { dataKey: "baseline", color: mediaGroupColors.baseline, label: "Baseline" },
-                { dataKey: "nonPaid", color: mediaGroupColors.nonPaid, label: "Non-Paid Media" },
-                { dataKey: "organic", color: mediaGroupColors.organic, label: "Organic Media" },
-                { dataKey: "paid", color: mediaGroupColors.paid, label: "Paid Media" }
-              ]}
+              areaGroups={mediaGroupsToDisplay}
               loading={loading}
               height={400}
               xAxisKey="date"
@@ -200,7 +208,7 @@ export function MediaTypeAnalysisSection({
             <div className="mt-4 text-sm text-muted-foreground">
               <p className="flex items-center gap-2">
                 <Info className="h-4 w-4 text-primary" /> 
-                This stacked area chart visualizes how each media group contributes to the total revenue over time, 
+                This stacked area chart visualizes how {mediaType === "all" ? "each media group" : "the selected media group"} contributes to the total revenue over time, 
                 showing both proportional and absolute changes.
               </p>
             </div>
@@ -259,3 +267,4 @@ export function MediaTypeAnalysisSection({
     </Card>
   );
 }
+
