@@ -8,7 +8,7 @@ import { ABTestComparisonChart } from "@/components/ab-testing/ABTestComparisonC
 import { ABTestMetricsCards } from "@/components/ab-testing/ABTestMetricsCards";
 import { ABTestScenarioSelector } from "@/components/ab-testing/ABTestScenarioSelector";
 import { useMockABTestData } from "@/hooks/useMockABTestData";
-import { BarChart2, Calendar, Clock, ArrowRight, LineChart, FileSpreadsheet, PieChart, Activity, TrendingUp } from "lucide-react";
+import { Calendar, Clock, ArrowRight, LineChart, FileSpreadsheet, PieChart, Activity, TrendingUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { GlobalFilters } from "@/components/layout/GlobalFilters";
@@ -79,7 +79,7 @@ const ABTestingPage = () => {
                 {selectedTestData.winner && (
                   <div className="bg-green-50/80 backdrop-blur-sm p-4 rounded-lg border border-green-100 flex items-start gap-3 premium-shadow">
                     <div className="mt-0.5">
-                      <BarChart2 className="h-5 w-5 text-green-500" />
+                      <PieChart className="h-5 w-5 text-green-500" />
                     </div>
                     <div>
                       <h3 className="font-medium text-green-700">Winner: {selectedTestData.variants.find(v => v.id === selectedTestData.winner)?.name}</h3>
@@ -100,10 +100,6 @@ const ABTestingPage = () => {
               <TabsTrigger value="overview" className="data-[state=active]:bg-primary/20">
                 <Activity className="h-4 w-4 mr-2" />
                 Overview
-              </TabsTrigger>
-              <TabsTrigger value="comparison" className="data-[state=active]:bg-primary/20">
-                <BarChart2 className="h-4 w-4 mr-2" />
-                Results Comparison
               </TabsTrigger>
               <TabsTrigger value="timeline" className="data-[state=active]:bg-primary/20">
                 <TrendingUp className="h-4 w-4 mr-2" />
@@ -149,40 +145,6 @@ const ABTestingPage = () => {
               </div>
             </TabsContent>
             
-            <TabsContent value="comparison" className="animate-fade-in">
-              <div className="grid grid-cols-1 gap-6">
-                <Card className="glass-card premium-shadow border-white/30">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="flex items-center gap-2">
-                      <LineChart className="h-5 w-5 text-primary" />
-                      Performance Metrics Comparison
-                    </CardTitle>
-                    <CardDescription>
-                      Comparing key metrics between the control and variant groups
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <ABTestComparisonChart test={selectedTestData} loading={loading} />
-                  </CardContent>
-                </Card>
-                
-                <Card className="glass-card premium-shadow border-white/30">
-                  <CardHeader className="pb-3">
-                    <CardTitle className="flex items-center gap-2">
-                      <FileSpreadsheet className="h-5 w-5 text-primary" />
-                      Detailed Results
-                    </CardTitle>
-                    <CardDescription>
-                      Complete performance data for all test variants
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <ABTestResultsTable test={selectedTestData} loading={loading} />
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-
             <TabsContent value="timeline" className="animate-fade-in">
               <Card className="glass-card premium-shadow border-white/30">
                 <CardHeader className="pb-3">
