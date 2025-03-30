@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { ChannelBreakdownChart } from "@/components/dashboard/ChannelBreakdownChart";
@@ -37,6 +38,12 @@ import { ChannelSaturationCurvePanel } from "@/components/budget/ChannelSaturati
 import { CustomScenarioPanel } from "@/components/budget/CustomScenarioPanel";
 import { toast } from "sonner";
 
+type ScenarioMetricsType = {
+  totalBudget: number;
+  projectedROI: number;
+  projectedRevenue: number;
+};
+
 const BudgetPage = () => {
   const [loading, setLoading] = useState(true);
   const [budgetData, setBudgetData] = useState<any[]>([]);
@@ -45,6 +52,11 @@ const BudgetPage = () => {
   const [activeScenario, setActiveScenario] = useState("bau");
   const [customScenarios, setCustomScenarios] = useState<Record<string, Record<string, number>>>({});
   const [customScenarioNames, setCustomScenarioNames] = useState<Record<string, string>>({});
+  const [scenarioMetrics, setScenarioMetrics] = useState<Record<string, ScenarioMetricsType>>({
+    bau: { totalBudget: 0, projectedROI: 0, projectedRevenue: 0 },
+    "cost-savings": { totalBudget: 0, projectedROI: 0, projectedRevenue: 0 },
+    "revenue-uplift": { totalBudget: 0, projectedROI: 0, projectedRevenue: 0 }
+  });
 
   useEffect(() => {
     // Simulate data loading

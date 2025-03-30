@@ -52,14 +52,17 @@ export function BudgetAllocationChart({ data, loading = false, title }: BudgetAl
           <Tooltip
             content={(props) => (
               <ChartTooltipContent
-                format={(value) => `$${Number(value).toLocaleString()}`}
+                formatter={(value) => `$${Number(value).toLocaleString()}`}
                 {...props}
               />
             )}
           />
           <Legend 
             content={(props) => (
-              <ChartLegendContent nameKey="name" {...props} />
+              <ChartLegendContent
+                {...props}
+                nameKey="name"
+              />
             )}
             verticalAlign="bottom" 
             align="center"
