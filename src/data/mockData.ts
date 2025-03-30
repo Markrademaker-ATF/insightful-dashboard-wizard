@@ -272,3 +272,41 @@ export const generateBudgetRecommendations = () => {
     };
   });
 };
+
+// Get channel data by media type for detailed breakdown
+export const getMediaTypeChannelData = (mediaType: string) => {
+  switch (mediaType) {
+    case "baseline":
+      return [
+        { name: "Brand Recognition", value: 120000, color: "#e63946" },
+        { name: "Market Trends", value: 85000, color: "#a8dadc" },
+        { name: "Seasonal Effects", value: 65000, color: "#457b9d" },
+        { name: "Prior Campaigns", value: 45000, color: "#1d3557" }
+      ];
+    case "paid":
+      return [
+        { name: "Google Ads", value: 95000, color: "#4361ee" },
+        { name: "Facebook Ads", value: 75000, color: "#3a0ca3" },
+        { name: "YouTube Ads", value: 55000, color: "#7209b7" },
+        { name: "TikTok Ads", value: 40000, color: "#f72585" },
+        { name: "Display Network", value: 35000, color: "#4cc9f0" },
+        { name: "LinkedIn Ads", value: 25000, color: "#3f37c9" }
+      ];
+    case "organic":
+      return [
+        { name: "SEO", value: 85000, color: "#06d6a0" },
+        { name: "Content Marketing", value: 65000, color: "#2dc653" },
+        { name: "Organic Social", value: 45000, color: "#57cc99" },
+        { name: "Blog Posts", value: 35000, color: "#80ed99" }
+      ];
+    case "nonPaid":
+      return [
+        { name: "Email", value: 70000, color: "#ffd166" },
+        { name: "Affiliate", value: 55000, color: "#ffb703" },
+        { name: "Referral", value: 40000, color: "#fb8500" },
+        { name: "PR", value: 30000, color: "#fd9e02" }
+      ];
+    default:
+      return [];
+  }
+};
