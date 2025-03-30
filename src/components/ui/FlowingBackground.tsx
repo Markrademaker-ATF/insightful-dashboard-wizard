@@ -91,7 +91,7 @@ export const FlowingBackground: React.FC<FlowingBackgroundProps> = ({
         const b = Math.min(255, Math.max(0, parseInt(baseColor[2]) + this.hue));
         
         ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${this.opacity})`;
-        ctx.strokeStyle = lineColor.replace(/opacity/g, (this.opacity * 0.5).toString());
+        ctx.strokeStyle = lineColor.replace(/opacity/g, String(this.opacity * 0.5));
         ctx.lineWidth = 2;
 
         ctx.beginPath();
