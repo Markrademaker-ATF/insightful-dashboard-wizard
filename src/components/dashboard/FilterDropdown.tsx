@@ -8,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Check } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface FilterOption {
   value: string;
@@ -20,6 +21,7 @@ interface FilterDropdownProps {
   onChange: (value: string) => void;
   icon?: React.ReactNode;
   label?: string;
+  className?: string;
 }
 
 export function FilterDropdown({
@@ -27,7 +29,8 @@ export function FilterDropdown({
   value,
   onChange,
   icon,
-  label = "Filter"
+  label = "Filter",
+  className
 }: FilterDropdownProps) {
   // Find the currently selected option label
   const selectedOption = options.find(option => option.value === value);
@@ -35,7 +38,11 @@ export function FilterDropdown({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="sm" className="h-9 gap-1">
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className={cn("h-9 gap-1", className)}
+        >
           {icon}
           {label}: {selectedOption?.label || value}
         </Button>
