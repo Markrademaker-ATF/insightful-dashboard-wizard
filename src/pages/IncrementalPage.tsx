@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/button";
@@ -27,6 +26,7 @@ import { ChannelOption } from "@/components/dashboard/MediaTypeSelector";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FilterDropdown } from "@/components/dashboard/FilterDropdown";
 import { GeographicMediaBreakdown } from "@/components/dashboard/GeographicMediaBreakdown";
+import { useProductFilter } from "@/contexts/ProductFilterContext";
 
 const IncrementalPage = () => {
   const [loading, setLoading] = useState(true);
@@ -41,16 +41,16 @@ const IncrementalPage = () => {
   const [mediaType, setMediaType] = useState("all");
   const [selectedChannel, setSelectedChannel] = useState("all");
   const [timeframe, setTimeframe] = useState("90d");
-  const [selectedProduct, setSelectedProduct] = useState("all");
+  
+  // Use the global product filter
+  const { selectedProduct } = useProductFilter();
 
-  // Product filter options
-  const productOptions = [
-    { value: "all", label: "All Products" },
-    { value: "electronics", label: "Electronics" },
-    { value: "clothing", label: "Clothing" },
-    { value: "furniture", label: "Furniture" },
-    { value: "beauty", label: "Beauty & Personal Care" },
-    { value: "food", label: "Food & Beverages" }
+  // Time period options
+  const timeframeOptions = [
+    { value: "30d", label: "Last 30 Days" },
+    { value: "90d", label: "Last 90 Days" },
+    { value: "6m", label: "Last 6 Months" },
+    { value: "1y", label: "Last Year" }
   ];
 
   // Channel options for each media type
@@ -75,14 +75,6 @@ const IncrementalPage = () => {
     { value: "brand", label: "Brand", color: "#ef476f", group: "baseline" },
     { value: "seasonal", label: "Seasonal", color: "#e56b6f", group: "baseline" },
     { value: "market", label: "Market Factors", color: "#d62828", group: "baseline" },
-  ];
-
-  // Time period options
-  const timeframeOptions = [
-    { value: "30d", label: "Last 30 Days" },
-    { value: "90d", label: "Last 90 Days" },
-    { value: "6m", label: "Last 6 Months" },
-    { value: "1y", label: "Last Year" }
   ];
 
   useEffect(() => {
@@ -132,11 +124,6 @@ const IncrementalPage = () => {
   const handleTimeframeChange = (newTimeframe: string) => {
     setTimeframe(newTimeframe);
   };
-  
-  // Handler for product change
-  const handleProductChange = (newProduct: string) => {
-    setSelectedProduct(newProduct);
-  };
 
   return (
     <div className="animate-fade-in">
@@ -145,13 +132,6 @@ const IncrementalPage = () => {
         description="Analyze baseline and incremental contribution to performance across media types and channels"
       >
         <div className="flex items-center gap-2">
-          <FilterDropdown 
-            options={productOptions}
-            value={selectedProduct}
-            onChange={handleProductChange}
-            icon={<ShoppingBag className="h-4 w-4 mr-2" />}
-            label="Product"
-          />
           <FilterDropdown 
             options={timeframeOptions}
             value={timeframe}
