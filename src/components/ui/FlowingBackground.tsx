@@ -3,9 +3,21 @@ import React, { useEffect, useRef } from 'react';
 
 interface FlowingBackgroundProps {
   className?: string;
+  particleCount?: number;
+  speed?: number;
+  particleSize?: number;
+  particleColor?: string;
+  lineColor?: string;
 }
 
-export const FlowingBackground: React.FC<FlowingBackgroundProps> = ({ className }) => {
+export const FlowingBackground: React.FC<FlowingBackgroundProps> = ({ 
+  className, 
+  particleCount = 50, 
+  speed = 0.5,
+  particleSize = 15,
+  particleColor = "rgba(243, 240, 255, 0.3)",
+  lineColor = "rgba(220, 215, 240, 0.4)"
+}) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -26,7 +38,6 @@ export const FlowingBackground: React.FC<FlowingBackgroundProps> = ({ className 
 
     // Create particles
     const particlesArray: Particle[] = [];
-    const numberOfParticles = 50;
 
     class Particle {
       x: number;
@@ -35,14 +46,16 @@ export const FlowingBackground: React.FC<FlowingBackgroundProps> = ({ className 
       speedX: number;
       speedY: number;
       opacity: number;
+      hue: number;
 
       constructor() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 15 + 1;
-        this.speedX = Math.random() * 0.5 - 0.25;
-        this.speedY = Math.random() * 0.5 - 0.25;
+        this.size = Math.random() * particleSize + 1;
+        this.speedX = Math.random() * speed - speed/2;
+        this.speedY = Math.random() * speed - speed/2;
         this.opacity = Math.random() * 0.5 + 0.1;
+        this.hue = Math.random() * 60 - 30; // For color variation
       }
 
       update() {
@@ -59,16 +72,26 @@ export const FlowingBackground: React.FC<FlowingBackgroundProps> = ({ className 
             this.y > canvas.height) {
           this.x = Math.random() * canvas.width;
           this.y = Math.random() * canvas.height;
-          this.size = Math.random() * 15 + 1;
-          this.speedX = Math.random() * 0.5 - 0.25;
-          this.speedY = Math.random() * 0.5 - 0.25;
+          this.size = Math.random() * particleSize + 1;
+          this.speedX = Math.random() * speed - speed/2;
+          this.speedY = Math.random() * speed - speed/2;
           this.opacity = Math.random() * 0.5 + 0.1;
         }
       }
 
       draw() {
-        ctx.fillStyle = `rgba(243, 240, 255, ${this.opacity})`;
-        ctx.strokeStyle = `rgba(220, 215, 240, ${this.opacity * 0.5})`;
+        // Extract base color from particleColor
+        const baseColor = particleColor.includes("rgba") 
+          ? particleColor.replace(/rgba?\(|\)/g, '').split(',')
+          : [243, 240, 255]; // Default color
+        
+        // Create slightly different color based on hue
+        const r = Math.min(255, Math.max(0, parseInt(baseColor[0]) + this.hue));
+        const g = Math.min(255, Math.max(0, parseInt(baseColor[1]) + this.hue));
+        const b = Math.min(255, Math.max(0, parseInt(baseColor[2]) + this.hue));
+        
+        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${this.opacity})`;
+        ctx.strokeStyle = lineColor.replace(/opacity/g, (this.opacity * 0.5).toString());
         ctx.lineWidth = 2;
 
         ctx.beginPath();
@@ -80,13 +103,17 @@ export const FlowingBackground: React.FC<FlowingBackgroundProps> = ({ className 
     }
 
     // Initialize particles
-    for (let i = 0; i < numberOfParticles; i++) {
+    for (let i = 0; i < particleCount; i++) {
       particlesArray.push(new Particle());
     }
 
     // Animation loop
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Apply a slight blur for a glow effect
+      ctx.shadowBlur = 15;
+      ctx.shadowColor = particleColor;
       
       for (let i = 0; i < particlesArray.length; i++) {
         particlesArray[i].update();
@@ -96,20 +123,33 @@ export const FlowingBackground: React.FC<FlowingBackgroundProps> = ({ className 
       // Connect nearby particles with lines
       connectParticles();
       
+      // Reset shadow for next frame
+      ctx.shadowBlur = 0;
+      
       requestAnimationFrame(animate);
     };
 
     // Draw lines between particles that are close to each other
     const connectParticles = () => {
+      const maxDistance = 150;
+      
       for (let i = 0; i < particlesArray.length; i++) {
         for (let j = i; j < particlesArray.length; j++) {
           const dx = particlesArray[i].x - particlesArray[j].x;
           const dy = particlesArray[i].y - particlesArray[j].y;
           const distance = Math.sqrt(dx * dx + dy * dy);
           
-          if (distance < 100) {
+          if (distance < maxDistance) {
+            // Calculate opacity based on distance
+            const opacity = 1 - (distance / maxDistance);
+            
+            // Extract base color from lineColor
+            const baseColor = lineColor.includes("rgba") 
+              ? lineColor.replace(/rgba?\(|\)/g, '').split(',')
+              : [220, 215, 240]; // Default color
+              
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(220, 215, 240, ${0.8 - distance/100})`;
+            ctx.strokeStyle = `rgba(${baseColor[0]}, ${baseColor[1]}, ${baseColor[2]}, ${opacity * 0.8})`;
             ctx.lineWidth = 0.5;
             ctx.moveTo(particlesArray[i].x, particlesArray[i].y);
             ctx.lineTo(particlesArray[j].x, particlesArray[j].y);
@@ -124,7 +164,7 @@ export const FlowingBackground: React.FC<FlowingBackgroundProps> = ({ className 
     return () => {
       window.removeEventListener('resize', resizeCanvas);
     };
-  }, []);
+  }, [particleCount, speed, particleSize, particleColor, lineColor]);
 
   return (
     <canvas 
