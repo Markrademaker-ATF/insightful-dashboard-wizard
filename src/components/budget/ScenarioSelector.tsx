@@ -2,7 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Info } from "lucide-react";
+import { Info, Sparkles } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 type ScenarioSelectorProps = {
@@ -35,7 +35,7 @@ export function ScenarioSelector({ activeScenario, onScenarioChange }: ScenarioS
         onValueChange={onScenarioChange}
         className="w-full"
       >
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="bau">
             Business As Usual
           </TabsTrigger>
@@ -45,12 +45,17 @@ export function ScenarioSelector({ activeScenario, onScenarioChange }: ScenarioS
           <TabsTrigger value="revenue-uplift">
             Revenue Uplift
           </TabsTrigger>
+          <TabsTrigger value="custom-optimizer" className="flex items-center gap-1">
+            <Sparkles className="h-4 w-4" />
+            Custom Optimizer
+          </TabsTrigger>
         </TabsList>
         
         {/* Add empty TabsContent elements for each tab to maintain correct structure */}
         <TabsContent value="bau" className="hidden" />
         <TabsContent value="cost-savings" className="hidden" />
         <TabsContent value="revenue-uplift" className="hidden" />
+        <TabsContent value="custom-optimizer" className="hidden" />
       </Tabs>
     </div>
   );

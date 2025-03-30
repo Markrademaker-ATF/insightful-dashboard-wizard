@@ -50,20 +50,24 @@ export function BudgetAllocationChart({ data, loading = false, title }: BudgetAl
             ))}
           </Pie>
           <Tooltip
-            content={(props) => (
-              <ChartTooltipContent
-                formatter={(value) => `$${Number(value).toLocaleString()}`}
-                {...props}
-              />
-            )}
+            content={(props) => {
+              return (
+                <ChartTooltipContent
+                  {...props}
+                  formatter={(value) => `$${Number(value).toLocaleString()}`}
+                />
+              );
+            }}
           />
           <Legend 
-            content={(props) => (
-              <ChartLegendContent
-                {...props}
-                nameKey="name"
-              />
-            )}
+            content={(props) => {
+              return (
+                <ChartLegendContent
+                  {...props}
+                  nameKey="name"
+                />
+              );
+            }}
             verticalAlign="bottom" 
             align="center"
           />
