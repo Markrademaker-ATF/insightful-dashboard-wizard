@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from 'react';
 
 interface FlowingBackgroundProps {
@@ -46,6 +47,8 @@ export const FlowingBackground: React.FC<FlowingBackgroundProps> = ({
       speedY: number;
       opacity: number;
       hue: number;
+      pulse: number;
+      pulseSpeed: number;
 
       constructor() {
         this.x = Math.random() * canvas.width;
@@ -55,13 +58,22 @@ export const FlowingBackground: React.FC<FlowingBackgroundProps> = ({
         this.speedY = Math.random() * speed - speed/2;
         this.opacity = Math.random() * 0.5 + 0.1;
         this.hue = Math.random() * 60 - 30; // For color variation
+        this.pulse = 0;
+        this.pulseSpeed = 0.02 + Math.random() * 0.03;
       }
 
       update() {
         this.x += this.speedX;
         this.y += this.speedY;
-
-        if (this.size > 0.2) this.size -= 0.05;
+        
+        // Add a subtle pulse effect
+        this.pulse += this.pulseSpeed;
+        if (this.pulse > Math.PI * 2) this.pulse = 0;
+        
+        // Add a slight size oscillation
+        const sizeOscillation = Math.sin(this.pulse) * 0.5;
+        
+        if (this.size > 0.2) this.size -= 0.01;
         
         // Reset particles when they get too small or leave the screen
         if (this.size <= 0.2 || 
@@ -90,21 +102,48 @@ export const FlowingBackground: React.FC<FlowingBackgroundProps> = ({
         const g = Math.min(255, Math.max(0, parseInt(baseColor[1]) + this.hue));
         const b = Math.min(255, Math.max(0, parseInt(baseColor[2]) + this.hue));
         
-        // Explicitly convert opacity to string
-        const particleOpacity = String(this.opacity);
-        const lineOpacityValue = String(this.opacity * 0.5);
+        // Pulse effect on opacity
+        const pulseOpacity = this.opacity * (0.8 + 0.2 * Math.sin(this.pulse));
         
+        // Convert opacity to string
+        const particleOpacity = String(pulseOpacity);
+        
+        // Calculate line opacity
+        const lineOpacityValue = String(pulseOpacity * 0.5);
+        
+        // Set fill style with particle color
         ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${particleOpacity})`;
         
-        // Safely replace opacity in lineColor
-        ctx.strokeStyle = lineColor.replace(/opacity/g, lineOpacityValue);
-        ctx.lineWidth = 2;
+        // Set stroke style with line color - safely replace opacity
+        let strokeStyleColor = lineColor;
+        if (lineColor.includes("rgba")) {
+          const lineColorParts = lineColor.match(/rgba?\(([^)]+)\)/);
+          if (lineColorParts && lineColorParts[1]) {
+            const parts = lineColorParts[1].split(',');
+            if (parts.length >= 3) {
+              strokeStyleColor = `rgba(${parts[0]}, ${parts[1]}, ${parts[2]}, ${lineOpacityValue})`;
+            }
+          }
+        }
+        
+        ctx.strokeStyle = strokeStyleColor;
+        ctx.lineWidth = 1;
 
+        // Apply glow effect
+        ctx.shadowBlur = 5 + 3 * Math.sin(this.pulse);
+        ctx.shadowColor = `rgba(${r}, ${g}, ${b}, 0.5)`;
+        
+        // Draw the particle
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        // Add a slight wobble to the particle shape for organic feel
+        const sizeWithPulse = this.size + Math.sin(this.pulse) * 0.5;
+        ctx.arc(this.x, this.y, sizeWithPulse, 0, Math.PI * 2);
         ctx.closePath();
         ctx.fill();
         ctx.stroke();
+        
+        // Reset shadow for next drawing
+        ctx.shadowBlur = 0;
       }
     }
 
@@ -115,7 +154,9 @@ export const FlowingBackground: React.FC<FlowingBackgroundProps> = ({
 
     // Animation loop
     const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // Create a semi-transparent layer for trail effect
+      ctx.fillStyle = 'rgba(10, 10, 25, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
       
       // Apply a slight blur for a glow effect
       ctx.shadowBlur = 15;
@@ -150,12 +191,22 @@ export const FlowingBackground: React.FC<FlowingBackgroundProps> = ({
             const opacity = 1 - (distance / maxDistance);
             
             // Extract base color from lineColor
-            const baseColor = lineColor.includes("rgba") 
-              ? lineColor.replace(/rgba?\(|\)/g, '').split(',')
-              : [220, 215, 240]; // Default color
-              
+            let r = 220, g = 215, b = 240; // Default color
+            const baseColorMatch = lineColor.match(/rgba?\(([^)]+)\)/);
+            if (baseColorMatch && baseColorMatch[1]) {
+              const parts = baseColorMatch[1].split(',');
+              if (parts.length >= 3) {
+                r = parseInt(parts[0].trim());
+                g = parseInt(parts[1].trim());
+                b = parseInt(parts[2].trim());
+              }
+            }
+            
+            // Convert to string for stroke style
+            const lineOpacityStr = String(opacity * 0.8);
+            
             ctx.beginPath();
-            ctx.strokeStyle = `rgba(${baseColor[0]}, ${baseColor[1]}, ${baseColor[2]}, ${opacity * 0.8})`;
+            ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${lineOpacityStr})`;
             ctx.lineWidth = 0.5;
             ctx.moveTo(particlesArray[i].x, particlesArray[i].y);
             ctx.lineTo(particlesArray[j].x, particlesArray[j].y);
