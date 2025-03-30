@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ArrowDown, ArrowUp, Info, Maximize2, X } from "lucide-react";
+import { ArrowDown, ArrowUp, Info, Maximize2, X, Map, Flag } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetClose } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -62,6 +62,15 @@ const channelNames = {
   baseline: "Baseline"
 };
 
+// Get colors for the heatmap based on incremental value
+const getIncrementalColor = (value: number) => {
+  if (value >= 700000) return "bg-blue-600 text-white";
+  if (value >= 500000) return "bg-blue-500 text-white";
+  if (value >= 350000) return "bg-blue-400 text-white";
+  if (value >= 200000) return "bg-blue-300";
+  return "bg-blue-200";
+};
+
 // Get colors for the heatmap based on ROAS value
 const getRoasColor = (roas: number) => {
   if (roas >= 5.0) return "bg-green-600 text-white";
@@ -75,21 +84,29 @@ const getRoasColor = (roas: number) => {
   return "bg-red-500 text-white";
 };
 
-// Function to get emoji indicators for ROAS trend
-const getTrendIndicator = (value: number) => {
-  if (value >= 4.0) return <ArrowUp className="h-4 w-4 text-green-500" />;
-  if (value >= 3.0) return <ArrowUp className="h-4 w-4 text-green-400" />;
-  if (value >= 2.0) return <ArrowDown className="h-4 w-4 text-yellow-500" />;
-  return <ArrowDown className="h-4 w-4 text-red-500" />;
+// Function to get emoji indicators for trend
+const getTrendIndicator = (value: number, isRevenue: boolean = false) => {
+  if (isRevenue) {
+    if (value >= 500000) return <ArrowUp className="h-4 w-4 text-green-500" />;
+    if (value >= 300000) return <ArrowUp className="h-4 w-4 text-green-400" />;
+    return <ArrowDown className="h-4 w-4 text-yellow-500" />;
+  } else {
+    // ROAS indicators
+    if (value >= 4.0) return <ArrowUp className="h-4 w-4 text-green-500" />;
+    if (value >= 3.0) return <ArrowUp className="h-4 w-4 text-green-400" />;
+    if (value >= 2.0) return <ArrowDown className="h-4 w-4 text-yellow-500" />;
+    return <ArrowDown className="h-4 w-4 text-red-500" />;
+  }
 };
 
-const getIncrementalColor = (contribution: number, total: number) => {
-  const percentage = (contribution / total) * 100;
-  if (percentage >= 20) return "bg-blue-600 text-white";
-  if (percentage >= 15) return "bg-blue-500 text-white";
-  if (percentage >= 10) return "bg-blue-400";
-  if (percentage >= 5) return "bg-blue-300";
-  return "bg-blue-200";
+// Function to format currency values
+const formatCurrency = (value: number) => {
+  if (value >= 1000000) {
+    return `$${(value / 1000000).toFixed(1)}M`;
+  } else if (value >= 1000) {
+    return `$${(value / 1000).toFixed(0)}K`;
+  }
+  return `$${value}`;
 };
 
 interface GeographicMediaBreakdownProps {
@@ -98,21 +115,21 @@ interface GeographicMediaBreakdownProps {
 }
 
 export function GeographicMediaBreakdown({ loading = false, selectedProduct }: GeographicMediaBreakdownProps) {
-  // Sort regions by ROAS
-  const sortedRegions = [...europeRegionsData].sort((a, b) => b.roas - a.roas);
+  // Sort regions by incremental revenue instead of ROAS
+  const sortedRegions = [...europeRegionsData].sort((a, b) => b.incremental - a.incremental);
 
   // Calculate total incremental contribution
   const totalIncremental = sortedRegions.reduce((sum, region) => sum + region.incremental, 0);
 
   // Calculate summary stats
-  const averageRoas = sortedRegions.reduce((sum, region) => sum + region.roas, 0) / sortedRegions.length;
+  const averageIncremental = totalIncremental / sortedRegions.length;
   const bestRegion = sortedRegions[0];
   const worstRegion = sortedRegions[sortedRegions.length - 1];
-  const totalRevenue = sortedRegions.reduce((sum, region) => sum + region.incremental, 0);
+  const averageRoas = sortedRegions.reduce((sum, region) => sum + region.roas, 0) / sortedRegions.length;
 
   // State for selected region for detailed view
   const [selectedRegion, setSelectedRegion] = useState<typeof europeRegionsData[0] | null>(null);
-  const [activeView, setActiveView] = useState<"roas" | "incremental">("roas");
+  const [activeView, setActiveView] = useState<"incremental" | "roas">("incremental");
 
   if (loading) {
     return (
@@ -132,7 +149,7 @@ export function GeographicMediaBreakdown({ loading = false, selectedProduct }: G
       <Tabs defaultValue="map" className="w-full">
         <TabsList className="mb-6">
           <TabsTrigger value="map" className="flex items-center gap-2">
-            <Info className="h-4 w-4" /> Overview
+            <Map className="h-4 w-4" /> Overview
           </TabsTrigger>
           <TabsTrigger value="table" className="flex items-center gap-2">
             <Info className="h-4 w-4" /> Detailed View
@@ -144,9 +161,11 @@ export function GeographicMediaBreakdown({ loading = false, selectedProduct }: G
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Card>
                 <CardContent className="p-4">
-                  <div className="font-medium text-sm text-muted-foreground mb-1">Average ROAS</div>
-                  <div className="text-2xl font-bold">{averageRoas.toFixed(2)}x</div>
-                  <div className="text-xs text-muted-foreground mt-2">Across all European regions</div>
+                  <div className="font-medium text-sm text-muted-foreground mb-1">Total Incremental Revenue</div>
+                  <div className="text-2xl font-bold">{formatCurrency(totalIncremental)}</div>
+                  <div className="text-xs text-muted-foreground mt-2">
+                    Product: {selectedProduct || "All Products"}
+                  </div>
                 </CardContent>
               </Card>
               
@@ -157,17 +176,15 @@ export function GeographicMediaBreakdown({ loading = false, selectedProduct }: G
                     <span className="text-2xl font-bold mr-2">{bestRegion.flag} {bestRegion.region}</span>
                     <ArrowUp className="h-4 w-4 text-green-500" />
                   </div>
-                  <div className="text-xs text-muted-foreground mt-2">ROAS: {bestRegion.roas.toFixed(2)}x</div>
+                  <div className="text-xs text-muted-foreground mt-2">Revenue: {formatCurrency(bestRegion.incremental)}</div>
                 </CardContent>
               </Card>
               
               <Card>
                 <CardContent className="p-4">
-                  <div className="font-medium text-sm text-muted-foreground mb-1">Total Incremental Revenue</div>
-                  <div className="text-2xl font-bold">${(totalRevenue/1000000).toFixed(1)}M</div>
-                  <div className="text-xs text-muted-foreground mt-2">
-                    Product: {selectedProduct || "All Products"}
-                  </div>
+                  <div className="font-medium text-sm text-muted-foreground mb-1">Average ROAS</div>
+                  <div className="text-2xl font-bold">{averageRoas.toFixed(2)}x</div>
+                  <div className="text-xs text-muted-foreground mt-2">Across all European regions</div>
                 </CardContent>
               </Card>
             </div>
@@ -177,102 +194,105 @@ export function GeographicMediaBreakdown({ loading = false, selectedProduct }: G
             <CardHeader className="pb-2">
               <CardTitle>Regional Analysis</CardTitle>
               <CardDescription>
-                Insights into incremental revenue and media performance by region
+                Incremental contribution by region across Europe
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Regional Breakdown</h3>
-                    <div className="grid grid-cols-2 gap-2">
-                      {sortedRegions.slice(0, 6).map((region) => (
-                        <Card key={region.region} className="overflow-hidden">
-                          <div className={`h-1 ${getRoasColor(region.roas)}`}></div>
-                          <CardContent className="p-3">
-                            <div className="flex items-center justify-between mb-2">
-                              <div className="flex items-center">
-                                <span className="text-lg mr-1">{region.flag}</span>
-                                <span className="font-medium text-sm">{region.region}</span>
-                              </div>
-                              <Badge className={getRoasColor(region.roas)}>
-                                {region.roas.toFixed(1)}x
+              <div className="mb-6 p-4 bg-muted/30 rounded-lg">
+                <div className="flex items-start gap-2">
+                  <Info className="h-5 w-5 text-primary mt-0.5" />
+                  <div>
+                    <h3 className="text-sm font-medium mb-1">Understanding Regional Distribution</h3>
+                    <p className="text-sm text-muted-foreground">
+                      This analysis shows incremental revenue contribution across European markets. 
+                      Use this data to identify top-performing regions and optimize your marketing investments
+                      based on regional performance trends.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mt-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-lg font-medium">Revenue by Region</h3>
+                  
+                  <div className="flex items-center gap-4">
+                    <Tabs value={activeView} onValueChange={(value) => setActiveView(value as "incremental" | "roas")} className="w-[300px]">
+                      <TabsList>
+                        <TabsTrigger value="incremental">Incremental Revenue</TabsTrigger>
+                        <TabsTrigger value="roas">ROAS</TabsTrigger>
+                      </TabsList>
+                    </Tabs>
+                  </div>
+                </div>
+
+                <div className="rounded-md border overflow-hidden">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Region</TableHead>
+                        <TableHead>{activeView === "incremental" ? "Incremental Revenue" : "ROAS"}</TableHead>
+                        <TableHead>Performance</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {sortedRegions.map((region) => (
+                        <TableRow 
+                          key={region.region} 
+                          className="cursor-pointer hover:bg-muted/50"
+                          onClick={() => setSelectedRegion(region)}
+                        >
+                          <TableCell>
+                            <div className="flex items-center">
+                              <span className="text-lg mr-2">{region.flag}</span>
+                              <span className="font-medium">{region.region}</span>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            {activeView === "incremental" ? (
+                              <Badge className={`${getIncrementalColor(region.incremental)}`}>
+                                {formatCurrency(region.incremental)}
                               </Badge>
-                            </div>
-                            <div className="text-xs text-muted-foreground">
-                              Incremental: ${(region.incremental/1000).toFixed(0)}K
-                            </div>
-                            <div className="text-xs text-muted-foreground flex items-center">
-                              {getTrendIndicator(region.roas)}
+                            ) : (
+                              <Badge className={`${getRoasColor(region.roas)}`}>
+                                {region.roas.toFixed(2)}x
+                              </Badge>
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center">
+                              {activeView === "incremental" 
+                                ? getTrendIndicator(region.incremental, true)
+                                : getTrendIndicator(region.roas)}
                               <span className="ml-1">
-                                {region.roas >= 4.0 ? "Excellent" : 
-                                region.roas >= 3.0 ? "Good" : 
-                                region.roas >= 2.0 ? "Average" : "Poor"}
+                                {activeView === "incremental" 
+                                  ? (region.incremental >= 500000 ? "Excellent" : 
+                                     region.incremental >= 300000 ? "Good" : 
+                                     region.incremental >= 200000 ? "Average" : "Poor")
+                                  : (region.roas >= 4.0 ? "Excellent" : 
+                                     region.roas >= 3.0 ? "Good" : 
+                                     region.roas >= 2.0 ? "Average" : "Poor")}
                               </span>
                             </div>
-                          </CardContent>
-                        </Card>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <Badge 
+                              variant="outline" 
+                              className="cursor-pointer"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedRegion(region);
+                              }}
+                            >
+                              <Maximize2 className="h-3 w-3 mr-1" />
+                              Details
+                            </Badge>
+                          </TableCell>
+                        </TableRow>
                       ))}
-                    </div>
-                    <div className="text-center text-sm text-muted-foreground">
-                      <button 
-                        className="text-primary hover:underline" 
-                        onClick={() => setActiveView("incremental")}
-                      >
-                        View all regions
-                      </button>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Performance Insights</h3>
-                    <Card>
-                      <CardContent className="p-4">
-                        <div className="space-y-4">
-                          <div className="flex items-start gap-2">
-                            <Info className="h-4 w-4 text-primary mt-1" />
-                            <div>
-                              <h3 className="text-sm font-medium mb-1">Key Findings</h3>
-                              <ul className="text-sm text-muted-foreground space-y-2">
-                                <li>• Northern European regions consistently show higher ROAS (4.0+)</li>
-                                <li>• Southern European markets require optimization (ROAS below 3.0)</li>
-                                <li>• Paid media delivers strongest incremental returns in UK and Nordics</li>
-                                <li>• Organic media shows promising growth in Germany and Netherlands</li>
-                              </ul>
-                            </div>
-                          </div>
-                          
-                          <div className="pt-2">
-                            <h3 className="text-sm font-medium mb-1">Media Mix by Region</h3>
-                            <div className="space-y-3 mt-3">
-                              {Object.entries(channelNames).map(([key, name]) => (
-                                <div key={key} className="flex items-center">
-                                  <div className="w-24 text-xs text-muted-foreground">{name}</div>
-                                  <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-                                    <div 
-                                      className={`h-2 ${key === 'paid' ? 'bg-blue-500' : key === 'organic' ? 'bg-green-500' : key === 'nonPaid' ? 'bg-amber-500' : 'bg-gray-500'}`}
-                                      style={{ width: `${key === 'paid' ? '45%' : key === 'organic' ? '25%' : key === 'nonPaid' ? '15%' : '15%'}` }}
-                                    ></div>
-                                  </div>
-                                  <div className="w-12 text-xs text-right text-muted-foreground">
-                                    {key === 'paid' ? '45%' : key === 'organic' ? '25%' : key === 'nonPaid' ? '15%' : '15%'}
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                          
-                          <div>
-                            <h3 className="text-sm font-medium mb-1">Strategic Recommendations</h3>
-                            <p className="text-sm text-muted-foreground">
-                              Focus budget allocation on Nordic and Western European markets where ROAS exceeds 4.0.
-                              Consider reallocating budget from Southern European markets to higher-performing regions.
-                            </p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
+                    </TableBody>
+                  </Table>
                 </div>
               </div>
             </CardContent>
@@ -282,116 +302,52 @@ export function GeographicMediaBreakdown({ loading = false, selectedProduct }: G
         <TabsContent value="table">
           <Card>
             <CardHeader>
-              <div className="flex items-center justify-between">
-                <div>
-                  <CardTitle>Regional Performance Data</CardTitle>
-                  <CardDescription>
-                    Detailed breakdown of incremental performance by region
-                  </CardDescription>
-                </div>
-                <div>
-                  <Tabs 
-                    value={activeView} 
-                    onValueChange={(v) => setActiveView(v as "roas" | "incremental")}
-                    className="w-[400px]"
-                  >
-                    <TabsList className="grid w-full grid-cols-2">
-                      <TabsTrigger value="roas">ROAS View</TabsTrigger>
-                      <TabsTrigger value="incremental">Incremental View</TabsTrigger>
-                    </TabsList>
-                  </Tabs>
-                </div>
-              </div>
+              <CardTitle>Detailed Regional Analysis</CardTitle>
+              <CardDescription>
+                Comprehensive breakdown of media performance by region
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="rounded-md border overflow-hidden">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Region</TableHead>
-                      {activeView === "roas" ? (
-                        <>
-                          <TableHead>ROAS</TableHead>
-                          <TableHead>Performance</TableHead>
-                        </>
-                      ) : (
-                        <>
-                          <TableHead>Incremental Revenue</TableHead>
-                          <TableHead>Contribution</TableHead>
-                        </>
-                      )}
-                      <TableHead className="text-right">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {(activeView === "roas" ? [...sortedRegions] : [...sortedRegions].sort((a, b) => b.incremental - a.incremental)).map((region) => (
-                      <TableRow 
-                        key={region.region} 
-                        className="cursor-pointer hover:bg-muted/50"
-                        onClick={() => setSelectedRegion(region)}
-                      >
-                        <TableCell>
-                          <div className="flex items-center">
-                            <span className="text-lg mr-2">{region.flag}</span>
-                            <span className="font-medium">{region.region}</span>
+              <div className="space-y-6">
+                {sortedRegions.map((region) => {
+                  const totalChannelRevenue = Object.values(region.channels).reduce((sum, val) => sum + (val as number), 0);
+                  
+                  return (
+                    <Card key={region.region} className="overflow-hidden">
+                      <div className="h-1 bg-gradient-to-r from-blue-500 to-purple-500"></div>
+                      <CardContent className="p-4">
+                        <div className="flex flex-col md:flex-row justify-between gap-4">
+                          <div className="flex items-center gap-3">
+                            <div className="text-3xl">{region.flag}</div>
+                            <div>
+                              <h3 className="text-lg font-medium">{region.region}</h3>
+                              <p className="text-sm text-muted-foreground">Incremental Revenue: {formatCurrency(region.incremental)}</p>
+                            </div>
                           </div>
-                        </TableCell>
-                        
-                        {activeView === "roas" ? (
-                          <>
-                            <TableCell>
-                              <Badge className={`${getRoasColor(region.roas)}`}>
-                                {region.roas.toFixed(2)}x
-                              </Badge>
-                            </TableCell>
-                            <TableCell>
-                              <div className="flex items-center">
-                                {getTrendIndicator(region.roas)}
-                                <span className="ml-1">
-                                  {region.roas >= 4.0 ? "Excellent" : 
-                                  region.roas >= 3.0 ? "Good" : 
-                                  region.roas >= 2.0 ? "Average" : "Poor"}
-                                </span>
+                          
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            {Object.entries(region.channels).map(([channel, value]) => (
+                              <div key={channel} className="text-center">
+                                <div className="text-xs text-muted-foreground mb-1">{channelNames[channel as keyof typeof channelNames]}</div>
+                                <div className="font-semibold">{formatCurrency(value as number)}</div>
+                                <div className="text-xs text-muted-foreground">
+                                  {Math.round(((value as number) / totalChannelRevenue) * 100)}% of total
+                                </div>
                               </div>
-                            </TableCell>
-                          </>
-                        ) : (
-                          <>
-                            <TableCell>
-                              <Badge className={`${getIncrementalColor(region.incremental, totalIncremental)}`}>
-                                ${(region.incremental/1000).toFixed(0)}K
-                              </Badge>
-                            </TableCell>
-                            <TableCell>
-                              {((region.incremental / totalIncremental) * 100).toFixed(1)}% of total
-                            </TableCell>
-                          </>
-                        )}
-                        
-                        <TableCell className="text-right">
-                          <Badge 
-                            variant="outline" 
-                            className="cursor-pointer"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedRegion(region);
-                            }}
-                          >
-                            <Maximize2 className="h-3 w-3 mr-1" />
-                            Details
-                          </Badge>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                            ))}
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
               </div>
             </CardContent>
           </Card>
         </TabsContent>
       </Tabs>
 
-      {/* Channel breakdown sheet that appears when a region is clicked */}
+      {/* Region detail sheet that appears when a region is clicked */}
       <Sheet open={!!selectedRegion} onOpenChange={() => setSelectedRegion(null)}>
         <SheetContent className="sm:max-w-lg">
           <SheetHeader>
@@ -400,33 +356,61 @@ export function GeographicMediaBreakdown({ loading = false, selectedProduct }: G
               {selectedRegion?.region} - Performance Analysis
             </SheetTitle>
             <SheetDescription>
-              Incremental and baseline contribution for {selectedRegion?.region}
+              Detailed performance metrics for {selectedRegion?.region}
             </SheetDescription>
           </SheetHeader>
           
           {selectedRegion && (
             <div className="py-6">
-              <div className="mb-6">
-                <div className="text-sm font-medium mb-2">Overall ROAS</div>
-                <div className="flex items-center">
-                  <Badge className={`text-lg ${getRoasColor(selectedRegion.roas)}`}>
-                    {selectedRegion.roas.toFixed(2)}x
-                  </Badge>
-                  <span className="ml-2 text-sm text-muted-foreground">
-                    {selectedRegion.roas >= 4.0 ? "Excellent performance" : 
-                     selectedRegion.roas >= 3.0 ? "Good performance" : 
-                     selectedRegion.roas >= 2.0 ? "Average performance" : "Needs improvement"}
-                  </span>
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="bg-muted/30 p-4 rounded-lg">
+                  <div className="text-sm text-muted-foreground mb-1">Incremental Revenue</div>
+                  <div className="text-2xl font-bold">{formatCurrency(selectedRegion.incremental)}</div>
+                  <div className="flex items-center gap-1 mt-1 text-xs">
+                    {getTrendIndicator(selectedRegion.incremental, true)}
+                    <span>
+                      {selectedRegion.incremental >= 500000 ? "Excellent" : 
+                       selectedRegion.incremental >= 300000 ? "Good" : 
+                       selectedRegion.incremental >= 200000 ? "Average" : "Poor"}
+                    </span>
+                  </div>
+                </div>
+                
+                <div className="bg-muted/30 p-4 rounded-lg">
+                  <div className="text-sm text-muted-foreground mb-1">ROAS</div>
+                  <div className="text-2xl font-bold">{selectedRegion.roas.toFixed(2)}x</div>
+                  <div className="flex items-center gap-1 mt-1 text-xs">
+                    {getTrendIndicator(selectedRegion.roas)}
+                    <span>
+                      {selectedRegion.roas >= 4.0 ? "Excellent" : 
+                       selectedRegion.roas >= 3.0 ? "Good" : 
+                       selectedRegion.roas >= 2.0 ? "Average" : "Poor"}
+                    </span>
+                  </div>
                 </div>
               </div>
-              
+
               <div className="mb-6">
-                <div className="text-sm font-medium mb-2">Incremental Contribution</div>
-                <div className="text-2xl font-bold">
-                  ${selectedRegion.incremental.toLocaleString()}
-                </div>
-                <div className="text-sm text-muted-foreground">
-                  {((selectedRegion.incremental / totalIncremental) * 100).toFixed(1)}% of total incremental revenue
+                <h3 className="text-sm font-medium mb-3">Revenue Breakdown by Media Type</h3>
+                <div className="space-y-3">
+                  {Object.entries(selectedRegion.channels).map(([channel, value]) => {
+                    const percentage = ((value as number) / selectedRegion.incremental) * 100;
+                    
+                    return (
+                      <div key={channel}>
+                        <div className="flex justify-between mb-1">
+                          <span className="text-sm">{channelNames[channel as keyof typeof channelNames]}</span>
+                          <span className="text-sm font-medium">{formatCurrency(value as number)} ({percentage.toFixed(1)}%)</span>
+                        </div>
+                        <div className="w-full bg-muted rounded-full h-2">
+                          <div 
+                            className="bg-primary h-2 rounded-full" 
+                            style={{ width: `${percentage}%` }}
+                          ></div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -434,56 +418,72 @@ export function GeographicMediaBreakdown({ loading = false, selectedProduct }: G
                 <div className="flex items-start gap-2">
                   <Info className="h-4 w-4 text-primary mt-0.5" />
                   <div>
+                    <h3 className="text-sm font-medium mb-1">Regional Insights</h3>
                     <p className="text-sm text-muted-foreground">
-                      The breakdown below shows how different media types contribute to 
-                      the incremental revenue in {selectedRegion.region}. 
-                      These insights can help optimize your regional media mix strategy.
+                      {selectedRegion.incremental >= 500000 
+                        ? `${selectedRegion.region} is a top-performing region with excellent incremental revenue. 
+                          Continue to prioritize this market in your media planning.` 
+                        : selectedRegion.incremental >= 300000
+                        ? `${selectedRegion.region} shows good performance with strong incremental revenue potential. 
+                          Consider optimizing your media mix to further improve results.`
+                        : `${selectedRegion.region} has room for improvement. Review your media strategy and 
+                          consider testing new approaches to boost incremental revenue.`
+                      }
                     </p>
                   </div>
                 </div>
               </div>
-
-              <div className="space-y-4">
-                <div className="text-sm font-medium">Media Type Breakdown</div>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Media Type</TableHead>
-                      <TableHead>Revenue</TableHead>
-                      <TableHead>Contribution</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {Object.entries(selectedRegion.channels).map(([channel, revenue]) => (
-                      <TableRow key={channel}>
-                        <TableCell className="font-medium">
-                          {channelNames[channel as keyof typeof channelNames]}
-                        </TableCell>
-                        <TableCell>
-                          ${(revenue as number).toLocaleString()}
-                        </TableCell>
-                        <TableCell>
-                          {((revenue as number / selectedRegion.incremental) * 100).toFixed(1)}%
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-                
-                <div className="mt-6 p-4 bg-muted/30 rounded-lg">
-                  <h3 className="text-sm font-medium mb-2 flex items-center">
-                    <Info className="h-4 w-4 mr-1 text-primary" />
-                    Region Insights
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    {selectedRegion.roas >= 4.0 
-                      ? `${selectedRegion.region} shows excellent ROAS performance with strong incremental contribution from paid media. Consider increasing investment in this high-performing region.`
-                      : selectedRegion.roas >= 3.0
-                      ? `${selectedRegion.region} shows good overall performance. Continue to monitor channel mix to optimize results further.`
-                      : `${selectedRegion.region} has below-average performance. Consider strategic reassessment of media mix or creative assets for this region.`
-                    }
-                  </p>
-                </div>
+              
+              <div>
+                <h3 className="text-sm font-medium mb-3">Recommendations</h3>
+                <ul className="space-y-2 text-sm">
+                  {selectedRegion.incremental >= 500000 ? (
+                    <>
+                      <li className="flex items-center gap-2">
+                        <Flag className="h-4 w-4 text-green-500" />
+                        <span>Consider increasing investment in this high-performing region</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <Flag className="h-4 w-4 text-green-500" />
+                        <span>Test expanding into similar neighboring markets</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <Flag className="h-4 w-4 text-green-500" />
+                        <span>Use this region's strategy as a blueprint for lower-performing areas</span>
+                      </li>
+                    </>
+                  ) : selectedRegion.incremental >= 300000 ? (
+                    <>
+                      <li className="flex items-center gap-2">
+                        <Flag className="h-4 w-4 text-blue-500" />
+                        <span>Optimize media mix to improve incremental revenue</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <Flag className="h-4 w-4 text-blue-500" />
+                        <span>Identify top-performing channels and increase their budget allocation</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <Flag className="h-4 w-4 text-blue-500" />
+                        <span>Test new creative approaches to boost engagement</span>
+                      </li>
+                    </>
+                  ) : (
+                    <>
+                      <li className="flex items-center gap-2">
+                        <Flag className="h-4 w-4 text-amber-500" />
+                        <span>Review overall strategy for this region</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <Flag className="h-4 w-4 text-amber-500" />
+                        <span>Consider reallocating budget from low-performing channels</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <Flag className="h-4 w-4 text-amber-500" />
+                        <span>Analyze audience data to improve targeting</span>
+                      </li>
+                    </>
+                  )}
+                </ul>
               </div>
             </div>
           )}
