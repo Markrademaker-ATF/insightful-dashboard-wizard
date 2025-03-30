@@ -34,8 +34,8 @@ const LoginPage = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-900 p-4 relative overflow-hidden">
-      {/* Dynamic Background */}
-      <FlowingBackground className="opacity-30" />
+      {/* Dynamic Background with customized density */}
+      <FlowingBackground className="opacity-40" />
       
       <div className="w-full max-w-md z-10">
         <div className="text-center mb-8">
