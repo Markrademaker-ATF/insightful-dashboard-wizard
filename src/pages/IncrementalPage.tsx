@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/button";
@@ -24,7 +25,6 @@ import { KeyContributorsSection } from "@/components/dashboard/KeyContributorsSe
 import { MediaTypesExplanationCard } from "@/components/dashboard/MediaTypesExplanationCard";
 import { ChannelOption } from "@/components/dashboard/MediaTypeSelector";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ChannelTrendsChart } from "@/components/channels/ChannelTrendsChart";
 import { FilterDropdown } from "@/components/dashboard/FilterDropdown";
 import { GeographicMediaBreakdown } from "@/components/dashboard/GeographicMediaBreakdown";
 
@@ -249,9 +249,6 @@ const IncrementalPage = () => {
           <TabsTrigger value="geography" className="flex items-center gap-2">
             <Globe className="h-4 w-4" /> Geographic Analysis
           </TabsTrigger>
-          <TabsTrigger value="trends" className="flex items-center gap-2">
-            <TrendingUp className="h-4 w-4" /> Performance Trends
-          </TabsTrigger>
         </TabsList>
 
         {/* Overview Tab Content */}
@@ -284,22 +281,6 @@ const IncrementalPage = () => {
         {/* Geographic Analysis Tab Content */}
         <TabsContent value="geography" className="space-y-8">
           <GeographicMediaBreakdown loading={loading} />
-        </TabsContent>
-
-        {/* Trends Tab Content */}
-        <TabsContent value="trends" className="space-y-8">
-          <Card>
-            <CardContent className="pt-6">
-              <h3 className="text-lg font-medium mb-4">Channel Performance Trends</h3>
-              <p className="text-sm text-muted-foreground mb-6">
-                Track how each channel's performance has changed over time to identify emerging patterns and shifts in effectiveness.
-              </p>
-              <ChannelTrendsChart 
-                data={channelTrendsData}
-                loading={loading}
-              />
-            </CardContent>
-          </Card>
         </TabsContent>
       </Tabs>
     </div>
