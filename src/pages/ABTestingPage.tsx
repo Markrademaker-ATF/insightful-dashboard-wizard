@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -7,13 +8,16 @@ import { ABTestComparisonChart } from "@/components/ab-testing/ABTestComparisonC
 import { ABTestMetricsCards } from "@/components/ab-testing/ABTestMetricsCards";
 import { ABTestScenarioSelector } from "@/components/ab-testing/ABTestScenarioSelector";
 import { useMockABTestData } from "@/hooks/useMockABTestData";
-import { BarChart2, Calendar, Clock, ArrowRight, LineChart, FileSpreadsheet } from "lucide-react";
+import { BarChart2, Calendar, Clock, ArrowRight, LineChart, FileSpreadsheet, PieChart, Activity, TrendingUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { GlobalFilters } from "@/components/layout/GlobalFilters";
+import { ABTestVariantTimeline } from "@/components/ab-testing/ABTestVariantTimeline";
 
 const ABTestingPage = () => {
   const { testScenarios, activeTests, completedTests, loading } = useMockABTestData();
   const [selectedTest, setSelectedTest] = useState<string>(completedTests[0]?.id || "");
+  const [activeTab, setActiveTab] = useState("overview");
 
   // Get the currently selected test data
   const selectedTestData = completedTests.find(test => test.id === selectedTest) || completedTests[0];
@@ -29,10 +33,13 @@ const ABTestingPage = () => {
 
   return (
     <div className="animate-fade-in">
-      <PageHeader
-        title="A/B Test Analysis"
-        description="Compare test results and analyze the performance of different variants to optimize your marketing strategy."
-      />
+      <div className="flex justify-between items-center mb-6">
+        <PageHeader
+          title="A/B Test Analysis"
+          description="Compare test results and analyze the performance of different variants to optimize your marketing strategy."
+        />
+        <GlobalFilters />
+      </div>
 
       <div className="mb-6">
         <ABTestScenarioSelector 
@@ -88,11 +95,19 @@ const ABTestingPage = () => {
           
           <ABTestMetricsCards test={selectedTestData} loading={loading} />
           
-          <Tabs defaultValue="comparison" className="mt-8">
+          <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="mt-8">
             <TabsList className="mb-4 bg-white/70 backdrop-blur-sm border border-white/30">
+              <TabsTrigger value="overview" className="data-[state=active]:bg-primary/20">
+                <Activity className="h-4 w-4 mr-2" />
+                Overview
+              </TabsTrigger>
               <TabsTrigger value="comparison" className="data-[state=active]:bg-primary/20">
                 <BarChart2 className="h-4 w-4 mr-2" />
                 Results Comparison
+              </TabsTrigger>
+              <TabsTrigger value="timeline" className="data-[state=active]:bg-primary/20">
+                <TrendingUp className="h-4 w-4 mr-2" />
+                Timeline Analysis
               </TabsTrigger>
               <TabsTrigger value="details" className="data-[state=active]:bg-primary/20">
                 <FileSpreadsheet className="h-4 w-4 mr-2" />
@@ -100,7 +115,41 @@ const ABTestingPage = () => {
               </TabsTrigger>
             </TabsList>
             
-            <TabsContent value="comparison">
+            <TabsContent value="overview" className="animate-fade-in">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <Card className="glass-card premium-shadow border-white/30">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center gap-2">
+                      <PieChart className="h-5 w-5 text-primary" />
+                      Key Performance Indicators
+                    </CardTitle>
+                    <CardDescription>
+                      Summarized view of test results and key metrics
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ABTestComparisonChart test={selectedTestData} loading={loading} />
+                  </CardContent>
+                </Card>
+                
+                <Card className="glass-card premium-shadow border-white/30">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center gap-2">
+                      <FileSpreadsheet className="h-5 w-5 text-primary" />
+                      Results Summary
+                    </CardTitle>
+                    <CardDescription>
+                      Comparison between test variants
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ABTestResultsTable test={selectedTestData} loading={loading} />
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="comparison" className="animate-fade-in">
               <div className="grid grid-cols-1 gap-6">
                 <Card className="glass-card premium-shadow border-white/30">
                   <CardHeader className="pb-3">
@@ -133,8 +182,25 @@ const ABTestingPage = () => {
                 </Card>
               </div>
             </TabsContent>
+
+            <TabsContent value="timeline" className="animate-fade-in">
+              <Card className="glass-card premium-shadow border-white/30">
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center gap-2">
+                    <TrendingUp className="h-5 w-5 text-primary" />
+                    Performance Over Time
+                  </CardTitle>
+                  <CardDescription>
+                    Tracking variant performance throughout the test duration
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ABTestVariantTimeline test={selectedTestData} loading={loading} />
+                </CardContent>
+              </Card>
+            </TabsContent>
             
-            <TabsContent value="details">
+            <TabsContent value="details" className="animate-fade-in">
               <Card className="glass-card premium-shadow border-white/30">
                 <CardHeader className="pb-3">
                   <CardTitle className="flex items-center gap-2">
