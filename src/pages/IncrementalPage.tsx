@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Download, TrendingUp, BarChart3, PieChart, Activity, Calendar, Globe } from "lucide-react";
+import { Download, TrendingUp, BarChart3, PieChart, Activity, Calendar, Globe, ShoppingBag } from "lucide-react";
 import {
   generateIncrementalData,
   channelColors,
@@ -41,6 +41,17 @@ const IncrementalPage = () => {
   const [mediaType, setMediaType] = useState("all");
   const [selectedChannel, setSelectedChannel] = useState("all");
   const [timeframe, setTimeframe] = useState("90d");
+  const [selectedProduct, setSelectedProduct] = useState("all");
+
+  // Product filter options
+  const productOptions = [
+    { value: "all", label: "All Products" },
+    { value: "electronics", label: "Electronics" },
+    { value: "clothing", label: "Clothing" },
+    { value: "furniture", label: "Furniture" },
+    { value: "beauty", label: "Beauty & Personal Care" },
+    { value: "food", label: "Food & Beverages" }
+  ];
 
   // Channel options for each media type
   const channelOptions: ChannelOption[] = [
@@ -102,7 +113,7 @@ const IncrementalPage = () => {
     };
 
     loadData();
-  }, [timeframe]);
+  }, [timeframe, selectedProduct]);
 
   // Update channel data when media type or selected channel changes
   useEffect(() => {
@@ -121,6 +132,11 @@ const IncrementalPage = () => {
   const handleTimeframeChange = (newTimeframe: string) => {
     setTimeframe(newTimeframe);
   };
+  
+  // Handler for product change
+  const handleProductChange = (newProduct: string) => {
+    setSelectedProduct(newProduct);
+  };
 
   return (
     <div className="animate-fade-in">
@@ -129,6 +145,13 @@ const IncrementalPage = () => {
         description="Analyze baseline and incremental contribution to performance across media types and channels"
       >
         <div className="flex items-center gap-2">
+          <FilterDropdown 
+            options={productOptions}
+            value={selectedProduct}
+            onChange={handleProductChange}
+            icon={<ShoppingBag className="h-4 w-4 mr-2" />}
+            label="Product"
+          />
           <FilterDropdown 
             options={timeframeOptions}
             value={timeframe}
@@ -280,7 +303,7 @@ const IncrementalPage = () => {
 
         {/* Geographic Analysis Tab Content */}
         <TabsContent value="geography" className="space-y-8">
-          <GeographicMediaBreakdown loading={loading} />
+          <GeographicMediaBreakdown loading={loading} selectedProduct={selectedProduct} />
         </TabsContent>
       </Tabs>
     </div>
