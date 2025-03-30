@@ -1,7 +1,6 @@
 
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Sparkles } from "lucide-react";
 
 export function HeaderBanner() {
   const location = useLocation();
@@ -85,12 +84,12 @@ export function HeaderBanner() {
   return (
     <div className="flex items-center gap-5 mb-6 animate-fade-in">
       <Link to="/" className="flex items-center gap-2 hover:opacity-90 transition-opacity">
-        <div className="bg-gradient-to-r from-primary to-purple-600 p-3 rounded-xl shadow-lg shadow-primary/20 flex items-center justify-center">
-          <img 
-            src="/lovable-uploads/c91593ad-aa3a-4f49-b9f4-86d049161286.png" 
-            alt="Artefact Logo" 
-            className="h-8 w-auto"
-          />
+        <div className="bg-gradient-to-r from-purple-600 to-violet-600 p-3 rounded-xl shadow-lg shadow-primary/20 flex items-center justify-center">
+          {/* Redesigned logo - simplified modern "A" mark */}
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14 2L25 26H3L14 2Z" fill="white"/>
+            <path d="M14 12L18 22H10L14 12Z" fill="#9b87f5"/>
+          </svg>
         </div>
       </Link>
       
