@@ -36,13 +36,18 @@ const LoginPage = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 to-slate-800 p-4 relative overflow-hidden">
       {/* Enhanced dynamic background with customized properties */}
       <FlowingBackground 
-        className="opacity-70"
-        particleCount={100}
-        speed={0.35}
-        particleSize={16}
-        particleColor="rgba(155, 135, 245, 0.6)"
-        lineColor="rgba(155, 135, 245, 0.4)"
+        className="opacity-80"
+        particleCount={120}
+        speed={0.4}
+        particleSize={18}
+        particleColor="rgba(155, 135, 245, 0.7)"
+        lineColor="rgba(155, 135, 245, 0.5)"
       />
+      
+      {/* Add floating elements for depth */}
+      <div className="absolute top-1/4 left-1/4 w-32 h-32 rounded-full bg-purple-500/10 blur-3xl animate-float"></div>
+      <div className="absolute bottom-1/4 right-1/4 w-40 h-40 rounded-full bg-indigo-500/10 blur-3xl animate-float" style={{animationDelay: "2s"}}></div>
+      <div className="absolute top-3/4 right-1/3 w-24 h-24 rounded-full bg-violet-500/10 blur-3xl animate-float" style={{animationDelay: "4s"}}></div>
       
       <div className="w-full max-w-md z-10">
         <div className="text-center mb-8 animate-fade-in">
