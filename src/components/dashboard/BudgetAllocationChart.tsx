@@ -1,6 +1,6 @@
 
 import React from "react";
-import { PieChart, Pie, ResponsiveContainer, Cell, Tooltip, Legend } from "recharts";
+import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 import { ChartContainer, ChartTooltipContent, ChartLegendContent } from "@/components/ui/chart";
 
 type BudgetAllocationProps = {
@@ -49,11 +49,16 @@ export function BudgetAllocationChart({ data, loading = false, title }: BudgetAl
               <Cell key={`cell-${index}`} fill={entry.color} style={{ filter: 'drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.1))' }} />
             ))}
           </Pie>
-          <Tooltip
+          <Tooltip 
             content={(props) => {
+              if (!props.active || !props.payload?.length) {
+                return null;
+              }
               return (
                 <ChartTooltipContent
-                  {...props}
+                  active={props.active}
+                  payload={props.payload}
+                  label={props.label}
                   formatter={(value) => `$${Number(value).toLocaleString()}`}
                 />
               );
@@ -61,9 +66,13 @@ export function BudgetAllocationChart({ data, loading = false, title }: BudgetAl
           />
           <Legend 
             content={(props) => {
+              if (!props.payload?.length) {
+                return null;
+              }
               return (
                 <ChartLegendContent
-                  {...props}
+                  payload={props.payload}
+                  verticalAlign={props.verticalAlign}
                   nameKey="name"
                 />
               );
