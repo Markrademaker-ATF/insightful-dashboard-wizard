@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, Bot, User, PlusCircle, Sparkles, ArrowRight } from "lucide-react";
+import { Send, Sparkles, ArrowRight } from "lucide-react";
 import { ChatMessage } from "./ChatMessage";
 import { SuggestionChip } from "./SuggestionChip";
 import { useToast } from "@/components/ui/use-toast";
@@ -101,7 +101,6 @@ export function ChatInterface() {
   const handleSuggestionClick = (query: string) => {
     setInput(query);
     
-    // Optionally auto-send the suggestion after a short delay
     setTimeout(() => {
       if (query) {
         sendMessage();
@@ -110,17 +109,17 @@ export function ChatInterface() {
   };
 
   return (
-    <div className="flex flex-col h-full min-h-[600px] bg-gradient-to-br from-purple-50/70 to-blue-50/70">
+    <div className="flex flex-col h-full min-h-[600px] bg-gradient-to-br from-purple-50/70 to-blue-50/70 rounded-xl overflow-hidden">
       {/* Chat messages container */}
-      <div className="flex-1 overflow-y-auto p-6">
-        <div className="space-y-6">
+      <div className="flex-1 overflow-y-auto p-6 space-y-4">
+        <div className="space-y-4">
           {messages.map((message) => (
             <ChatMessage key={message.id} message={message} />
           ))}
           {isLoading && (
-            <div className="flex items-center gap-2 text-primary animate-pulse p-4 rounded-lg bg-accent/30">
-              <Sparkles className="h-4 w-4 text-primary" />
-              <span>AI is generating insights...</span>
+            <div className="flex items-center gap-3 text-primary animate-pulse p-4 rounded-xl bg-primary/10 border border-primary/20">
+              <Sparkles className="h-5 w-5 text-primary" />
+              <span className="text-base">AI is generating insights...</span>
             </div>
           )}
           <div ref={messagesEndRef} />
@@ -128,9 +127,9 @@ export function ChatInterface() {
       </div>
       
       {/* Suggestions */}
-      <div className="px-6 py-3 border-t bg-white/40 backdrop-blur-sm">
-        <p className="text-xs text-muted-foreground mb-2 flex items-center gap-2">
-          <Sparkles className="h-3 w-3 text-primary" />
+      <div className="px-6 py-4 border-t bg-white/40 backdrop-blur-sm">
+        <p className="text-sm text-muted-foreground mb-3 flex items-center gap-2">
+          <Sparkles className="h-4 w-4 text-primary" />
           Suggested insights:
         </p>
         <div className="flex flex-wrap gap-2 mb-3">
@@ -145,7 +144,7 @@ export function ChatInterface() {
       </div>
       
       {/* Input area */}
-      <div className="border-t p-4 bg-white/60 backdrop-blur-sm">
+      <div className="border-t p-5 bg-white/60 backdrop-blur-sm">
         <div className="relative">
           <Textarea
             placeholder="Ask an intelligent question about your analytics..."
@@ -153,19 +152,19 @@ export function ChatInterface() {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             rows={3}
-            className="pr-12 resize-none border-primary/30 focus:border-primary/70 transition-colors shadow-sm bg-white/80"
+            className="pr-14 resize-none border-primary/30 focus:border-primary/70 transition-colors shadow-sm bg-white/80 text-base"
           />
           <Button
             size="icon"
-            className="absolute bottom-2 right-2 bg-primary hover:bg-primary/90 text-white shadow-sm"
+            className="absolute bottom-2 right-2 bg-primary hover:bg-primary/90 text-white shadow-sm w-10 h-10"
             onClick={sendMessage}
             disabled={!input.trim() || isLoading}
           >
-            <Send className="h-4 w-4" />
+            <Send className="h-5 w-5" />
           </Button>
         </div>
-        <div className="text-xs text-muted-foreground mt-2 flex items-center gap-1">
-          <Sparkles className="h-3 w-3 text-primary" />
+        <div className="text-sm text-muted-foreground mt-2 flex items-center gap-2">
+          <Sparkles className="h-4 w-4 text-primary" />
           Press Enter to send, Shift+Enter for a new line
         </div>
       </div>

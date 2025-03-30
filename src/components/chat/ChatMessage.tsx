@@ -20,28 +20,34 @@ export function ChatMessage({ message }: ChatMessageProps) {
   return (
     <div
       className={cn(
-        "flex items-start gap-4 rounded-lg p-4 transition-all duration-300",
-        isAI ? "bg-accent/60 border border-accent/30 shadow-sm" : ""
+        "flex items-start gap-4 rounded-xl p-5 transition-all duration-300 mb-4",
+        isAI 
+          ? "bg-primary/10 border border-primary/20 shadow-sm" 
+          : "bg-secondary/10 border border-secondary/20"
       )}
     >
       <div className={cn(
-        "rounded-full p-2 w-9 h-9 flex items-center justify-center flex-shrink-0 shadow-sm",
-        isAI ? "bg-primary/20 text-primary" : "bg-secondary text-secondary-foreground"
+        "rounded-full p-2.5 w-11 h-11 flex items-center justify-center flex-shrink-0 shadow-sm",
+        isAI 
+          ? "bg-primary/20 text-primary" 
+          : "bg-secondary text-secondary-foreground"
       )}>
-        {isAI ? <Bot className="h-4 w-4" /> : <User className="h-4 w-4" />}
+        {isAI ? <Bot className="h-5 w-5" /> : <User className="h-5 w-5" />}
       </div>
       
       <div className="flex-1">
-        <div className="text-sm font-medium mb-1 flex items-center gap-2">
+        <div className="text-base font-semibold mb-2 flex items-center gap-2 text-foreground">
           {isAI ? "Analytics Assistant" : "You"}
-          <span className="text-xs text-muted-foreground font-normal">
+          <span className="text-sm text-muted-foreground font-normal ml-2">
             {formatTime(message.timestamp)}
           </span>
         </div>
-        <div className="text-sm whitespace-pre-wrap leading-relaxed">{message.content}</div>
+        <div className="text-base text-foreground/90 whitespace-pre-wrap leading-relaxed">
+          {message.content}
+        </div>
         {isAI && (
-          <div className="flex items-center gap-1 mt-2 text-xs text-muted-foreground">
-            <Check className="h-3 w-3" />
+          <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
+            <Check className="h-4 w-4 text-primary" />
             <span>AI-generated response</span>
           </div>
         )}

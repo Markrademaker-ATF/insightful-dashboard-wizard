@@ -11,10 +11,10 @@ export function SuggestionChip({ query, onClick }: SuggestionChipProps) {
   return (
     <button
       onClick={onClick}
-      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-medium bg-primary/10 hover:bg-primary/20 text-primary transition-colors border border-primary/10 shadow-sm"
+      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium bg-primary/10 hover:bg-primary/20 text-primary transition-colors border border-primary/20 shadow-sm hover:shadow-md"
     >
-      <span className="truncate max-w-[200px]">{query}</span>
-      <ArrowRight className="h-3 w-3" />
+      <span className="truncate max-w-[250px]">{query}</span>
+      <ArrowRight className="h-4 w-4" />
     </button>
   );
 }
