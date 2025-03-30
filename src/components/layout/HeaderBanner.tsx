@@ -84,14 +84,14 @@ export function HeaderBanner() {
   return (
     <div className="flex items-center gap-5 mb-6 animate-fade-in">
       <Link to="/" className="flex items-center gap-2 hover:opacity-90 transition-opacity">
-        <div className="p-2 flex items-center justify-center">
-          {/* Updated logo to match the triangle design in the reference image */}
-          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M20 0L40 40H0L20 0Z" fill="url(#triangle-gradient)"/>
+        <div className="flex items-center justify-center">
+          {/* Updated logo to match the reference image */}
+          <svg width="50" height="40" viewBox="0 0 50 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M25 0L50 40H0L25 0Z" fill="url(#triangle-gradient)"/>
             <defs>
-              <linearGradient id="triangle-gradient" x1="20" y1="0" x2="20" y2="40" gradientUnits="userSpaceOnUse">
+              <linearGradient id="triangle-gradient" x1="25" y1="0" x2="25" y2="40" gradientUnits="userSpaceOnUse">
                 <stop offset="0" stopColor="#2B5BA9"/>
-                <stop offset="0.5" stopColor="#8B4AA9"/>
+                <stop offset="0.33" stopColor="#8B4AA9"/>
                 <stop offset="1" stopColor="#C84E99"/>
               </linearGradient>
             </defs>

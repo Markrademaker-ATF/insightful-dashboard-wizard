@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { FlowingBackground } from "@/components/ui/FlowingBackground";
-import { LogIn, Mail, Lock, ArrowRight, KeyRound } from "lucide-react";
+import { Mail, Lock, ArrowRight, KeyRound } from "lucide-react";
 import { toast } from "sonner";
 
 const LoginPage = () => {
@@ -51,22 +51,22 @@ const LoginPage = () => {
       
       <div className="w-full max-w-md z-10">
         <div className="text-center mb-8 animate-fade-in">
-          <div className="flex items-center justify-center mb-2">
-            {/* Updated logo design */}
-            <div className="mb-2 flex justify-center">
-              <svg width="60" height="60" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M20 0L40 40H0L20 0Z" fill="url(#login-triangle-gradient)"/>
+          <div className="flex flex-col items-center justify-center mb-2">
+            {/* Updated logo design to match reference image */}
+            <div className="mb-2">
+              <svg width="100" height="80" viewBox="0 0 50 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M25 0L50 40H0L25 0Z" fill="url(#login-triangle-gradient)"/>
                 <defs>
-                  <linearGradient id="login-triangle-gradient" x1="20" y1="0" x2="20" y2="40" gradientUnits="userSpaceOnUse">
+                  <linearGradient id="login-triangle-gradient" x1="25" y1="0" x2="25" y2="40" gradientUnits="userSpaceOnUse">
                     <stop offset="0" stopColor="#2B5BA9"/>
-                    <stop offset="0.5" stopColor="#8B4AA9"/>
+                    <stop offset="0.33" stopColor="#8B4AA9"/>
                     <stop offset="1" stopColor="#C84E99"/>
                   </linearGradient>
                 </defs>
               </svg>
             </div>
+            <h1 className="text-4xl font-bold tracking-tight text-white mb-2 text-balance">ARTEFACT</h1>
           </div>
-          <h1 className="text-4xl font-bold tracking-tight text-white mb-2 text-balance">ARTEFACT</h1>
           <p className="text-slate-300">Marketing Intelligence Platform</p>
         </div>
         
