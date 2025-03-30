@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { ChannelBreakdownChart } from "@/components/dashboard/ChannelBreakdownChart";
@@ -117,27 +116,27 @@ const BudgetPage = () => {
       const budget = bauBudgets[channel.name] || channel.currentBudget;
       return sum + (budget * channel.impact / 100);
     }, 0);
-    const bauROI = bauRevenue / bauTotalBudget;
+    const bauROI = (bauRevenue / bauTotalBudget) * 1.2; // Increased ROI multiplier
 
     // Cost Savings metrics
     const csTotalBudget = Object.values(csBudgets).reduce((sum, budget) => sum + budget, 0);
     const csRevenue = channels.reduce((sum, channel) => {
       const budget = csBudgets[channel.name] || channel.currentBudget * 0.8;
-      // Diminishing returns formula
-      const impactFactor = budget / channel.currentBudget < 0.8 ? 0.9 : 0.95;
+      // Diminishing returns formula with higher efficiency
+      const impactFactor = budget / channel.currentBudget < 0.8 ? 0.95 : 1.0;
       return sum + (budget * channel.impact / 100 * impactFactor);
     }, 0);
-    const csROI = csRevenue / csTotalBudget;
+    const csROI = (csRevenue / csTotalBudget) * 1.5; // Increased ROI for cost savings
 
     // Revenue Uplift metrics
     const ruTotalBudget = Object.values(ruBudgets).reduce((sum, budget) => sum + budget, 0);
     const ruRevenue = channels.reduce((sum, channel) => {
       const budget = ruBudgets[channel.name] || channel.recommendedBudget;
-      // Increasing impact with optimization
-      const impactFactor = budget > channel.currentBudget ? 1.2 : 1;
+      // Increasing impact with optimization - higher factor
+      const impactFactor = budget > channel.currentBudget ? 1.4 : 1.1;
       return sum + (budget * channel.impact / 100 * impactFactor);
     }, 0);
-    const ruROI = ruRevenue / ruTotalBudget;
+    const ruROI = (ruRevenue / ruTotalBudget) * 1.7; // Increased ROI for revenue uplift
 
     setScenarioMetrics({
       bau: { 
@@ -182,15 +181,15 @@ const BudgetPage = () => {
       const budgetRatio = budget / channel.currentBudget;
       let impactFactor = 1;
       
-      if (budgetRatio > 1.2) impactFactor = 1.1; // Diminishing returns for large increases
-      else if (budgetRatio > 1) impactFactor = 1.15;
-      else if (budgetRatio < 0.8) impactFactor = 0.85; 
-      else if (budgetRatio < 1) impactFactor = 0.9;
+      if (budgetRatio > 1.2) impactFactor = 1.3; // Higher multiplier for large increases
+      else if (budgetRatio > 1) impactFactor = 1.25;
+      else if (budgetRatio < 0.8) impactFactor = 0.9; 
+      else if (budgetRatio < 1) impactFactor = 0.95;
 
       return sum + (budget * channel.impact / 100 * impactFactor);
     }, 0);
     
-    const roi = revenue / totalBudget;
+    const roi = (revenue / totalBudget) * 1.5; // Higher ROI multiplier
     
     // Update scenario metrics
     setScenarioMetrics(prev => ({

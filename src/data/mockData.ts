@@ -1,4 +1,3 @@
-
 import { faker } from "@faker-js/faker";
 
 // Define the channel names
@@ -235,8 +234,25 @@ export const generateBudgetAllocation = () => {
 export const generateBudgetRecommendations = () => {
   const channels = Object.keys(channelNames);
   return channels.map((channel) => {
-    const currentBudget = faker.number.int({ min: 10000, max: 100000 });
-    const impact = faker.number.int({ min: 5, max: 30 });
+    // Aligned with saturation curve data
+    let currentBudget, impact;
+    
+    if (channel === "google" || channel === "search") {
+      currentBudget = 45000;
+      impact = 25;
+    } else if (channel === "facebook" || channel === "social") {
+      currentBudget = 35000;
+      impact = 20;
+    } else if (channel === "display") {
+      currentBudget = 30000;
+      impact = 18;
+    } else if (channel === "youtube" || channel === "video") {
+      currentBudget = 25000;
+      impact = 15;
+    } else {
+      currentBudget = faker.number.int({ min: 10000, max: 20000 });
+      impact = faker.number.int({ min: 5, max: 15 });
+    }
     
     // Calculate recommended budget based on impact
     // Higher impact channels get higher budget recommendations

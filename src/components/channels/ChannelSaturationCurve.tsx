@@ -22,13 +22,14 @@ import { Info } from "lucide-react";
 const generateSaturationData = (channelId: string, activeScenario: string, customBudgets: Record<string, Record<string, number>>) => {
   // We'll create points of a curve that demonstrates diminishing returns with a hill shape
   const points = [];
+  // Base values aligned with scenario comparison numbers
   const baseSpend = channelId === "search" ? 20000 : 
                    channelId === "social" ? 15000 : 
                    channelId === "display" ? 10000 : 5000;
   
-  const maxRoas = channelId === "search" ? 4.5 : 
-                 channelId === "social" ? 3.8 : 
-                 channelId === "display" ? 3.2 : 2.8;
+  const maxRoas = channelId === "search" ? 6.5 : 
+                 channelId === "social" ? 5.8 : 
+                 channelId === "display" ? 4.2 : 3.8;
                  
   const saturationPoint = channelId === "search" ? 35000 : 
                          channelId === "social" ? 25000 : 
