@@ -31,6 +31,10 @@ export function HeaderBanner() {
         return "Guide";
       case "/settings":
         return "Settings";
+      case "/chat-ai":
+        return "Analytics AI Assistant";
+      case "/recommendations":
+        return "Recommendations";
       default:
         return "Dashboard";
     }
@@ -55,10 +59,23 @@ export function HeaderBanner() {
         return "Optimize budget allocation";
       case "/ab-testing":
         return "Test and experiment analysis";
+      case "/chat-ai":
+        return "AI-powered insights and assistance";
+      case "/recommendations":
+        return "Actionable marketing recommendations";
+      case "/methodologies":
+        return "Understand analytics methodologies";
+      case "/guide":
+        return "Platform documentation and help";
+      case "/settings":
+        return "Configure application settings";
       default:
         return "";
     }
   };
+
+  // Option to display only the logo box or full name based on preference
+  const displayLogoOnly = false; // Set to true to show only the logo box
 
   return (
     <div className="flex items-center gap-5 mb-6 animate-fade-in">
@@ -71,10 +88,12 @@ export function HeaderBanner() {
           />
         </div>
         
-        <div className="flex items-baseline gap-1">
-          <h2 className="font-bold text-xl text-gray-800 hidden md:block">ARTEFACT</h2>
-          <Sparkles className="h-4 w-4 text-primary animate-pulse hidden md:block" />
-        </div>
+        {!displayLogoOnly && (
+          <div className="flex items-baseline gap-1">
+            <h2 className="font-bold text-xl text-gray-800 hidden md:block">ARTEFACT</h2>
+            <Sparkles className="h-4 w-4 text-primary animate-pulse hidden md:block" />
+          </div>
+        )}
       </Link>
       
       <div className="h-12 w-px bg-gradient-to-b from-gray-200 to-gray-100 hidden md:block"></div>
