@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/button";
@@ -277,6 +276,7 @@ const IncrementalPage = () => {
             channelOptions={channelOptions}
             selectedChannel={selectedChannel}
             setSelectedChannel={setSelectedChannel}
+            timeSeriesData={timeSeriesData}
           />
         </TabsContent>
 

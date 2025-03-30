@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Info, TrendingUp, LineChart as LineChartIcon, PieChart, BarChart4, Activity, ArrowUpDown } from "lucide-react";
+import { Info, TrendingUp, LineChart as LineChartIcon, PieChart, BarChart4, Activity, ArrowUpDown, AreaChart } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MediaTypeSelector, ChannelOption } from "@/components/dashboard/MediaTypeSelector";
 import { MediaGroupBreakdownChart } from "@/components/dashboard/MediaGroupBreakdownChart";
@@ -12,6 +12,7 @@ import { MarginalReturnsChart } from "@/components/dashboard/MarginalReturnsChar
 import { mediaGroupColors } from "@/components/dashboard/MediaGroupBreakdownChart";
 import { channelSaturationData } from "@/data/mockData";
 import { Badge } from "@/components/ui/badge";
+import { StackedAreaChart } from "@/components/dashboard/StackedAreaChart";
 
 interface MediaTypeAnalysisSectionProps {
   mediaGroupData: any[];
@@ -24,6 +25,7 @@ interface MediaTypeAnalysisSectionProps {
   channelOptions?: ChannelOption[];
   selectedChannel?: string;
   setSelectedChannel?: (channel: string) => void;
+  timeSeriesData?: any[];
 }
 
 export function MediaTypeAnalysisSection({
@@ -36,7 +38,8 @@ export function MediaTypeAnalysisSection({
   loading,
   channelOptions = [],
   selectedChannel = "all",
-  setSelectedChannel
+  setSelectedChannel,
+  timeSeriesData = []
 }: MediaTypeAnalysisSectionProps) {
   const [insightView, setInsightView] = React.useState("breakdown");
 
@@ -141,6 +144,9 @@ export function MediaTypeAnalysisSection({
             <TabsTrigger value="breakdown" className="flex items-center gap-1">
               <BarChart4 className="h-4 w-4" /> Breakdown
             </TabsTrigger>
+            <TabsTrigger value="trends" className="flex items-center gap-1">
+              <AreaChart className="h-4 w-4" /> Trends Over Time
+            </TabsTrigger>
             <TabsTrigger value="saturation" className="flex items-center gap-1">
               <LineChartIcon className="h-4 w-4" /> Saturation
             </TabsTrigger>
@@ -173,6 +179,29 @@ export function MediaTypeAnalysisSection({
                 <Info className="h-4 w-4 text-primary" /> 
                 This chart shows the monthly contribution of each media type to total revenue.
                 {selectedChannel !== "all" && " Filtered by selected channel."}
+              </p>
+            </div>
+          </TabsContent>
+
+          {/* Trends Over Time Chart (New) */}
+          <TabsContent value="trends" className="mt-0">
+            <StackedAreaChart 
+              data={timeSeriesData}
+              areaGroups={[
+                { dataKey: "baseline", color: mediaGroupColors.baseline, label: "Baseline" },
+                { dataKey: "nonPaid", color: mediaGroupColors.nonPaid, label: "Non-Paid Media" },
+                { dataKey: "organic", color: mediaGroupColors.organic, label: "Organic Media" },
+                { dataKey: "paid", color: mediaGroupColors.paid, label: "Paid Media" }
+              ]}
+              loading={loading}
+              height={400}
+              xAxisKey="date"
+            />
+            <div className="mt-4 text-sm text-muted-foreground">
+              <p className="flex items-center gap-2">
+                <Info className="h-4 w-4 text-primary" /> 
+                This stacked area chart visualizes how each media group contributes to the total revenue over time, 
+                showing both proportional and absolute changes.
               </p>
             </div>
           </TabsContent>
