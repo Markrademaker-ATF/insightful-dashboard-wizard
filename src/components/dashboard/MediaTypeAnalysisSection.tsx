@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Info, TrendingUp, LineChart as LineChartIcon, PieChart, BarChart4, Layers } from "lucide-react";
+import { Info, TrendingUp, LineChart as LineChartIcon, PieChart, BarChart4 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MediaTypeSelector, ChannelOption } from "@/components/dashboard/MediaTypeSelector";
 import { MediaGroupBreakdownChart } from "@/components/dashboard/MediaGroupBreakdownChart";
@@ -11,7 +11,6 @@ import { ChannelInsights } from "@/components/dashboard/ChannelInsights";
 import { MarginalReturnsChart } from "@/components/dashboard/MarginalReturnsChart";
 import { mediaGroupColors } from "@/components/dashboard/MediaGroupBreakdownChart";
 import { channelSaturationData } from "@/data/mockData";
-import { MediaChannelBreakdown } from "@/components/dashboard/MediaChannelBreakdown";
 
 interface MediaTypeAnalysisSectionProps {
   mediaGroupData: any[];
@@ -68,12 +67,9 @@ export function MediaTypeAnalysisSection({
             <TabsTrigger value="marginal" className="flex items-center gap-1">
               <TrendingUp className="h-4 w-4" /> Returns
             </TabsTrigger>
-            <TabsTrigger value="channels" className="flex items-center gap-1">
-              <Layers className="h-4 w-4" /> Channels
-            </TabsTrigger>
             {mediaType !== "all" && (
-              <TabsTrigger value="details" className="flex items-center gap-1">
-                <PieChart className="h-4 w-4" /> Details
+              <TabsTrigger value="channels" className="flex items-center gap-1">
+                <PieChart className="h-4 w-4" /> Channels
               </TabsTrigger>
             )}
           </TabsList>
@@ -134,25 +130,9 @@ export function MediaTypeAnalysisSection({
             </div>
           </TabsContent>
 
-          {/* Channel Breakdown Tab */}
-          <TabsContent value="channels" className="mt-0">
-            <MediaChannelBreakdown 
-              mediaType={mediaType}
-              selectedChannel={selectedChannel}
-              loading={loading}
-            />
-            <div className="mt-4 text-sm text-muted-foreground">
-              <p className="flex items-center gap-2">
-                <Info className="h-4 w-4 text-primary" /> 
-                This view shows a detailed breakdown of revenue contribution by individual channels within each media type.
-                <span className="font-medium ml-1">Use this to identify your top-performing channels and find opportunities for optimization.</span>
-              </p>
-            </div>
-          </TabsContent>
-
-          {/* Channels Details Tab */}
+          {/* Channels Chart */}
           {mediaType !== "all" && (
-            <TabsContent value="details" className="mt-0">
+            <TabsContent value="channels" className="mt-0">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <ChannelBreakdownDisplay 
                   channelData={channelData} 

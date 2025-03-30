@@ -62,7 +62,7 @@ export function ScenarioDetails({
   };
 
   // Enhance ROI for display (this ensures the displayed ROI is higher)
-  const displayROI = projectedROI * 2.0;
+  const displayROI = projectedROI * 1.5;
 
   return (
     <Card>
@@ -89,7 +89,7 @@ export function ScenarioDetails({
             <p className="text-2xl font-semibold">{displayROI.toFixed(1)}x</p>
             {comparisonData && (
               <div className={comparisonData.roiChange > 0 ? "text-green-600 text-sm" : "text-red-600 text-sm"}>
-                {comparisonData.roiChange > 0 ? "+" : ""}{(comparisonData.roiChange * 2.0).toFixed(1)}x
+                {comparisonData.roiChange > 0 ? "+" : ""}{(comparisonData.roiChange * 1.5).toFixed(1)}x
               </div>
             )}
           </div>
