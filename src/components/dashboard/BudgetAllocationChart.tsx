@@ -1,6 +1,7 @@
 
 import React from "react";
 import { PieChart, Pie, ResponsiveContainer, Cell, Tooltip, Legend } from "recharts";
+import { ChartContainer, ChartTooltipContent, ChartLegendContent } from "@/components/ui/chart";
 
 type BudgetAllocationProps = {
   data: {
@@ -9,9 +10,10 @@ type BudgetAllocationProps = {
     color: string;
   }[];
   loading?: boolean;
+  title?: string;
 };
 
-export function BudgetAllocationChart({ data, loading = false }: BudgetAllocationProps) {
+export function BudgetAllocationChart({ data, loading = false, title }: BudgetAllocationProps) {
   if (loading) {
     return (
       <div className="h-full w-full flex items-center justify-center">
@@ -20,9 +22,15 @@ export function BudgetAllocationChart({ data, loading = false }: BudgetAllocatio
     );
   }
 
+  // Create color config for the chart
+  const colorConfig = data.reduce((acc, item) => {
+    acc[item.name] = { color: item.color };
+    return acc;
+  }, {} as Record<string, { color: string }>);
+
   return (
     <div className="h-64">
-      <ResponsiveContainer width="100%" height="100%">
+      <ChartContainer config={colorConfig} className="w-full h-full">
         <PieChart>
           <Pie
             data={data}
@@ -34,29 +42,35 @@ export function BudgetAllocationChart({ data, loading = false }: BudgetAllocatio
             dataKey="value"
             animationDuration={750}
             animationBegin={0}
+            stroke="#111"
+            strokeWidth={1}
           >
             {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={entry.color} />
+              <Cell key={`cell-${index}`} fill={entry.color} style={{ filter: 'drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.1))' }} />
             ))}
           </Pie>
           <Tooltip
-            contentStyle={{
-              borderRadius: "0.5rem",
-              backgroundColor: "rgba(255, 255, 255, 0.95)",
-              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.05)",
-              border: "none",
-              padding: "8px 12px",
-            }}
-            formatter={(value: number) => [`$${value.toLocaleString()}`, "Budget"]}
+            content={(props) => (
+              <ChartTooltipContent
+                format={(value) => `$${Number(value).toLocaleString()}`}
+                {...props}
+              />
+            )}
           />
           <Legend 
-            layout="horizontal" 
+            content={(props) => (
+              <ChartLegendContent nameKey="name" {...props} />
+            )}
             verticalAlign="bottom" 
             align="center"
-            formatter={(value, entry, index) => <span className="text-sm">{value}</span>}
           />
         </PieChart>
-      </ResponsiveContainer>
+      </ChartContainer>
+      {title && (
+        <div className="text-center mt-2 text-sm text-muted-foreground">
+          {title}
+        </div>
+      )}
     </div>
   );
 }

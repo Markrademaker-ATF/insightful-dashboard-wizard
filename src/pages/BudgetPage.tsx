@@ -34,6 +34,7 @@ import { cn } from "@/lib/utils";
 import { ScenarioSelector } from "@/components/budget/ScenarioSelector";
 import { ScenarioDetails } from "@/components/budget/ScenarioDetails";
 import { ChannelSaturationCurvePanel } from "@/components/budget/ChannelSaturationCurvePanel";
+import { CustomScenarioPanel } from "@/components/budget/CustomScenarioPanel";
 import { toast } from "sonner";
 
 const BudgetPage = () => {
@@ -42,16 +43,8 @@ const BudgetPage = () => {
   const [recommendations, setRecommendations] = useState<any[]>([]);
   const [viewMode, setViewMode] = useState("current");
   const [activeScenario, setActiveScenario] = useState("bau");
-  const [customBudgets, setCustomBudgets] = useState<Record<string, Record<string, number>>>({
-    bau: {},
-    "cost-savings": {},
-    "revenue-uplift": {}
-  });
-  const [scenarioMetrics, setScenarioMetrics] = useState({
-    bau: { totalBudget: 0, projectedROI: 0, projectedRevenue: 0 },
-    "cost-savings": { totalBudget: 0, projectedROI: 0, projectedRevenue: 0 },
-    "revenue-uplift": { totalBudget: 0, projectedROI: 0, projectedRevenue: 0 }
-  });
+  const [customScenarios, setCustomScenarios] = useState<Record<string, Record<string, number>>>({});
+  const [customScenarioNames, setCustomScenarioNames] = useState<Record<string, string>>({});
 
   useEffect(() => {
     // Simulate data loading
@@ -84,7 +77,7 @@ const BudgetPage = () => {
         ruBudgets[channel.name] = channel.recommendedBudget;
       });
 
-      setCustomBudgets({
+      setCustomScenarios({
         bau: bauBudgets,
         "cost-savings": csBudgets,
         "revenue-uplift": ruBudgets
@@ -153,6 +146,56 @@ const BudgetPage = () => {
     });
   };
 
+  // Apply custom scenario
+  const applyCustomScenario = (budgets: Record<string, number>, scenarioName: string) => {
+    const scenarioId = `custom-${Date.now()}`;
+    
+    // Save custom budgets
+    setCustomScenarios(prev => ({
+      ...prev,
+      [scenarioId]: budgets
+    }));
+
+    // Save scenario name
+    setCustomScenarioNames(prev => ({
+      ...prev,
+      [scenarioId]: scenarioName
+    }));
+
+    // Calculate metrics for the custom scenario
+    const totalBudget = Object.values(budgets).reduce((sum, budget) => sum + budget, 0);
+    const revenue = recommendations.reduce((sum, channel) => {
+      const budget = budgets[channel.name] || channel.currentBudget;
+      // Apply a different impact factor based on budget changes
+      const budgetRatio = budget / channel.currentBudget;
+      let impactFactor = 1;
+      
+      if (budgetRatio > 1.2) impactFactor = 1.1; // Diminishing returns for large increases
+      else if (budgetRatio > 1) impactFactor = 1.15;
+      else if (budgetRatio < 0.8) impactFactor = 0.85; 
+      else if (budgetRatio < 1) impactFactor = 0.9;
+
+      return sum + (budget * channel.impact / 100 * impactFactor);
+    }, 0);
+    
+    const roi = revenue / totalBudget;
+    
+    // Update scenario metrics
+    setScenarioMetrics(prev => ({
+      ...prev,
+      [scenarioId]: {
+        totalBudget,
+        projectedROI: roi,
+        projectedRevenue: revenue
+      }
+    }));
+    
+    // Set active scenario to the new custom scenario
+    setActiveScenario(scenarioId);
+    
+    toast.success(`Created new scenario: ${scenarioName}`);
+  };
+
   // Apply recommended changes
   const applyRecommendations = () => {
     toast.success("Budget recommendations applied");
@@ -163,25 +206,30 @@ const BudgetPage = () => {
     ? recommendations.reduce((sum, channel) => sum + channel.currentBudget, 0)
     : 0;
     
-  const activeBudgets = customBudgets[activeScenario];
+  const activeBudgets = customScenarios[activeScenario];
   const activeScenarioTotalBudget = !loading
     ? Object.values(activeBudgets).reduce((sum, budget) => sum + (budget as number), 0)
     : 0;
     
   // Prepare chart data for the active scenario
   const scenarioBudgetChart = !loading
-    ? recommendations.map(item => ({
-        name: item.name,
-        value: activeBudgets[item.name] || item.currentBudget,
-        color: item.color
-      }))
+    ? recommendations.map(item => {
+        const customScenario = activeScenario.startsWith('custom-') ? customScenarios[activeScenario] || {} : {};
+        return {
+          name: item.name,
+          value: activeScenario.startsWith('custom-') 
+            ? customScenario[item.name] || item.currentBudget
+            : activeBudgets[item.name] || item.currentBudget,
+          color: item.color
+        };
+      })
     : [];
 
   // Comparison data between BAU and active scenario
   const comparisonData = activeScenario !== "bau" ? {
-    budgetChange: scenarioMetrics[activeScenario].totalBudget - scenarioMetrics.bau.totalBudget,
-    roiChange: scenarioMetrics[activeScenario].projectedROI - scenarioMetrics.bau.projectedROI,
-    revenueChange: scenarioMetrics[activeScenario].projectedRevenue - scenarioMetrics.bau.projectedRevenue
+    budgetChange: scenarioMetrics[activeScenario]?.totalBudget - scenarioMetrics.bau.totalBudget,
+    roiChange: scenarioMetrics[activeScenario]?.projectedROI - scenarioMetrics.bau.projectedROI,
+    revenueChange: scenarioMetrics[activeScenario]?.projectedRevenue - scenarioMetrics.bau.projectedRevenue
   } : undefined;
 
   // Impact data for visualization
@@ -207,6 +255,15 @@ const BudgetPage = () => {
       color: channel.color
     };
   }) : [];
+
+  // Get the name of the active scenario for display
+  const getActiveScenarioName = () => {
+    if (activeScenario === "bau") return "Business As Usual";
+    if (activeScenario === "cost-savings") return "Cost Savings";
+    if (activeScenario === "revenue-uplift") return "Revenue Uplift";
+    // For custom scenarios, return the custom name
+    return customScenarioNames[activeScenario] || "Custom Scenario";
+  };
 
   return (
     <div className="animate-fade-in">
@@ -237,11 +294,20 @@ const BudgetPage = () => {
       {/* Scenario Details */}
       <div className="mb-8">
         <ScenarioDetails 
-          scenario={activeScenario}
-          totalBudget={scenarioMetrics[activeScenario].totalBudget}
-          projectedROI={scenarioMetrics[activeScenario].projectedROI}
-          projectedRevenue={scenarioMetrics[activeScenario].projectedRevenue}
+          scenario={getActiveScenarioName()}
+          totalBudget={scenarioMetrics[activeScenario]?.totalBudget || 0}
+          projectedROI={scenarioMetrics[activeScenario]?.projectedROI || 0}
+          projectedRevenue={scenarioMetrics[activeScenario]?.projectedRevenue || 0}
           comparisonData={comparisonData}
+        />
+      </div>
+
+      {/* Custom Scenario Creator */}
+      <div className="mb-8">
+        <CustomScenarioPanel 
+          recommendations={recommendations || []} 
+          currentBudget={totalCurrentBudget}
+          onApplyCustomScenario={applyCustomScenario}
         />
       </div>
 
@@ -260,7 +326,11 @@ const BudgetPage = () => {
             </div>
           </div>
           
-          <BudgetAllocationChart data={budgetData} loading={loading} />
+          <BudgetAllocationChart 
+            data={budgetData} 
+            loading={loading} 
+            title="Current allocation by channel"
+          />
         </div>
         
         <div className="dashboard-card">
@@ -268,7 +338,7 @@ const BudgetPage = () => {
             <div className="flex items-center gap-2">
               <PieChart className="h-5 w-5 text-primary" />
               <div>
-                <h3 className="text-lg font-medium">{activeScenario === "bau" ? "Current" : activeScenario === "cost-savings" ? "Cost Savings" : "Revenue Uplift"} Allocation</h3>
+                <h3 className="text-lg font-medium">{getActiveScenarioName()} Allocation</h3>
                 <p className="text-sm text-muted-foreground">
                   ${activeScenarioTotalBudget.toLocaleString()} total budget
                 </p>
@@ -276,7 +346,11 @@ const BudgetPage = () => {
             </div>
           </div>
           
-          <BudgetAllocationChart data={scenarioBudgetChart} loading={loading} />
+          <BudgetAllocationChart 
+            data={scenarioBudgetChart} 
+            loading={loading} 
+            title={`${getActiveScenarioName()} allocation by channel`}
+          />
         </div>
       </div>
       
@@ -325,10 +399,10 @@ const BudgetPage = () => {
         </Card>
       </div>
 
-      {/* Channel Saturation Curves - MOVED LOWER IN THE PAGE */}
+      {/* Channel Saturation Curves */}
       <ChannelSaturationCurvePanel
         activeScenario={activeScenario}
-        customBudgets={customBudgets}
+        customBudgets={customScenarios}
       />
       
       {/* Scenario comparison table */}
@@ -367,8 +441,8 @@ const BudgetPage = () => {
                   ))
                 ) : (
                   recommendations.map((channel, i) => {
-                    const csBudget = customBudgets["cost-savings"][channel.name] || 0;
-                    const ruBudget = customBudgets["revenue-uplift"][channel.name] || 0;
+                    const csBudget = customScenarios["cost-savings"][channel.name] || 0;
+                    const ruBudget = customScenarios["revenue-uplift"][channel.name] || 0;
                     const csChange = csBudget - channel.currentBudget;
                     const ruChange = ruBudget - channel.currentBudget;
                     
