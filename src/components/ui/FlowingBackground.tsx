@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 
 interface FlowingBackgroundProps {
@@ -80,18 +79,25 @@ export const FlowingBackground: React.FC<FlowingBackgroundProps> = ({
       }
 
       draw() {
-        // Extract base color from particleColor
-        const baseColor = particleColor.includes("rgba") 
-          ? particleColor.replace(/rgba?\(|\)/g, '').split(',')
-          : [243, 240, 255]; // Default color
+        // Extract base color from particleColor, with safe parsing
+        const baseColorMatch = particleColor.match(/rgba?\(([^)]+)\)/);
+        const baseColor = baseColorMatch 
+          ? baseColorMatch[1].split(',').map(val => val.trim()) 
+          : ['243', '240', '255'];
         
-        // Create slightly different color based on hue
+        // Safely parse and convert color values
         const r = Math.min(255, Math.max(0, parseInt(baseColor[0]) + this.hue));
         const g = Math.min(255, Math.max(0, parseInt(baseColor[1]) + this.hue));
         const b = Math.min(255, Math.max(0, parseInt(baseColor[2]) + this.hue));
         
-        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${this.opacity})`;
-        ctx.strokeStyle = lineColor.replace(/opacity/g, String(this.opacity * 0.5));
+        // Explicitly convert opacity to string
+        const particleOpacity = String(this.opacity);
+        const lineOpacityValue = String(this.opacity * 0.5);
+        
+        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${particleOpacity})`;
+        
+        // Safely replace opacity in lineColor
+        ctx.strokeStyle = lineColor.replace(/opacity/g, lineOpacityValue);
         ctx.lineWidth = 2;
 
         ctx.beginPath();
