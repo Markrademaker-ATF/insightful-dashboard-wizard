@@ -1,7 +1,7 @@
 
 import React from "react";
-import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
-import { ChartContainer, ChartTooltipContent, ChartLegendContent } from "@/components/ui/chart";
+import { PieChart, Pie, Cell, Tooltip } from "recharts";
+import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 
 type BudgetAllocationProps = {
   data: {
@@ -92,28 +92,12 @@ export function BudgetAllocationChart({ data, loading = false, title }: BudgetAl
                   payload={props.payload}
                   label={props.label}
                   formatter={(value) => [
-                    `$${Number(value).toLocaleString()} (${percentage}%)`, 
+                    `${currentItem.name}: $${Number(value).toLocaleString()} (${percentage}%)`, 
                     "Budget"
                   ]}
                 />
               );
             }}
-          />
-          <Legend 
-            content={(props) => {
-              if (!props.payload?.length) {
-                return null;
-              }
-              return (
-                <ChartLegendContent
-                  payload={props.payload}
-                  verticalAlign={props.verticalAlign}
-                  nameKey="name"
-                />
-              );
-            }}
-            verticalAlign="bottom" 
-            align="center"
           />
         </PieChart>
       </ChartContainer>
