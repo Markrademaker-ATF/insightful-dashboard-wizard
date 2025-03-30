@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Info, TrendingUp, LineChart as LineChartIcon, PieChart, BarChart4 } from "lucide-react";
+import { Info, TrendingUp, LineChart as LineChartIcon, PieChart, BarChart4, Activity, ArrowUpDown } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MediaTypeSelector, ChannelOption } from "@/components/dashboard/MediaTypeSelector";
 import { MediaGroupBreakdownChart } from "@/components/dashboard/MediaGroupBreakdownChart";
@@ -11,6 +11,7 @@ import { ChannelInsights } from "@/components/dashboard/ChannelInsights";
 import { MarginalReturnsChart } from "@/components/dashboard/MarginalReturnsChart";
 import { mediaGroupColors } from "@/components/dashboard/MediaGroupBreakdownChart";
 import { channelSaturationData } from "@/data/mockData";
+import { Badge } from "@/components/ui/badge";
 
 interface MediaTypeAnalysisSectionProps {
   mediaGroupData: any[];
@@ -39,6 +40,33 @@ export function MediaTypeAnalysisSection({
 }: MediaTypeAnalysisSectionProps) {
   const [insightView, setInsightView] = React.useState("breakdown");
 
+  // Get the latest data for the selected media type
+  const latestData = !loading && mediaGroupData.length > 0 
+    ? mediaGroupData[mediaGroupData.length - 1] 
+    : null;
+
+  // Calculate growth rate from previous period (simulate by taking a ~5-15% change)
+  const getGrowthRate = (type: string) => {
+    const baseRate = Math.random() > 0.5 ? 
+      5 + Math.random() * 10 : // positive 5-15%
+      -1 * (5 + Math.random() * 10); // negative 5-15%
+    return baseRate.toFixed(1);
+  };
+
+  // Generate summary metrics for the current media type
+  const getMetricsForMediaType = () => {
+    if (!latestData || mediaType === "all") return null;
+    
+    return {
+      revenue: latestData[mediaType],
+      contribution: Math.round((latestData[mediaType] / latestData.total) * 100),
+      growth: getGrowthRate(mediaType),
+      channelCount: channelOptions.filter(c => c.group === mediaType).length
+    };
+  };
+
+  const mediaTypeMetrics = getMetricsForMediaType();
+  
   return (
     <Card className="mb-8">
       <CardHeader>
@@ -49,8 +77,60 @@ export function MediaTypeAnalysisSection({
           onChannelChange={setSelectedChannel}
           channelOptions={channelOptions}
         />
+        
+        {/* Add summary stats for selected media type */}
+        {mediaType !== "all" && mediaTypeMetrics && (
+          <div className="mt-4 flex flex-wrap gap-6">
+            <div>
+              <div className="text-sm text-muted-foreground">Revenue</div>
+              <div className="text-xl font-semibold mt-1">${mediaTypeMetrics.revenue.toLocaleString()}</div>
+            </div>
+            <div>
+              <div className="text-sm text-muted-foreground">Contribution</div>
+              <div className="text-xl font-semibold mt-1">{mediaTypeMetrics.contribution}%</div>
+            </div>
+            <div>
+              <div className="text-sm text-muted-foreground">Growth</div>
+              <div className={`text-xl font-semibold mt-1 flex items-center ${Number(mediaTypeMetrics.growth) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                {Number(mediaTypeMetrics.growth) >= 0 ? '+' : ''}{mediaTypeMetrics.growth}%
+              </div>
+            </div>
+            <div>
+              <div className="text-sm text-muted-foreground">Channels</div>
+              <div className="text-xl font-semibold mt-1">{mediaTypeMetrics.channelCount}</div>
+            </div>
+          </div>
+        )}
       </CardHeader>
       <CardContent>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg font-medium">
+            {mediaType === "all" ? "All Media Types" : 
+             mediaType === "paid" ? "Paid Media Analysis" :
+             mediaType === "organic" ? "Organic Media Analysis" :
+             mediaType === "nonPaid" ? "Non-Paid Media Analysis" : 
+             "Baseline Analysis"}
+          </h3>
+          
+          {/* Add media type badge */}
+          {mediaType !== "all" && (
+            <Badge 
+              variant="outline" 
+              className="flex items-center gap-1"
+              style={{ borderColor: mediaGroupColors[mediaType as keyof typeof mediaGroupColors] }}
+            >
+              <div 
+                className="w-2 h-2 rounded-full mr-1"
+                style={{ backgroundColor: mediaGroupColors[mediaType as keyof typeof mediaGroupColors] }}
+              ></div>
+              {mediaType === "paid" ? "Paid Media" :
+               mediaType === "organic" ? "Organic Media" :
+               mediaType === "nonPaid" ? "Non-Paid Media" : 
+               "Baseline"}
+            </Badge>
+          )}
+        </div>
+
         <Tabs
           defaultValue="breakdown"
           value={insightView}
@@ -69,7 +149,7 @@ export function MediaTypeAnalysisSection({
             </TabsTrigger>
             {mediaType !== "all" && (
               <TabsTrigger value="channels" className="flex items-center gap-1">
-                <PieChart className="h-4 w-4" /> Channels
+                <Activity className="h-4 w-4" /> Channels
               </TabsTrigger>
             )}
           </TabsList>
