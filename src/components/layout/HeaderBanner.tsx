@@ -1,6 +1,7 @@
 
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import { Sparkles } from "lucide-react";
 
 export function HeaderBanner() {
   const location = useLocation();
@@ -61,16 +62,28 @@ export function HeaderBanner() {
 
   return (
     <div className="flex items-center gap-5 mb-6 animate-fade-in">
-      <Link to="/">
-        <img 
-          src="/lovable-uploads/c91593ad-aa3a-4f49-b9f4-86d049161286.png" 
-          alt="Artefact Logo" 
-          className="h-12" // Increased from h-10
-        />
+      <Link to="/" className="flex items-center gap-2 hover:opacity-90 transition-opacity">
+        <div className="bg-gradient-to-r from-primary to-purple-600 p-3 rounded-xl shadow-lg shadow-primary/20 flex items-center justify-center">
+          <img 
+            src="/lovable-uploads/c91593ad-aa3a-4f49-b9f4-86d049161286.png" 
+            alt="Artefact Logo" 
+            className="h-8 w-auto"
+          />
+        </div>
+        
+        <div className="flex items-baseline gap-1">
+          <h2 className="font-bold text-xl text-gray-800 hidden md:block">ARTEFACT</h2>
+          <Sparkles className="h-4 w-4 text-primary animate-pulse hidden md:block" />
+        </div>
       </Link>
-      <div className="h-12 w-px bg-gray-200 hidden md:block"></div> {/* Also increased height */}
+      
+      <div className="h-12 w-px bg-gradient-to-b from-gray-200 to-gray-100 hidden md:block"></div>
+      
       <div className="flex flex-col">
-        <h1 className="text-2xl font-bold text-gray-800">{getPageTitle()}</h1> {/* Increased from text-xl */}
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-gray-800">{getPageTitle()}</h1>
+          <div className="h-2 w-2 rounded-full bg-primary/70 animate-pulse hidden sm:block"></div>
+        </div>
         <p className="text-sm text-muted-foreground">{getPageDescription()}</p>
       </div>
     </div>
