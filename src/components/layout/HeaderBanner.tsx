@@ -84,11 +84,17 @@ export function HeaderBanner() {
   return (
     <div className="flex items-center gap-5 mb-6 animate-fade-in">
       <Link to="/" className="flex items-center gap-2 hover:opacity-90 transition-opacity">
-        <div className="bg-gradient-to-r from-purple-600 to-violet-600 p-3 rounded-xl shadow-lg shadow-primary/20 flex items-center justify-center">
-          {/* Redesigned logo - simplified modern "A" mark */}
-          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M14 2L25 26H3L14 2Z" fill="white"/>
-            <path d="M14 12L18 22H10L14 12Z" fill="#9b87f5"/>
+        <div className="p-2 flex items-center justify-center">
+          {/* Updated logo to match the triangle design in the reference image */}
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 0L40 40H0L20 0Z" fill="url(#triangle-gradient)"/>
+            <defs>
+              <linearGradient id="triangle-gradient" x1="20" y1="0" x2="20" y2="40" gradientUnits="userSpaceOnUse">
+                <stop offset="0" stopColor="#2B5BA9"/>
+                <stop offset="0.5" stopColor="#8B4AA9"/>
+                <stop offset="1" stopColor="#C84E99"/>
+              </linearGradient>
+            </defs>
           </svg>
         </div>
       </Link>
