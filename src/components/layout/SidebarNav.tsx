@@ -164,26 +164,25 @@ export function SidebarNav() {
               <button
                 onClick={() => toggleGroup(item.title)}
                 className={cn(
-                  "nav-link group w-full flex justify-between",
-                  hasActiveChild ? "text-primary" : ""
+                  "w-full flex justify-between items-center px-3 py-2.5 rounded-md text-sm font-medium transition-all duration-200",
+                  hasActiveChild 
+                    ? "bg-gradient-to-r from-primary/20 to-primary/5 text-primary" 
+                    : "text-muted-foreground hover:bg-accent hover:text-primary"
                 )}
-                style={{
-                  animationDelay: `${index * 50}ms`,
-                }}
               >
                 <div className="flex items-center">
-                  <item.icon className="h-5 w-5 mr-2" />
+                  <item.icon className="h-4 w-4 mr-2.5" />
                   <span className="text-sm font-medium">{item.title}</span>
                 </div>
                 {isExpanded ? (
-                  <ChevronDown className="h-4 w-4" />
+                  <ChevronDown className="h-4 w-4 opacity-70" />
                 ) : (
-                  <ChevronRight className="h-4 w-4" />
+                  <ChevronRight className="h-4 w-4 opacity-70" />
                 )}
               </button>
               
               {isExpanded && (
-                <div className="ml-6 mt-1 flex flex-col gap-1 border-l pl-2 border-border/50">
+                <div className="ml-6 mt-1 flex flex-col gap-1 border-l-2 pl-3 border-border/40">
                   {item.children.map((child, childIndex) => {
                     const isActive = location.pathname === child.href;
                     return (
@@ -191,12 +190,11 @@ export function SidebarNav() {
                         key={`${index}-${childIndex}`}
                         to={child.href || "#"}
                         className={cn(
-                          "nav-link group",
-                          isActive ? "active" : ""
+                          "flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-all duration-200",
+                          isActive 
+                            ? "bg-primary/10 text-primary font-medium" 
+                            : "text-muted-foreground hover:bg-accent/50 hover:text-primary"
                         )}
-                        style={{
-                          animationDelay: `${(index + childIndex) * 50}ms`,
-                        }}
                       >
                         <child.icon className="h-4 w-4" />
                         <span className="text-sm">{child.title}</span>
@@ -215,15 +213,19 @@ export function SidebarNav() {
               key={index}
               to={item.href || "#"}
               className={cn(
-                "nav-link group",
-                isActive ? "active" : ""
+                "flex items-center gap-2.5 px-3 py-2.5 rounded-md text-sm font-medium transition-all duration-200",
+                isActive 
+                  ? "bg-gradient-to-r from-primary/20 to-primary/10 text-primary shadow-sm" 
+                  : "text-muted-foreground hover:bg-accent/50 hover:text-primary"
               )}
-              style={{
-                animationDelay: `${index * 50}ms`,
-              }}
             >
-              <item.icon className="h-5 w-5" />
+              <item.icon className="h-4 w-4" />
               <span className="text-sm">{item.title}</span>
+              {item.title === "Chat AI Assistant" && (
+                <span className="ml-auto px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+                  New
+                </span>
+              )}
             </Link>
           );
         }

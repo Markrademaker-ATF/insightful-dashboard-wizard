@@ -22,14 +22,14 @@ export function ChatMessage({ message }: ChatMessageProps) {
       className={cn(
         "flex items-start gap-4 rounded-xl p-5 transition-all duration-300 mb-4",
         isAI 
-          ? "bg-primary/10 border border-primary/20 shadow-sm" 
+          ? "bg-gradient-to-r from-primary/10 to-purple-100/30 border border-primary/20 shadow-sm" 
           : "bg-secondary/10 border border-secondary/20"
       )}
     >
       <div className={cn(
         "rounded-full p-2.5 w-11 h-11 flex items-center justify-center flex-shrink-0 shadow-sm",
         isAI 
-          ? "bg-primary/20 text-primary" 
+          ? "gradient-purple-blue text-white" 
           : "bg-secondary text-secondary-foreground"
       )}>
         {isAI ? <Bot className="h-5 w-5" /> : <User className="h-5 w-5" />}
@@ -37,7 +37,11 @@ export function ChatMessage({ message }: ChatMessageProps) {
       
       <div className="flex-1">
         <div className="text-base font-semibold mb-2 flex items-center gap-2 text-foreground">
-          {isAI ? "Analytics Assistant" : "You"}
+          {isAI ? (
+            <span className="gradient-text">Analytics Assistant</span>
+          ) : (
+            "You"
+          )}
           <span className="text-sm text-muted-foreground font-normal ml-2">
             {formatTime(message.timestamp)}
           </span>
@@ -46,7 +50,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
           {message.content}
         </div>
         {isAI && (
-          <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
+          <div className="flex items-center gap-2 mt-2 text-sm text-primary/80">
             <Check className="h-4 w-4 text-primary" />
             <span>AI-generated response</span>
           </div>

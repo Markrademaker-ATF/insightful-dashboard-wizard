@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -225,5 +226,27 @@
   
   .animate-pulse {
     animation: pulse-glow 3s ease-in-out infinite;
+  }
+  
+  /* New gradient classes */
+  .gradient-purple-blue {
+    @apply bg-gradient-to-r from-blue-500 via-primary to-purple-600;
+  }
+  
+  .gradient-text {
+    @apply bg-gradient-to-r from-blue-600 via-primary to-purple-600 bg-clip-text text-transparent;
+  }
+  
+  /* Improved sidebar styling */
+  .sidebar-item {
+    @apply flex items-center gap-2.5 px-3 py-2.5 rounded-md text-sm font-medium transition-all duration-200;
+  }
+  
+  .sidebar-item.active {
+    @apply bg-gradient-to-r from-primary/20 to-primary/10 text-primary shadow-sm;
+  }
+  
+  .sidebar-item:not(.active) {
+    @apply text-muted-foreground hover:bg-accent/50 hover:text-primary;
   }
 }

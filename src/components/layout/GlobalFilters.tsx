@@ -13,9 +13,9 @@ export function GlobalFilters() {
         options={productOptions}
         value={selectedProduct}
         onChange={setSelectedProduct}
-        icon={<Package className="h-5 w-5 mr-2 text-white" />}
+        icon={<Package className="h-4 w-4 mr-2" />}
         label="Product"
-        className="bg-primary hover:bg-primary/90 text-white border-none"
+        className="bg-gradient-to-r from-primary to-purple-600 hover:opacity-90 text-white border-none shadow-sm"
       />
     </div>
   );
