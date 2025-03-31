@@ -85,17 +85,11 @@ export function HeaderBanner() {
     <div className="flex items-center gap-5 mb-6 animate-fade-in">
       <Link to="/" className="flex items-center gap-2 hover:opacity-90 transition-opacity">
         <div className="flex items-center justify-center">
-          {/* Updated logo to match the reference image */}
-          <svg width="50" height="40" viewBox="0 0 50 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M25 0L50 40H0L25 0Z" fill="url(#triangle-gradient)"/>
-            <defs>
-              <linearGradient id="triangle-gradient" x1="25" y1="0" x2="25" y2="40" gradientUnits="userSpaceOnUse">
-                <stop offset="0" stopColor="#2B5BA9"/>
-                <stop offset="0.33" stopColor="#8B4AA9"/>
-                <stop offset="1" stopColor="#C84E99"/>
-              </linearGradient>
-            </defs>
-          </svg>
+          <img 
+            src="/lovable-uploads/86767657.png" 
+            alt="Logo" 
+            className="h-10 w-auto" 
+          />
         </div>
       </Link>
       

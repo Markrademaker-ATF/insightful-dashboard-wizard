@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -62,34 +61,43 @@ const LandingPage = () => {
     setCanvasDimensions();
     window.addEventListener('resize', setCanvasDimensions);
     
-    // Create particle class
-    class Particle {
+    // Create neuron class
+    class Neuron {
       x: number;
       y: number;
       size: number;
       speedX: number;
       speedY: number;
+      connections: Neuron[];
+      pulsePhase: number;
+      pulseSpeed: number;
       color: string;
       
       constructor() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 3 + 1;
-        this.speedX = Math.random() * 1 - 0.5;
-        this.speedY = Math.random() * 1 - 0.5;
+        this.size = Math.random() * 1.5 + 0.5;
+        this.speedX = Math.random() * 0.3 - 0.15;
+        this.speedY = Math.random() * 0.3 - 0.15;
+        this.connections = [];
+        this.pulsePhase = Math.random() * Math.PI * 2;
+        this.pulseSpeed = Math.random() * 0.01 + 0.005;
         
-        // Purple/blue color palette with opacity
-        const hue = Math.floor(Math.random() * 40) + 240; // Blue to purple hues
-        const saturation = Math.floor(Math.random() * 30) + 70; // High saturation
-        const lightness = Math.floor(Math.random() * 30) + 50; // Medium lightness
-        const alpha = Math.random() * 0.5 + 0.1; // Low opacity
-        
-        this.color = `hsla(${hue}, ${saturation}%, ${lightness}%, ${alpha})`;
+        // Artefact brand colors with varying opacity
+        const colors = [
+          'rgba(155, 135, 245, 0.8)', // Primary purple
+          'rgba(99, 102, 241, 0.8)',  // Indigo
+          'rgba(139, 92, 246, 0.8)',  // Violet
+          'rgba(167, 139, 250, 0.8)', // Light purple
+          'rgba(129, 140, 248, 0.8)'  // Blue
+        ];
+        this.color = colors[Math.floor(Math.random() * colors.length)];
       }
       
       update() {
         this.x += this.speedX;
         this.y += this.speedY;
+        this.pulsePhase += this.pulseSpeed;
         
         // Wrap around screen edges
         if (this.x > canvas.width) this.x = 0;
@@ -101,19 +109,50 @@ const LandingPage = () => {
       
       draw() {
         if (!ctx) return;
-        ctx.fillStyle = this.color;
+        
+        // Draw connections first
+        this.connections.forEach(neuron => {
+          const dx = this.x - neuron.x;
+          const dy = this.y - neuron.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          
+          if (distance < 120) {
+            const opacity = (1 - distance / 120) * 0.15; // More subtle connections
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(155, 135, 245, ${opacity})`; // Artefact purple
+            ctx.lineWidth = 0.5;
+            ctx.moveTo(this.x, this.y);
+            ctx.lineTo(neuron.x, neuron.y);
+            ctx.stroke();
+          }
+        });
+        
+        // Draw neuron with Artefact colors
+        const pulseScale = Math.sin(this.pulsePhase) * 0.2 + 1;
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.arc(this.x, this.y, this.size * pulseScale, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Draw glow effect with matching color
+        const gradient = ctx.createRadialGradient(
+          this.x, this.y, 0,
+          this.x, this.y, this.size * 1.5
+        );
+        gradient.addColorStop(0, this.color.replace('0.8', '0.4'));
+        gradient.addColorStop(1, this.color.replace('0.8', '0'));
+        ctx.fillStyle = gradient;
+        ctx.arc(this.x, this.y, this.size * 1.5, 0, Math.PI * 2);
         ctx.fill();
       }
     }
     
-    // Create particle array
-    const particleCount = Math.min(150, Math.floor((canvas.width * canvas.height) / 15000));
-    const particles: Particle[] = [];
+    // Create neuron array with more neurons
+    const neuronCount = Math.min(150, Math.floor((canvas.width * canvas.height) / 15000));
+    const neurons: Neuron[] = [];
     
-    for (let i = 0; i < particleCount; i++) {
-      particles.push(new Particle());
+    for (let i = 0; i < neuronCount; i++) {
+      neurons.push(new Neuron());
     }
     
     // Animation function
@@ -122,25 +161,25 @@ const LandingPage = () => {
       ctx.fillStyle = 'rgba(16, 16, 39, 0.05)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       
-      // Update and draw particles
-      particles.forEach(particle => {
-        particle.update();
-        particle.draw();
+      // Update and draw neurons
+      neurons.forEach(neuron => {
+        neuron.update();
+        neuron.draw();
       });
       
-      // Connect particles with lines if they are close enough
-      for (let i = 0; i < particles.length; i++) {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
+      // Connect neurons with lines if they are close enough
+      for (let i = 0; i < neurons.length; i++) {
+        for (let j = i + 1; j < neurons.length; j++) {
+          const dx = neurons[i].x - neurons[j].x;
+          const dy = neurons[i].y - neurons[j].y;
           const distance = Math.sqrt(dx * dx + dy * dy);
           
           if (distance < 100) {
             ctx.beginPath();
             ctx.strokeStyle = `rgba(155, 135, 245, ${0.1 * (1 - distance / 100)})`; // Purple with distance-based opacity
             ctx.lineWidth = 0.5;
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.moveTo(neurons[i].x, neurons[i].y);
+            ctx.lineTo(neurons[j].x, neurons[j].y);
             ctx.stroke();
           }
         }
@@ -168,8 +207,11 @@ const LandingPage = () => {
       <header className="bg-transparent text-white py-6 px-6 md:px-10 relative z-10">
         <div className="container mx-auto">
           <div className="flex items-center space-x-2">
-            <h1 className="text-2xl md:text-3xl font-bold">ARTEFACT</h1>
-            <p className="text-xs md:text-sm">AI IS ABOUT PEOPLE</p>
+            <img 
+              src="/lovable-uploads/Artefact-AI-is-about-People-White-300x106.png"
+              alt="Artefact Logo"
+              className="h-8 md:h-10"
+            />
           </div>
         </div>
       </header>
@@ -325,44 +367,68 @@ const LandingPage = () => {
           {/* Client logo grid with real brand logos */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             {/* L'Oreal */}
-            <div className="flex items-center justify-center p-6 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/15 transition-all duration-300 group">
-              <div className="h-12 w-36 flex items-center justify-center">
-                <span className="font-bold text-white tracking-wide text-xl">L'ORÉAL</span>
+            <div className="flex items-center justify-center p-6 rounded-lg bg-white/20 backdrop-blur-sm hover:bg-white/25 transition-all duration-300 group">
+              <div className="h-20 w-56 flex items-center justify-center">
+                <img 
+                  src="/lovable-uploads/1361925.png"
+                  alt="L'Oréal Logo"
+                  className="h-16 w-auto object-contain brightness-100"
+                />
               </div>
             </div>
             
             {/* Hunkemoller */}
-            <div className="flex items-center justify-center p-6 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/15 transition-all duration-300 group">
-              <div className="h-12 w-36 flex items-center justify-center">
-                <span className="font-bold text-white tracking-wide text-xl">HUNKEMÖLLER</span>
+            <div className="flex items-center justify-center p-6 rounded-lg bg-white/20 backdrop-blur-sm hover:bg-white/25 transition-all duration-300 group">
+              <div className="h-16 w-48 flex items-center justify-center">
+                <img 
+                  src="/lovable-uploads/Hunkemoeller_Logo.png"
+                  alt="Hunkemöller Logo"
+                  className="h-12 w-auto object-contain"
+                />
               </div>
             </div>
             
             {/* Torrid */}
-            <div className="flex items-center justify-center p-6 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/15 transition-all duration-300 group">
-              <div className="h-12 w-36 flex items-center justify-center">
-                <span className="font-bold text-white tracking-wide text-xl">TORRID</span>
+            <div className="flex items-center justify-center p-6 rounded-lg bg-white/20 backdrop-blur-sm hover:bg-white/25 transition-all duration-300 group">
+              <div className="h-16 w-48 flex items-center justify-center">
+                <img 
+                  src="/lovable-uploads/vvsfwpbxyg2q4ti9pcup.webp"
+                  alt="Torrid Logo"
+                  className="h-12 w-auto object-contain"
+                />
               </div>
             </div>
             
             {/* BNP Paribas */}
-            <div className="flex items-center justify-center p-6 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/15 transition-all duration-300 group">
-              <div className="h-12 w-36 flex items-center justify-center">
-                <span className="font-bold text-white tracking-wide text-lg">BNP PARIBAS</span>
+            <div className="flex items-center justify-center p-6 rounded-lg bg-white/20 backdrop-blur-sm hover:bg-white/25 transition-all duration-300 group">
+              <div className="h-20 w-56 flex items-center justify-center">
+                <img 
+                  src="/lovable-uploads/BNP-Paribas-Logo.png"
+                  alt="BNP Paribas Logo"
+                  className="h-16 w-auto object-contain"
+                />
               </div>
             </div>
             
             {/* Meta */}
-            <div className="flex items-center justify-center p-6 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/15 transition-all duration-300 group">
-              <div className="h-12 w-36 flex items-center justify-center">
-                <span className="font-bold text-white tracking-wide text-xl">META</span>
+            <div className="flex items-center justify-center p-6 rounded-lg bg-white/20 backdrop-blur-sm hover:bg-white/25 transition-all duration-300 group">
+              <div className="h-16 w-48 flex items-center justify-center">
+                <img 
+                  src="/lovable-uploads/Meta_Platforms_Inc._logo.svg.png"
+                  alt="Meta Logo"
+                  className="h-12 w-auto object-contain"
+                />
               </div>
             </div>
             
             {/* Samsung */}
-            <div className="flex items-center justify-center p-6 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/15 transition-all duration-300 group">
-              <div className="h-12 w-36 flex items-center justify-center">
-                <span className="font-bold text-white tracking-wide text-xl">SAMSUNG</span>
+            <div className="flex items-center justify-center p-6 rounded-lg bg-white/20 backdrop-blur-sm hover:bg-white/25 transition-all duration-300 group">
+              <div className="h-16 w-48 flex items-center justify-center">
+                <img 
+                  src="/lovable-uploads/Samsung_wordmark.svg"
+                  alt="Samsung Logo"
+                  className="h-12 w-auto object-contain"
+                />
               </div>
             </div>
           </div>
@@ -540,21 +606,21 @@ const LandingPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {[
               {
-                quote: "The insights we've gained have completely transformed our marketing approach. We've seen a 32% increase in ROAS since implementing Artefact's recommendations.",
-                author: "Sarah Johnson",
-                title: "CMO, Global Retail Brand",
+                quote: "Artefact's MMM solution is like having a Formula 1 car for your marketing analytics. Just as an F1 car's performance is optimized through countless data points and real-time adjustments, Artefact's platform provides that same level of precision and optimization for your marketing spend. The way it breaks down each component's contribution to overall performance is truly remarkable.",
+                author: "Sid Mohan",
+                title: "Marketing Analytics Expert",
                 color: "blue"
               },
               {
-                quote: "Artefact's platform gives us clarity on which channels are truly driving results. We've reallocated our budget based on their analysis and seen immediate improvements.",
-                author: "Michael Chen",
-                title: "Head of Digital, Tech Company",
+                quote: "The depth of insights we get from Artefact's MMM solution is incredible. It's not just about numbers; it's about understanding the true impact of each marketing channel and making data-driven decisions that drive real business growth.",
+                author: "Calogero Zarbo",
+                title: "Data Science Director",
                 color: "purple"
               },
               {
-                quote: "The multi-touch attribution model has given us visibility into the customer journey we never had before. It's changed how we think about our entire marketing strategy.",
-                author: "Emma Rodriguez",
-                title: "Marketing Director, E-commerce",
+                quote: "Artefact has transformed how we approach marketing mix modeling. Their solution provides clarity in complexity, helping us optimize our marketing spend with unprecedented precision and confidence.",
+                author: "Ilona van Berlo",
+                title: "Marketing Strategy Lead",
                 color: "pink"
               }
             ].map((testimonial, index) => (
@@ -591,10 +657,17 @@ const LandingPage = () => {
                 Join hundreds of forward-thinking businesses using data-driven insights to maximize their marketing ROI
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button className="bg-pink-500 hover:bg-pink-600 text-white px-8 py-6 rounded-full">
+                <Button 
+                  className="bg-pink-500 hover:bg-pink-600 text-white px-8 py-6 rounded-full"
+                  onClick={() => window.open('https://www.artefact.com/contact-us/', '_blank')}
+                >
                   Schedule a Demo
                 </Button>
-                <Button variant="outline" className="bg-transparent hover:bg-white/10 text-white border-white px-8 py-6 rounded-full">
+                <Button 
+                  variant="outline" 
+                  className="bg-transparent hover:bg-white/10 text-white border-white px-8 py-6 rounded-full"
+                  onClick={() => window.open('https://www.artefact.com/offers/marketing-data-driven/measurements-mroi-insights/', '_blank')}
+                >
                   Learn More
                 </Button>
               </div>

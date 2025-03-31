@@ -1,4 +1,3 @@
-
 import React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,35 +7,35 @@ type SidebarHeaderProps = {
   collapsed: boolean;
   setCollapsed: (collapsed: boolean) => void;
 };
-
 export function SidebarHeader({ collapsed, setCollapsed }: SidebarHeaderProps) {
   return (
     <div className={cn(
       "flex items-center transition-all duration-300",
-      collapsed ? "justify-center py-4 px-2" : "justify-between py-5 px-4"
+      collapsed ? "justify-center py-6 px-3" : "justify-between py-7 px-5"
     )}>
       <div className={cn(
         "flex items-center justify-center w-full",
-        !collapsed && "px-2"
+        !collapsed && "px-3"
       )}>
-        <div className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-lg p-0.5">
-          <img 
-            src="/lovable-uploads/c91593ad-aa3a-4f49-b9f4-86d049161286.png" 
-            alt="Artefact Logo" 
-            className={cn("rounded bg-white/90", collapsed ? "h-7 w-7" : "h-9 w-9")}
-          />
-        </div>
+        <img 
+          src="/lovable-uploads/c91593ad-aa3a-4f49-b9f4-86d049161286.png" 
+          alt="Logo" 
+          className={cn(
+            "h-16 w-auto", // Changed from h-12 to h-16 for bigger logo
+            collapsed && "hidden"
+          )}
+        />
       </div>
       <Button
         variant="ghost"
         size="icon"
         className={cn(
-          "h-8 w-8 rounded-full hover:bg-gray-100",
-          collapsed && "absolute -right-4 top-6 bg-white shadow-md border z-30"
+          "h-10 w-10 rounded-full hover:bg-gray-100",
+          collapsed && "absolute -right-5 top-8 bg-white shadow-md border z-30"
         )}
         onClick={() => setCollapsed(!collapsed)}
       >
-        {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+        {collapsed ? <ChevronRight className="h-5 w-5" /> : <ChevronLeft className="h-5 w-5" />}
       </Button>
     </div>
   );

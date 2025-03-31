@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -7,6 +6,84 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { FlowingBackground } from "@/components/ui/FlowingBackground";
 import { Mail, Lock, ArrowRight, KeyRound } from "lucide-react";
 import { toast } from "sonner";
+
+const floatKeyframes = `
+  @keyframes float1 {
+    0% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    100% {
+      transform: translate(300px, 150px) rotate(360deg);
+    }
+  }
+
+  @keyframes float2 {
+    0% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    100% {
+      transform: translate(-250px, 200px) rotate(360deg);
+    }
+  }
+
+  @keyframes float3 {
+    0% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    100% {
+      transform: translate(200px, -300px) rotate(360deg);
+    }
+  }
+
+  @keyframes float4 {
+    0% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    100% {
+      transform: translate(-300px, -200px) rotate(360deg);
+    }
+  }
+
+  @keyframes float5 {
+    0% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    100% {
+      transform: translate(250px, -250px) rotate(360deg);
+    }
+  }
+
+  @keyframes float6 {
+    0% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    100% {
+      transform: translate(200px, 250px) rotate(360deg);
+    }
+  }
+
+  @keyframes float7 {
+    0% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    100% {
+      transform: translate(-200px, -150px) rotate(360deg);
+    }
+  }
+
+  @keyframes float8 {
+    0% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    100% {
+      transform: translate(150px, -200px) rotate(360deg);
+    }
+  }
+`;
+
+const style = document.createElement('style');
+style.textContent = floatKeyframes;
+document.head.appendChild(style);
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -34,38 +111,151 @@ const LoginPage = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 to-slate-800 p-4 relative overflow-hidden">
-      {/* Enhanced dynamic background with customized properties */}
-      <FlowingBackground 
-        className="opacity-80"
-        particleCount={120}
-        speed={0.4}
-        particleSize={18}
-        particleColor="rgba(155, 135, 245, 0.7)"
-        lineColor="rgba(155, 135, 245, 0.5)"
-      />
+      {/* Background with gradient and animated cubes */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-900 via-purple-900 to-pink-900 overflow-hidden">
+        <FlowingBackground 
+          particleCount={120}
+          speed={0.4}
+          particleSize={18}
+          particleColor="rgba(155, 135, 245, 0.7)"
+          lineColor="rgba(155, 135, 245, 0.5)"
+        />
+        {/* Floating Cubes */}
+        <div className="absolute inset-0">
+          <img 
+            src="/lovable-uploads/Cube-grand-1.webp"
+            alt="Floating Cube 1"
+            className="absolute w-24 h-24"
+            style={{
+              top: '20%',
+              left: '15%',
+              animation: 'float1 30s linear infinite',
+              opacity: 0.6
+            }}
+          />
+          <img 
+            src="/lovable-uploads/Cube-grand-1.webp"
+            alt="Floating Cube 2"
+            className="absolute w-20 h-20"
+            style={{
+              top: '60%',
+              left: '70%',
+              animation: 'float2 35s linear infinite',
+              opacity: 0.5
+            }}
+          />
+          <img 
+            src="/lovable-uploads/Cube-grand-1.webp"
+            alt="Floating Cube 3"
+            className="absolute w-16 h-16"
+            style={{
+              top: '30%',
+              left: '80%',
+              animation: 'float3 40s linear infinite',
+              opacity: 0.4
+            }}
+          />
+          
+          {/* New larger cubes */}
+          <img 
+            src="/lovable-uploads/Cube-grand-1.webp"
+            alt="Floating Cube 4"
+            className="absolute w-40 h-40"
+            style={{
+              top: '10%',
+              left: '40%',
+              animation: 'float4 45s linear infinite',
+              opacity: 0.3
+            }}
+          />
+          <img 
+            src="/lovable-uploads/Cube-grand-1.webp"
+            alt="Floating Cube 5"
+            className="absolute w-48 h-48"
+            style={{
+              top: '50%',
+              left: '20%',
+              animation: 'float5 50s linear infinite',
+              opacity: 0.2
+            }}
+          />
+          <img 
+            src="/lovable-uploads/Cube-grand-1.webp"
+            alt="Floating Cube 6"
+            className="absolute w-36 h-36"
+            style={{
+              top: '70%',
+              left: '60%',
+              animation: 'float1 55s linear infinite',
+              opacity: 0.25
+            }}
+          />
+        </div>
+      </div>
       
       {/* Add floating elements for depth */}
       <div className="absolute top-1/4 left-1/4 w-32 h-32 rounded-full bg-purple-500/10 blur-3xl animate-float"></div>
       <div className="absolute bottom-1/4 right-1/4 w-40 h-40 rounded-full bg-indigo-500/10 blur-3xl animate-float" style={{animationDelay: "2s"}}></div>
       <div className="absolute top-3/4 right-1/3 w-24 h-24 rounded-full bg-violet-500/10 blur-3xl animate-float" style={{animationDelay: "4s"}}></div>
       
+      {/* Floating 3D Objects */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <img 
+          src="/lovable-uploads/artefact obj 3.png"
+          alt="Floating 3D Object"
+          className="absolute w-32 h-32 object-contain opacity-20"
+          style={{ 
+            top: '20%', 
+            left: '10%', 
+            animation: 'float6 45s linear infinite',
+            animationDelay: '0s'
+          }}
+        />
+        <img 
+          src="/lovable-uploads/artefact obj 4.webp"
+          alt="Floating 3D Object"
+          className="absolute w-40 h-40 object-contain opacity-20"
+          style={{ 
+            top: '60%', 
+            right: '15%', 
+            animation: 'float7 50s linear infinite',
+            animationDelay: '2s'
+          }}
+        />
+        <img 
+          src="/lovable-uploads/artefact obj 3.png"
+          alt="Floating 3D Object"
+          className="absolute w-24 h-24 object-contain opacity-20"
+          style={{ 
+            top: '80%', 
+            left: '20%', 
+            animation: 'float8 55s linear infinite',
+            animationDelay: '4s'
+          }}
+        />
+        <img 
+          src="/lovable-uploads/artefact obj 4.webp"
+          alt="Floating 3D Object"
+          className="absolute w-28 h-28 object-contain opacity-20"
+          style={{ 
+            top: '30%', 
+            right: '25%', 
+            animation: 'float6 60s linear infinite',
+            animationDelay: '1s'
+          }}
+        />
+      </div>
+      
       <div className="w-full max-w-md z-10">
         <div className="text-center mb-8 animate-fade-in">
           <div className="flex flex-col items-center justify-center mb-2">
-            {/* Updated logo design to match reference image */}
             <div className="mb-2">
-              <svg width="100" height="80" viewBox="0 0 50 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M25 0L50 40H0L25 0Z" fill="url(#login-triangle-gradient)"/>
-                <defs>
-                  <linearGradient id="login-triangle-gradient" x1="25" y1="0" x2="25" y2="40" gradientUnits="userSpaceOnUse">
-                    <stop offset="0" stopColor="#2B5BA9"/>
-                    <stop offset="0.33" stopColor="#8B4AA9"/>
-                    <stop offset="1" stopColor="#C84E99"/>
-                  </linearGradient>
-                </defs>
-              </svg>
+              <img 
+                src="/lovable-uploads/Artefact-AI-is-about-People-White-300x106.png" 
+                alt="Artefact Logo" 
+                className="w-[300px] h-auto" 
+              />
             </div>
-            <h1 className="text-4xl font-bold tracking-tight text-white mb-2 text-balance">ARTEFACT</h1>
           </div>
           <p className="text-slate-300">Marketing Intelligence Platform</p>
         </div>
