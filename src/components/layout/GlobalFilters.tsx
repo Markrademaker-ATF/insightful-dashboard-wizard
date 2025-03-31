@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useProductFilter } from '@/contexts/ProductFilterContext';
 import { useGeoFilter } from '@/contexts/GeoFilterContext';
@@ -93,7 +92,7 @@ export function GlobalFilters() {
               
               <div>
                 <label className="text-sm font-medium mb-1 block">End Date</label>
-                <Popover open={isEndCalendarOpen} onOpenChange={setIsEndCalendarOpen}>
+                <Popover open={isEndCalendarOpen) onOpenChange={setIsEndCalendarOpen}>
                   <PopoverTrigger asChild>
                     <Button 
                       variant="outline" 
@@ -162,7 +161,7 @@ export function GlobalFilters() {
         onChange={setSelectedProduct}
         icon={<Package className="h-4 w-4 mr-2" />}
         label="Product"
-        className="bg-gradient-to-r from-primary to-purple-600 hover:opacity-90 text-white border-none shadow-sm"
+        className="bg-white hover:bg-gray-50 text-gray-800 border border-gray-200 shadow-sm"
       />
     </div>
   );
