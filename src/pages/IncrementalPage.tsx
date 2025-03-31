@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Button } from "@/components/ui/button";
@@ -25,7 +26,6 @@ import { MediaTypesExplanationCard } from "@/components/dashboard/MediaTypesExpl
 import { ChannelOption } from "@/components/dashboard/MediaTypeSelector";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FilterDropdown } from "@/components/dashboard/FilterDropdown";
-import { GeographicMediaBreakdown } from "@/components/dashboard/GeographicMediaBreakdown";
 import { useProductFilter } from "@/contexts/ProductFilterContext";
 
 const IncrementalPage = () => {
@@ -249,9 +249,6 @@ const IncrementalPage = () => {
           <TabsTrigger value="mediaTypes" className="flex items-center gap-2">
             <PieChart className="h-4 w-4" /> Media Types
           </TabsTrigger>
-          <TabsTrigger value="geography" className="flex items-center gap-2">
-            <Globe className="h-4 w-4" /> Geographic Analysis
-          </TabsTrigger>
         </TabsList>
 
         {/* Overview Tab Content */}
@@ -279,11 +276,6 @@ const IncrementalPage = () => {
             setSelectedChannel={setSelectedChannel}
             timeSeriesData={timeSeriesData}
           />
-        </TabsContent>
-
-        {/* Geographic Analysis Tab Content */}
-        <TabsContent value="geography" className="space-y-8">
-          <GeographicMediaBreakdown loading={loading} selectedProduct={selectedProduct} />
         </TabsContent>
       </Tabs>
     </div>
