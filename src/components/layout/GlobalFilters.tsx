@@ -28,7 +28,6 @@ export function GlobalFilters() {
     }
     return 'Select Date Range';
   };
-
   // Apply the date range and automatically update the predefined range if it matches
   const applyDateRange = () => {
     if (startDate && endDate) {
@@ -92,7 +91,7 @@ export function GlobalFilters() {
               
               <div>
                 <label className="text-sm font-medium mb-1 block">End Date</label>
-                <Popover open={isEndCalendarOpen) onOpenChange={setIsEndCalendarOpen}>
+                <Popover open={isEndCalendarOpen} onOpenChange={setIsEndCalendarOpen}>
                   <PopoverTrigger asChild>
                     <Button 
                       variant="outline" 
