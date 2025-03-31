@@ -1,3 +1,4 @@
+
 import React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,6 +8,7 @@ type SidebarHeaderProps = {
   collapsed: boolean;
   setCollapsed: (collapsed: boolean) => void;
 };
+
 export function SidebarHeader({ collapsed, setCollapsed }: SidebarHeaderProps) {
   return (
     <div className={cn(
@@ -21,7 +23,7 @@ export function SidebarHeader({ collapsed, setCollapsed }: SidebarHeaderProps) {
           src="/lovable-uploads/c91593ad-aa3a-4f49-b9f4-86d049161286.png" 
           alt="Logo" 
           className={cn(
-            "h-16 w-auto", // Changed from h-12 to h-16 for bigger logo
+            "h-16 w-full", // Changed to w-full for wider logo
             collapsed && "hidden"
           )}
         />
