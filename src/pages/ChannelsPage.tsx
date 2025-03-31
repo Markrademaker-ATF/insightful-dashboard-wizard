@@ -1,10 +1,11 @@
+
 import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { BarChart, PieChart, LineChart as LineChartIcon, Filter, ArrowDown, ArrowUp, Table as TableIcon, Globe, Info } from "lucide-react";
+import { BarChart, PieChart, LineChart as LineChartIcon, Filter, ArrowDown, ArrowUp, Table as TableIcon, Info } from "lucide-react";
 import { ChannelPerformanceTable } from "@/components/channels/ChannelPerformanceTable";
 import { ChannelBreakdownChart } from "@/components/channels/ChannelBreakdownChart";
 import { ChannelTrendsChart } from "@/components/channels/ChannelTrendsChart";
@@ -14,7 +15,6 @@ import { generateChannelData, generateChannelTrendsData, channelColors, channelN
 import { FilterExportControls } from "@/components/channels/FilterExportControls";
 import { ChannelDetailView } from "@/components/channels/ChannelDetailView";
 import { RoasComparisonChart } from "@/components/channels/RoasComparisonChart";
-import { EuropeRoasHeatmap } from "@/components/channels/EuropeRoasHeatmap";
 
 export default function ChannelsPage() {
   const [mainTab, setMainTab] = useState("analysis");
@@ -92,9 +92,6 @@ export default function ChannelsPage() {
           </TabsTrigger>
           <TabsTrigger value="details" className="flex items-center gap-2">
             <TableIcon className="h-4 w-4" /> Channel Details
-          </TabsTrigger>
-          <TabsTrigger value="geography" className="flex items-center gap-2">
-            <Globe className="h-4 w-4" /> Geographic Analysis
           </TabsTrigger>
         </TabsList>
 
@@ -254,47 +251,6 @@ export default function ChannelsPage() {
                   Select a channel above to view detailed performance data
                 </div>
               )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Geographic Analysis Tab Content */}
-        <TabsContent value="geography" className="space-y-6 mt-6">
-          <Card>
-            <CardHeader>
-              <div className="flex flex-row items-center justify-between">
-                <div>
-                  <CardTitle className="flex items-center gap-2">
-                    <Globe className="h-5 w-5" /> 
-                    Geographic Analysis
-                  </CardTitle>
-                  <CardDescription>
-                    Explore regional marketing performance and ROAS variations across Europe
-                  </CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="mb-6 p-4 bg-muted/30 rounded-lg">
-                <div className="flex items-start gap-2">
-                  <Info className="h-5 w-5 text-primary mt-0.5" />
-                  <div>
-                    <h3 className="text-sm font-medium mb-1 flex items-center gap-2">
-                      <Globe className="h-4 w-4" /> Geographic Performance Insights
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      Dive deep into your marketing performance across European markets. This geographic analysis provides a comprehensive view of Return on Ad Spend (ROAS) by region, helping you understand:
-                      • Regional variations in marketing efficiency
-                      • Top-performing countries and channels
-                      • Potential opportunities for targeted marketing strategies
-                      • Comparative performance across different European markets
-
-                      Use this visualization to make data-driven decisions about geographic marketing investments and resource allocation.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <EuropeRoasHeatmap loading={loading} selectedChannel={selectedChannel} />
             </CardContent>
           </Card>
         </TabsContent>
