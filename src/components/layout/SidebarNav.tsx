@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
@@ -89,11 +88,6 @@ const navItems: NavItem[] = [
     ]
   },
   {
-    title: "Quick Recommendations",
-    href: "/recommendations",
-    icon: Zap,
-  },
-  {
     title: "Budget Optimizer",
     href: "/budget",
     icon: PieChart,
@@ -102,6 +96,11 @@ const navItems: NavItem[] = [
     title: "A/B Testing",
     href: "/ab-testing",
     icon: LineChart,
+  },
+  {
+    title: "Quick Recommendations",
+    href: "/recommendations",
+    icon: Zap,
   },
   {
     title: "Chat AI Assistant",
@@ -221,7 +220,7 @@ export function SidebarNav() {
             >
               <item.icon className="h-4 w-4" />
               <span className="text-sm">{item.title}</span>
-              {item.title === "Chat AI Assistant" && (
+              {(item.title === "Chat AI Assistant" || item.title === "Quick Recommendations") && (
                 <span className="ml-auto px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-white">
                   New
                 </span>

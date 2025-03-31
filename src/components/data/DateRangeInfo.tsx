@@ -1,5 +1,4 @@
-
-import React from "react";
+import * as React from "react";
 import { Calendar, Clock, Database, Filter } from "lucide-react";
 
 type DateRangeInfoProps = {

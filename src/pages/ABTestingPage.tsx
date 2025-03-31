@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -33,13 +32,10 @@ const ABTestingPage = () => {
 
   return (
     <div className="animate-fade-in">
-      <div className="flex justify-between items-center mb-6">
-        <PageHeader
-          title="A/B Test Analysis"
-          description="Compare test results and analyze the performance of different variants to optimize your marketing strategy."
-        />
-        <GlobalFilters />
-      </div>
+      <PageHeader
+        title="A/B Test Analysis"
+        description="Compare test results and analyze the performance of different variants to optimize your marketing strategy."
+      />
 
       <div className="mb-6">
         <ABTestScenarioSelector 

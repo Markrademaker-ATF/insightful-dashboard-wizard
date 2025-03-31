@@ -219,10 +219,10 @@ const LandingPage = () => {
       <main className="flex-grow text-white relative z-10">
         <div className="container mx-auto px-6 py-20 md:py-32">
           <div className="max-w-4xl mx-auto text-center mb-12">
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
-              Marketing <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-300 to-pink-500">
-                Intelligence Platform
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-sans mb-6 leading-tight">
+              ARTEFACT<br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 via-purple-400 to-indigo-400 font-bold animate-gradient bg-[length:200%_200%] animate-gradient-x">
+              MROI Lighthouse
               </span>
             </h1>
             <p className="text-xl md:text-2xl mb-10 max-w-2xl mx-auto">
