@@ -24,9 +24,10 @@ interface ChartTooltipContentProps {
   className?: string
   active?: boolean
   payload?: Array<{
-    value: number
-    name: string
-    dataKey: string | number
+    value: number;
+    name: string;
+    dataKey: string | number;
+    color?: string; // Added the color property that might be present
   }>
   label?: string
   formatter?: (value: number, name: string) => [string, string]
@@ -82,7 +83,7 @@ const ChartTooltipContent = React.forwardRef<
                   <div
                     className="h-2 w-2 rounded-full"
                     style={{
-                      backgroundColor: item.color,
+                      backgroundColor: item.color || '#888888', // Provide a fallback color if item.color is undefined
                     }}
                   />
                   <span className="text-xs text-muted-foreground">

@@ -120,7 +120,7 @@ export function CampaignCostMetricsChart({ loading, data }: CampaignCostMetricsC
                 <span className="font-medium">Current average:</span>
                 <span className="font-bold text-primary">
                   {formatValue(
-                    data.reduce((sum, item) => sum + item[activeMetric as keyof typeof item] as number, 0) / data.length,
+                    data.reduce((sum, item) => sum + (item[activeMetric as keyof typeof item] as number), 0) / data.length,
                     activeMetric
                   )}
                 </span>
