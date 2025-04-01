@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Helmet } from "react-helmet";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ChevronRight, BarChart, TrendingUp, Layers, ArrowRight } from "lucide-react";
+import { ChevronRight, BarChart, TrendingUp, Layers, ArrowRight, BookOpen, Scale, GitCompare } from "lucide-react";
 import MethodologySelector from "@/components/methodologies/MethodologySelector";
 import MethodologyDetails from "@/components/methodologies/MethodologyDetails";
 
@@ -191,14 +191,115 @@ const MethodologiesPage = () => {
           </div>
         </CardContent>
       </Card>
-      
-      {/* Technical Methodology Selector - Now as a separate section with appealing design */}
+
+      {/* New section: Integrated Analytics Framework */}
       <div className="mb-8">
         <div className="flex items-center gap-2 mb-4">
           <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold">
             <span>2</span>
           </div>
-          <h2 className="text-2xl font-semibold">Technical Deep Dive</h2>
+          <h2 className="text-2xl font-semibold">Integrated Analytics Framework</h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* MTA Scaling Using MMM */}
+          <Card className="glass-card border-t-4 border-t-green-500">
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <Scale className="h-5 w-5 text-green-600" />
+                <CardTitle>How MTA is Scaled Using MMM</CardTitle>
+              </div>
+              <CardDescription>
+                Creating alignment between tactical and strategic measurement approaches
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground mb-4">
+                Multi-touch attribution (MTA) models often face challenges with completeness and bias. 
+                To address these limitations, we use Marketing Mix Models (MMM) to calibrate MTA results:
+              </p>
+
+              <div className="space-y-4">
+                <div className="bg-green-50/50 p-4 rounded-lg border border-green-100">
+                  <h4 className="font-medium text-green-800 mb-2">Scaling MTA With MMM</h4>
+                  <p className="text-sm text-muted-foreground">
+                    We ensure MTA aligns with MMM results by applying a scaling factor to each channel:
+                  </p>
+                  <ol className="mt-2 space-y-2 pl-5 list-decimal text-sm text-muted-foreground">
+                    <li>Calculate total channel contribution from both MMM and MTA models</li>
+                    <li>Determine scaling factor = MMM contribution ÷ MTA contribution</li>
+                    <li>Apply scaling factor to MTA touchpoint values within each channel</li>
+                    <li>Recalculate customer journey value using scaled touchpoints</li>
+                  </ol>
+                </div>
+
+                <div className="border rounded-lg p-4">
+                  <h4 className="font-medium mb-2">Benefits of MTA-MMM Integration</h4>
+                  <ul className="space-y-2 pl-5 list-disc text-sm text-muted-foreground">
+                    <li>Combines strategic accuracy of MMM with customer journey insights from MTA</li>
+                    <li>Accounts for offline touchpoints and external factors missed by MTA</li>
+                    <li>Resolves cookie/tracking limitations in MTA data collection</li>
+                    <li>Provides consistent reporting across tactical and strategic decisions</li>
+                  </ul>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* MMM Calibration with Incrementality */}
+          <Card className="glass-card border-t-4 border-t-blue-500">
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <GitCompare className="h-5 w-5 text-blue-600" />
+                <CardTitle>How MMM is Calibrated With Incrementality Tests</CardTitle>
+              </div>
+              <CardDescription>
+                Validating econometric models with experimental evidence
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground mb-4">
+                Marketing Mix Models may not always capture true causal effects. Incrementality testing 
+                provides experimental validation to refine MMM effectiveness estimates:
+              </p>
+
+              <div className="space-y-4">
+                <div className="bg-blue-50/50 p-4 rounded-lg border border-blue-100">
+                  <h4 className="font-medium text-blue-800 mb-2">MMM Calibration Process</h4>
+                  <p className="text-sm text-muted-foreground">
+                    The calibration process involves several key steps:
+                  </p>
+                  <ol className="mt-2 space-y-2 pl-5 list-decimal text-sm text-muted-foreground">
+                    <li>Run incrementality tests for key channels to determine true lift</li>
+                    <li>Compare incrementality results with MMM-estimated effects</li>
+                    <li>Calculate calibration factor = Incrementality lift ÷ MMM lift</li>
+                    <li>Apply calibration factors to MMM coefficients</li>
+                    <li>Re-optimize response curves based on calibrated coefficients</li>
+                  </ol>
+                </div>
+
+                <div className="border rounded-lg p-4">
+                  <h4 className="font-medium mb-2">Why Calibration Matters</h4>
+                  <ul className="space-y-2 pl-5 list-disc text-sm text-muted-foreground">
+                    <li>MMM may overestimate impact due to correlation vs. causation issues</li>
+                    <li>Incrementality tests provide ground truth for causal impact</li>
+                    <li>Calibration removes selection bias that econometric models can't address</li>
+                    <li>Results in more accurate budget allocation recommendations</li>
+                  </ul>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+      
+      {/* Documentation Section (Moved from top) */}
+      <div className="mb-8">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold">
+            <span>3</span>
+          </div>
+          <h2 className="text-2xl font-semibold">Documentation</h2>
         </div>
         
         <p className="text-muted-foreground mb-6">
@@ -211,10 +312,11 @@ const MethodologiesPage = () => {
         />
       </div>
       
-      {/* Methodology Details Display - Now always showing MMM by default */}
+      {/* Methodology Details Display */}
       <MethodologyDetails methodology={activeMethodology} />
     </>
   );
 };
 
 export default MethodologiesPage;
+
