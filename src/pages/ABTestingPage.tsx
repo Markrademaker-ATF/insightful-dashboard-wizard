@@ -6,8 +6,9 @@ import { ABTestResultsTable } from "@/components/ab-testing/ABTestResultsTable";
 import { ABTestComparisonChart } from "@/components/ab-testing/ABTestComparisonChart";
 import { ABTestMetricsCards } from "@/components/ab-testing/ABTestMetricsCards";
 import { ABTestScenarioSelector } from "@/components/ab-testing/ABTestScenarioSelector";
+import { ABTestGeoDistribution } from "@/components/ab-testing/ABTestGeoDistribution"; // Add the new component
 import { useMockABTestData } from "@/hooks/useMockABTestData";
-import { Calendar, Clock, ArrowRight, LineChart, FileSpreadsheet, PieChart, Activity, TrendingUp } from "lucide-react";
+import { Calendar, Clock, ArrowRight, LineChart, FileSpreadsheet, PieChart, Activity, TrendingUp, Globe } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { GlobalFilters } from "@/components/layout/GlobalFilters";
@@ -101,6 +102,10 @@ const ABTestingPage = () => {
                 <TrendingUp className="h-4 w-4 mr-2" />
                 Timeline Analysis
               </TabsTrigger>
+              <TabsTrigger value="geo" className="data-[state=active]:bg-primary/20">
+                <Globe className="h-4 w-4 mr-2" />
+                Geographic Analysis
+              </TabsTrigger>
               <TabsTrigger value="details" className="data-[state=active]:bg-primary/20">
                 <FileSpreadsheet className="h-4 w-4 mr-2" />
                 Details & Analysis
@@ -156,6 +161,10 @@ const ABTestingPage = () => {
                   <ABTestVariantTimeline test={selectedTestData} loading={loading} />
                 </CardContent>
               </Card>
+            </TabsContent>
+            
+            <TabsContent value="geo" className="animate-fade-in">
+              <ABTestGeoDistribution test={selectedTestData} loading={loading} />
             </TabsContent>
             
             <TabsContent value="details" className="animate-fade-in">

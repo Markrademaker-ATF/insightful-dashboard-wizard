@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 
 export interface ABTestVariant {
@@ -12,6 +11,13 @@ export interface ABTestVariant {
   improvement?: number;
   confidenceLevel?: number;
   timeSeriesData?: { date: string; conversions: number; visitors: number }[];
+}
+
+export interface GeoDistribution {
+  name: string;
+  isTestGroup: boolean;
+  visitors: number;
+  conversions: number;
 }
 
 export interface ABTest {
@@ -30,6 +36,7 @@ export interface ABTest {
   nextSteps?: string;
   winner?: string;
   confidenceLevel?: number;
+  geoDistribution?: GeoDistribution[];
 }
 
 export function useMockABTestData() {
@@ -80,7 +87,15 @@ export function useMockABTestData() {
           winner: "variant-b",
           confidenceLevel: 99.8,
           analysis: "The 'Start Free Trial' button outperformed the control with a 40% higher conversion rate. This is statistically significant with a 99.8% confidence level.",
-          nextSteps: "Implement 'Start Free Trial' as the default CTA on the homepage and test additional variations in other locations."
+          nextSteps: "Implement 'Start Free Trial' as the default CTA on the homepage and test additional variations in other locations.",
+          geoDistribution: [
+            { name: "United States", isTestGroup: true, visitors: 2500, conversions: 175 },
+            { name: "Canada", isTestGroup: true, visitors: 1000, conversions: 70 },
+            { name: "United Kingdom", isTestGroup: false, visitors: 2000, conversions: 100 },
+            { name: "Australia", isTestGroup: false, visitors: 1500, conversions: 75 },
+            { name: "Germany", isTestGroup: true, visitors: 1500, conversions: 105 },
+            { name: "France", isTestGroup: false, visitors: 1500, conversions: 75 }
+          ]
         },
         {
           id: "test-2",
@@ -120,7 +135,12 @@ export function useMockABTestData() {
           winner: "variant-b",
           confidenceLevel: 99.5,
           analysis: "The benefits-focused creative generated a 40% higher conversion rate compared to the features-focused creative. The results are statistically significant.",
-          nextSteps: "Update all social media ad creative to emphasize benefits over features. Develop additional benefit-focused variations for further testing."
+          nextSteps: "Update all social media ad creative to emphasize benefits over features. Develop additional benefit-focused variations for further testing.",
+          geoDistribution: [
+            { name: "North America", isTestGroup: true, visitors: 5000, conversions: 210 },
+            { name: "Europe", isTestGroup: false, visitors: 5000, conversions: 150 },
+            { name: "Asia Pacific", isTestGroup: true, visitors: 5000, conversions: 210 }
+          ]
         },
         {
           id: "test-3",
@@ -160,7 +180,15 @@ export function useMockABTestData() {
           winner: "variant-b",
           confidenceLevel: 99.9,
           analysis: "Personalized subject lines resulted in a 25% higher open rate and subsequently a 25% higher conversion rate. This result was highly statistically significant.",
-          nextSteps: "Implement personalization in all email campaigns. Test different types of personalization to further optimize results."
+          nextSteps: "Implement personalization in all email campaigns. Test different types of personalization to further optimize results.",
+          geoDistribution: [
+            { name: "Western Europe", isTestGroup: true, visitors: 10000, conversions: 2500 },
+            { name: "Eastern Europe", isTestGroup: false, visitors: 5000, conversions: 1000 },
+            { name: "North America", isTestGroup: true, visitors: 15000, conversions: 3750 },
+            { name: "Latin America", isTestGroup: false, visitors: 10000, conversions: 2000 },
+            { name: "Asia", isTestGroup: true, visitors: 5000, conversions: 1250 },
+            { name: "Oceania", isTestGroup: false, visitors: 5000, conversions: 1000 }
+          ]
         }
       ];
       
@@ -199,6 +227,12 @@ export function useMockABTestData() {
               confidenceLevel: 92.3,
               timeSeriesData: generateTimeSeriesData(10, 3180, 223)
             }
+          ],
+          geoDistribution: [
+            { name: "United States", isTestGroup: true, visitors: 1600, conversions: 112 },
+            { name: "Canada", isTestGroup: false, visitors: 1600, conversions: 96 },
+            { name: "United Kingdom", isTestGroup: true, visitors: 1580, conversions: 111 },
+            { name: "Australia", isTestGroup: false, visitors: 1580, conversions: 95 }
           ]
         }
       ];
