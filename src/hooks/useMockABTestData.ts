@@ -20,6 +20,13 @@ export interface GeoDistribution {
   conversions: number;
 }
 
+export interface Methodology {
+  name: string;
+  uplift: number;
+  confidence: number;
+  description: string;
+}
+
 export interface ABTest {
   id: string;
   name: string;
@@ -37,6 +44,7 @@ export interface ABTest {
   winner?: string;
   confidenceLevel?: number;
   geoDistribution?: GeoDistribution[];
+  methodologiesComparison?: Methodology[];
 }
 
 export function useMockABTestData() {

@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -6,9 +7,10 @@ import { ABTestResultsTable } from "@/components/ab-testing/ABTestResultsTable";
 import { ABTestComparisonChart } from "@/components/ab-testing/ABTestComparisonChart";
 import { ABTestMetricsCards } from "@/components/ab-testing/ABTestMetricsCards";
 import { ABTestScenarioSelector } from "@/components/ab-testing/ABTestScenarioSelector";
-import { ABTestGeoDistribution } from "@/components/ab-testing/ABTestGeoDistribution"; // Add the new component
+import { ABTestGeoDistribution } from "@/components/ab-testing/ABTestGeoDistribution";
+import { ABTestMethodologyComparison } from "@/components/ab-testing/ABTestMethodologyComparison";
 import { useMockABTestData } from "@/hooks/useMockABTestData";
-import { Calendar, Clock, ArrowRight, LineChart, FileSpreadsheet, PieChart, Activity, TrendingUp, Globe } from "lucide-react";
+import { Calendar, Clock, ArrowRight, LineChart, FileSpreadsheet, PieChart, Activity, TrendingUp, Globe, Calculator } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { GlobalFilters } from "@/components/layout/GlobalFilters";
@@ -106,6 +108,10 @@ const ABTestingPage = () => {
                 <Globe className="h-4 w-4 mr-2" />
                 Geographic Analysis
               </TabsTrigger>
+              <TabsTrigger value="methodologies" className="data-[state=active]:bg-primary/20">
+                <Calculator className="h-4 w-4 mr-2" />
+                Methodology Comparison
+              </TabsTrigger>
               <TabsTrigger value="details" className="data-[state=active]:bg-primary/20">
                 <FileSpreadsheet className="h-4 w-4 mr-2" />
                 Details & Analysis
@@ -165,6 +171,10 @@ const ABTestingPage = () => {
             
             <TabsContent value="geo" className="animate-fade-in">
               <ABTestGeoDistribution test={selectedTestData} loading={loading} />
+            </TabsContent>
+
+            <TabsContent value="methodologies" className="animate-fade-in">
+              <ABTestMethodologyComparison test={selectedTestData} loading={loading} />
             </TabsContent>
             
             <TabsContent value="details" className="animate-fade-in">
