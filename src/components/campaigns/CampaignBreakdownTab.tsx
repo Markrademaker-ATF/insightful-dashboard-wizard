@@ -1,3 +1,4 @@
+
 import React from "react";
 import { 
   Card, 
@@ -19,6 +20,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { FilterExportControls } from "@/components/channels/FilterExportControls";
 import { MetricCard } from "@/components/dashboard/MetricCard";
 import { PerformanceChart } from "@/components/dashboard/PerformanceChart";
+import { CampaignCostMetricsChart } from "./CampaignCostMetricsChart";
 
 interface CampaignBreakdownTabProps {
   campaignData: any;
@@ -56,6 +58,20 @@ export const CampaignBreakdownTab: React.FC<CampaignBreakdownTabProps> = ({
   const roas = campaignData.revenue / campaignData.cost;
   const ctr = (campaignData.clicks / campaignData.impressions) * 100;
   const conversionRate = (campaignData.conversions / campaignData.clicks) * 100;
+  
+  // Generate cost metrics data
+  const costMetricsData = campaignData.dailyData.map((day: any) => {
+    const cpc = day.cost / Math.max(day.clicks, 1); // Cost per click
+    const cpm = (day.cost / Math.max(day.impressions, 1)) * 1000; // Cost per 1000 impressions
+    const cpv = day.cost / Math.max(day.impressions * 0.4, 1); // Cost per view (assuming 40% of impressions are views)
+    
+    return {
+      date: day.date,
+      cpc,
+      cpm,
+      cpv
+    };
+  });
 
   return (
     <div className="space-y-6">
@@ -128,6 +144,12 @@ export const CampaignBreakdownTab: React.FC<CampaignBreakdownTabProps> = ({
           />
         </CardContent>
       </Card>
+      
+      {/* NEW: Campaign Cost Metrics Chart */}
+      <CampaignCostMetricsChart 
+        data={costMetricsData}
+        loading={loading}
+      />
       
       {/* Creative performance */}
       <Card>

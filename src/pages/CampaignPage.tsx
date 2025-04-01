@@ -183,14 +183,25 @@ const ChannelDetailsPage = () => {
           dailyData: Array.from({ length: days }).map((_, i) => {
             const date = new Date();
             date.setDate(date.getDate() - (days - i - 1));
+            const impressions = Math.round(10000 + Math.random() * 30000);
+            const clicks = Math.round(300 + Math.random() * 1500);
+            const cost = Math.round(300 + Math.random() * 1500);
+            
+            // Calculate derived cost metrics
+            const cpc = cost / Math.max(clicks, 1); // Cost per click
+            const cpm = (cost / Math.max(impressions, 1)) * 1000; // Cost per mille (1000 impressions)
+            const cpv = cost / Math.max(impressions * 0.4, 1); // Cost per view (assuming 40% view rate)
             
             return {
               date: date.toISOString().split('T')[0],
-              impressions: Math.round(10000 + Math.random() * 30000),
-              clicks: Math.round(300 + Math.random() * 1500),
+              impressions: impressions,
+              clicks: clicks,
               conversions: Math.round(10 + Math.random() * 50),
               revenue: Math.round(1000 + Math.random() * 5000),
-              cost: Math.round(300 + Math.random() * 1500),
+              cost: cost,
+              cpc: cpc,
+              cpm: cpm,
+              cpv: cpv
             };
           }),
           geographicData: [
