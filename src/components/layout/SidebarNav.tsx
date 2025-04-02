@@ -1,238 +1,227 @@
-
-import React, { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { 
-  BarChart3, 
-  LineChart,
-  Radio, 
-  Layers, 
-  GitCompare, 
-  TrendingUp, 
-  PieChart, 
-  Settings, 
-  HelpCircle,
+import React from "react";
+import {
+  BarChart,
+  Settings,
   LayoutDashboard,
-  ChevronDown,
-  ChevronRight,
-  FileBarChart,
-  Lightbulb,
-  Home,
-  Rocket,
-  Bot,
-  Zap,
-  Activity,
-  BarChart
+  ListChecks,
+  Plus,
+  KanbanSquare,
+  Users,
+  Bell,
+  HelpCircle,
+  BarChart3,
+  Layers,
+  Target as TargetIcon,
+  TrendingUp,
+  SplitSquareHorizontal,
+  Activity
 } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { usePathname, useRouter } from 'next/navigation';
 import { cn } from "@/lib/utils";
 
-type NavItem = {
+interface NavItemProps {
+  href: string;
   title: string;
-  href?: string;
-  icon: React.ElementType;
-  children?: NavItem[];
+  icon: React.ReactNode;
+}
+
+interface NavGroupProps {
+  title: string;
+  items: NavItemProps[];
+}
+
+const NavItem = ({ href, title, icon }: NavItemProps) => {
+  const pathname = usePathname();
+  const isActive = pathname === href;
+
+  return (
+    <li>
+      <Button
+        variant="ghost"
+        className={cn(
+          "justify-start px-4",
+          isActive ? "bg-secondary text-foreground" : "text-muted-foreground"
+        )}
+        onClick={() => {
+          // Use the router.push method to navigate to the specified href
+          window.location.href = href;
+        }}
+      >
+        {icon}
+        <span>{title}</span>
+      </Button>
+    </li>
+  );
 };
 
-const navItems: NavItem[] = [
-  {
-    title: "Getting Started",
-    href: "/getting-started",
-    icon: Rocket,
-  },
-  {
-    title: "Strategic Overview",
-    href: "/analytics",
-    icon: LayoutDashboard,
-  },
-
-  {
-    title: "Channel Analysis",
-    href: "/channels",
-    icon: Radio,
-  },
-  {
-    title: "Campaign Analysis",
-    href: "/campaign",
-    icon: BarChart3,
-  },
-  {
-    title: "Campaign Analytics Dashboard",
-    href: "/campaign-analytics",
-    icon: BarChart,
-  },
-  {
-    title: "Budget Optimizer",
-    href: "/budget",
-    icon: PieChart,
-  },
-  {
-    title: "A/B Testing",
-    href: "/ab-testing",
-    icon: LineChart,
-  },
-  {
-    title: "Model Metrics",
-    href: "/model-metrics",
-    icon: Activity,
-  },
-  {
-    title: "Quick Recommendations",
-    href: "/recommendations",
-    icon: Zap,
-  },
-  {
-    title: "Chat AI Assistant",
-    href: "/chat-ai",
-    icon: Bot,
-  },
-  {
-    title: "Data",
-    href: "/data",
-    icon: Layers,
-  },
-  {
-    title: "Documentation",
-    href: "/methodologies",
-    icon: Lightbulb,
-  },
-  {
-    title: "Help & Resources",
-    icon: HelpCircle,
-    children: [
-      {
-        title: "Pages Guide",
-        href: "/guide",
-        icon: Layers,
-      },
-      {
-        title: "Metrics Guide",
-        href: "/metrics-guide",
-        icon: FileBarChart,
-      },
-      {
-        title: "FAQ",
-        href: "/faq",
-        icon: HelpCircle,
-      },
-    ]
-  },
-  {
-    title: "Settings",
-    href: "/settings",
-    icon: Settings,
-  },
-
-  {
-    title: "Draft Folder",
-    icon: BarChart3,
-    children: [
-      {
-        title: "Draft EDA",
-        href: "/metrics",
-        icon: FileBarChart,
-      },
-      {
-        title: "Incremental Analysis THIS PAGE IN CHANNEL ANALYSIS",
-        href: "/incremental",
-        icon: TrendingUp,
-      },
-    ]
-  },
-];
+const NavGroup = ({ title, items }: NavGroupProps) => {
+  return (
+    <li>
+      <span className="text-sm text-muted-foreground px-4">{title}</span>
+      <ul className="mt-2 space-y-1">
+        {items.map((item) => (
+          <NavItem key={item.href} href={item.href} title={item.title} icon={item.icon} />
+        ))}
+      </ul>
+    </li>
+  );
+};
 
 export function SidebarNav() {
-  const location = useLocation();
-  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({
-    "Overview": true,
-    "Analysis": true,
-    "Help & Resources": true
-  });
-  
-  const toggleGroup = (groupTitle: string) => {
-    setExpandedGroups(prev => ({
-      ...prev,
-      [groupTitle]: !prev[groupTitle]
-    }));
-  };
-  
+  const router = useRouter();
+
+  const items = [
+    {
+      title: "Getting Started",
+      items: [
+        {
+          title: "Dashboard",
+          href: "/",
+          icon: <LayoutDashboard className="h-4 w-4 mr-2" />,
+        },
+        {
+          title: "Tasks",
+          href: "/tasks",
+          icon: <ListChecks className="h-4 w-4 mr-2" />,
+        },
+      ],
+    },
+    {
+      title: "Projects",
+      items: [
+        {
+          title: "Add New",
+          href: "/projects/new",
+          icon: <Plus className="h-4 w-4 mr-2" />,
+        },
+        {
+          title: "Kanban",
+          href: "/projects/kanban",
+          icon: <KanbanSquare className="h-4 w-4 mr-2" />,
+        },
+      ],
+    },
+    {
+      title: "Team",
+      items: [
+        {
+          title: "Members",
+          href: "/team",
+          icon: <Users className="h-4 w-4 mr-2" />,
+        },
+      ],
+    },
+    {
+      title: "Marketing Analytics",
+      items: [
+        {
+          title: "Analytics Overview",
+          href: "/analytics",
+          icon: <BarChart className="h-4 w-4 mr-2" />,
+        },
+        {
+          title: "Channels",
+          href: "/channels",
+          icon: <Layers className="h-4 w-4 mr-2" />,
+        },
+        {
+          title: "Campaigns",
+          href: "/campaigns",
+          icon: <TargetIcon className="h-4 w-4 mr-2" />,
+        },
+        {
+          title: "Incremental Analysis",
+          href: "/incremental",
+          icon: <TrendingUp className="h-4 w-4 mr-2" />,
+        },
+        {
+          title: "A/B Testing",
+          href: "/ab-testing",
+          icon: <SplitSquareHorizontal className="h-4 w-4 mr-2" />,
+        },
+        {
+          title: "Incrementality Tests",
+          href: "/incrementality-test",
+          icon: <Activity className="h-4 w-4 mr-2" />,
+        },
+      ],
+    },
+  ];
+
   return (
-    <div className="flex flex-col gap-1 w-full py-4">
-      {navItems.map((item, index) => {
-        // Check if item has children (is a group)
-        if (item.children) {
-          const isExpanded = expandedGroups[item.title];
-          const hasActiveChild = item.children.some(child => location.pathname === child.href);
-          
-          return (
-            <div key={index} className="mb-2">
-              <button
-                onClick={() => toggleGroup(item.title)}
-                className={cn(
-                  "w-full flex justify-between items-center px-3 py-2.5 rounded-md text-sm font-medium transition-all duration-200",
-                  hasActiveChild 
-                    ? "bg-gradient-to-r from-primary/20 to-primary/5 text-primary" 
-                    : "text-muted-foreground hover:bg-accent hover:text-primary"
-                )}
-              >
-                <div className="flex items-center">
-                  <item.icon className="h-4 w-4 mr-2.5" />
-                  <span className="text-sm font-medium">{item.title}</span>
-                </div>
-                {isExpanded ? (
-                  <ChevronDown className="h-4 w-4 opacity-70" />
-                ) : (
-                  <ChevronRight className="h-4 w-4 opacity-70" />
-                )}
-              </button>
-              
-              {isExpanded && (
-                <div className="ml-6 mt-1 flex flex-col gap-1 border-l-2 pl-3 border-border/40">
-                  {item.children.map((child, childIndex) => {
-                    const isActive = location.pathname === child.href;
-                    return (
-                      <Link
-                        key={`${index}-${childIndex}`}
-                        to={child.href || "#"}
-                        className={cn(
-                          "flex items-center gap-2.5 px-3 py-2 rounded-md text-sm transition-all duration-200",
-                          isActive 
-                            ? "bg-primary/10 text-primary font-medium" 
-                            : "text-muted-foreground hover:bg-accent/50 hover:text-primary"
-                        )}
-                      >
-                        <child.icon className="h-4 w-4" />
-                        <span className="text-sm">{child.title}</span>
-                      </Link>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          );
-        } else {
-          // Regular menu item without children
-          const isActive = location.pathname === item.href;
-          return (
-            <Link
-              key={index}
-              to={item.href || "#"}
-              className={cn(
-                "flex items-center gap-2.5 px-3 py-2.5 rounded-md text-sm font-medium transition-all duration-200",
-                isActive 
-                  ? "bg-gradient-to-r from-primary/20 to-primary/10 text-primary shadow-sm" 
-                  : "text-muted-foreground hover:bg-accent/50 hover:text-primary"
-              )}
-            >
-              <item.icon className="h-4 w-4" />
-              <span className="text-sm">{item.title}</span>
-              {(item.title === "Chat AI Assistant" || item.title === "Quick Recommendations") && (
-                <span className="ml-auto px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-gradient-to-r from-blue-500 to-purple-600 text-white">
-                  New
-                </span>
-              )}
-            </Link>
-          );
-        }
-      })}
+    <div className="flex flex-col h-full space-y-4 py-4">
+      <ScrollArea className="flex-1 px-3">
+        <ul className="space-y-2">
+          {items.map((group) => (
+            <NavGroup key={group.title} title={group.title} items={group.items} />
+          ))}
+        </ul>
+      </ScrollArea>
+      <div className="pb-3 px-3">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="relative h-8 w-full px-2 justify-start text-muted-foreground data-[state=open]:bg-secondary">
+              <Avatar className="mr-2 h-6 w-6">
+                <AvatarImage src="/avatars/01.png" alt="Avatar" />
+                <AvatarFallback>OM</AvatarFallback>
+              </Avatar>
+              <span>Olivia Martin</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" forceMount className="w-[200px]">
+            <DropdownMenuItem>
+              <Settings className="h-4 w-4 mr-2" />
+              Settings
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => router.push('/login')}>
+              Log out
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </div>
   );
+}
+
+export function MobileSidebar() {
+  const router = useRouter();
+
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button variant="ghost" size="sm" className="px-2">
+          Menu
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="left" className="pr-0">
+        <SheetHeader className="pl-10 pr-6">
+          <SheetTitle>Dashboard</SheetTitle>
+          <SheetDescription>
+            Manage your tasks, team members and projects.
+          </SheetDescription>
+        </SheetHeader>
+        <SidebarNav />
+      </SheetContent>
+    </Sheet>
+  )
 }

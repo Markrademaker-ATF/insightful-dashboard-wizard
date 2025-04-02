@@ -1,69 +1,59 @@
+import React, { Suspense } from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { MainLayout } from "@/components/layout/MainLayout";
+import { LandingPage } from "@/pages/LandingPage";
+import { NotFound } from "@/pages/NotFound";
+import { AnalyticsPage } from "@/pages/AnalyticsPage";
+import { ChannelsPage } from "@/pages/ChannelsPage";
+import { CampaignsPage } from "@/pages/CampaignsPage";
+import { IncrementalPage } from "@/pages/IncrementalPage";
+import ABTestingPage from "@/pages/ABTestingPage";
+import IncrementalityTestPage from "./pages/IncrementalityTestPage";
 
-import React from "react";
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { MainLayout } from "./components/layout/MainLayout";
-import LandingPage from "./pages/LandingPage";
-import LoginPage from "./pages/LoginPage";
-import AnalyticsOverview from "./pages/AnalyticsOverview";
-import DataPage from "./pages/DataPage";
-import ChannelsPage from "./pages/ChannelsPage";
-import CampaignPage from "./pages/CampaignPage";
-import CampaignAnalytics from "./pages/CampaignAnalytics";
-import MetricsPage from "./pages/MetricsPage";
-import IncrementalPage from "./pages/IncrementalPage";
-import BudgetPage from "./pages/BudgetPage";
-import ABTestingPage from "./pages/ABTestingPage";
-import GuidePage from "./pages/GuidePage";
-import SettingsPage from "./pages/SettingsPage";
-import MethodologiesPage from "./pages/MethodologiesPage";
-import FAQPage from "./pages/FAQPage";
-import MetricsGuidePage from "./pages/MetricsGuidePage";
-import GettingStartedPage from "./pages/GettingStartedPage";
-import ChatAIPage from "./pages/ChatAIPage";
-import RecommendationsPage from "./pages/RecommendationsPage";
-import ModelMetricsPage from "./pages/ModelMetricsPage";
-import NotFound from "./pages/NotFound";
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <MainLayout />,
+    errorElement: <NotFound />,
+    children: [
+      {
+        index: true,
+        element: <LandingPage />,
+      },
+      {
+        path: "/analytics",
+        element: <AnalyticsPage />,
+      },
+      {
+        path: "/channels",
+        element: <ChannelsPage />,
+      },
+      {
+        path: "/campaigns",
+        element: <CampaignsPage />,
+      },
+      {
+        path: "/incremental",
+        element: <IncrementalPage />,
+      },
+      {
+        path: "/ab-testing",
+        element: <ABTestingPage />,
+      },
+      {
+        path: "/incrementality-test",
+        element: <IncrementalityTestPage />,
+      },
+    ],
+  },
+]);
 
-const queryClient = new QueryClient();
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route element={<MainLayout />}>
-            <Route path="/analytics" element={<AnalyticsOverview />} />
-            <Route path="/methodologies" element={<MethodologiesPage />} />
-            <Route path="/data" element={<DataPage />} />
-            <Route path="/metrics" element={<MetricsPage />} />
-            <Route path="/incremental" element={<IncrementalPage />} />
-            <Route path="/channels" element={<ChannelsPage />} />
-            <Route path="/campaign" element={<CampaignPage />} />
-            <Route path="/campaign-analytics" element={<CampaignAnalytics />} />
-            <Route path="/budget" element={<BudgetPage />} />
-            <Route path="/ab-testing" element={<ABTestingPage />} />
-            <Route path="/chat-ai" element={<ChatAIPage />} />
-            <Route path="/recommendations" element={<RecommendationsPage />} />
-            <Route path="/guide" element={<GuidePage />} />
-            <Route path="/faq" element={<FAQPage />} />
-            <Route path="/metrics-guide" element={<MetricsGuidePage />} />
-            <Route path="/settings" element={<SettingsPage />} />
-            <Route path="/getting-started" element={<GettingStartedPage />} />
-            <Route path="/model-metrics" element={<ModelMetricsPage />} />
-          </Route>
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+function App() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <RouterProvider router={router} />
+    </Suspense>
+  );
+}
 
 export default App;
