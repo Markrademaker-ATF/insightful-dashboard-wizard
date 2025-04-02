@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { 
@@ -18,7 +19,8 @@ import {
   Home,
   Rocket,
   Bot,
-  Zap
+  Zap,
+  Activity
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -63,8 +65,8 @@ const navItems: NavItem[] = [
   },
   {
     title: "Model Metrics",
-    href: "/",
-    icon: TrendingUp,
+    href: "/model-metrics",
+    icon: Activity,
   },
   {
     title: "Quick Recommendations",
