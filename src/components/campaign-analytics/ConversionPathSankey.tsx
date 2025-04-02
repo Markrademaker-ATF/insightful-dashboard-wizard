@@ -2,10 +2,10 @@
 import React from "react";
 import { 
   Sankey, 
-  SankeyNode, 
-  SankeyLink, 
+  Rectangle,
+  Layer,
   ResponsiveContainer, 
-  Rectangle, 
+  Tooltip, 
   Text 
 } from "recharts";
 
@@ -52,24 +52,17 @@ export const ConversionPathSankey = () => {
         <ResponsiveContainer width="100%" height="100%">
           <Sankey
             data={data}
-            node={
-              <SankeyNode 
-                fill="#34d399"
-                opacity={0.8} 
-                stroke="#1f2937" 
-              >
-                <Rectangle />
-                <Text />
-              </SankeyNode>
-            }
-            link={
-              <SankeyLink 
-                stroke="#d1d5db"
-                strokeWidth={2} 
-              />
-            }
+            nodeWidth={15}
+            nodePadding={10}
+            linkCurvature={0.5}
+            iterations={64}
+            node={<Layer fill="#34d399" opacity={0.8} />}
+            link={<Layer stroke="#d1d5db" strokeWidth={2} />}
             margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
-          />
+          >
+            <Tooltip />
+            <Text />
+          </Sankey>
         </ResponsiveContainer>
       </div>
     </div>

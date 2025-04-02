@@ -59,7 +59,11 @@ export const PromotionTypeChart = () => {
             formatter={(value, name) => {
               if (name === "revenue") return [`$${value.toLocaleString()}`, "Revenue"];
               if (name === "cost") return [`$${value.toLocaleString()}`, "Cost"];
-              if (name === "roas") return [value.toFixed(2) + "x", "ROAS"];
+              if (name === "roas") {
+                // Safely handle the value by ensuring it's a number before using toFixed
+                const numValue = typeof value === 'number' ? value : parseFloat(String(value));
+                return [isNaN(numValue) ? value : `${numValue.toFixed(2)}x`, "ROAS"];
+              }
               return [value, name];
             }}
           />
