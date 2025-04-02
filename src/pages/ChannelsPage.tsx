@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { PageHeader } from "@/components/layout/PageHeader";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -30,11 +29,7 @@ export default function ChannelsPage() {
   const [timeframe, setTimeframe] = useState("Q4");
   const [selectedChannel, setSelectedChannel] = useState<string | null>(Object.keys(channelNames)[0]); // Default to first channel
   const [incrementalData, setIncrementalData] = useState<any[]>([]);
-  const [yoyData, setYoyData] = useState<any>({
-    factors: [],
-    channels: [],
-    external: []
-  });
+  const [yoyData, setYoyData] = useState<any[]>([]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -526,6 +521,134 @@ export default function ChannelsPage() {
           </Card>
         </TabsContent>
       </Tabs>
-    </div>
-  );
-}
+      
+      {/* Original Tabs Content - Keeping for reference if needed */}
+      {/* Remove this section if you want to completely replace the content */}
+      {/* <ChannelMetricsOverview data={channelData} loading={loading} /> */}
+      
+      {/* Main Tabs 
+      <Tabs value={mainTab} onValueChange={setMainTab} className="space-y-6">
+        <TabsList className="justify-start">
+          <TabsTrigger value="analysis" className="flex items-center gap-2">
+            <BarChart className="h-4 w-4" /> Channel Overview
+          </TabsTrigger>
+          <TabsTrigger value="details" className="flex items-center gap-2">
+            <TableIcon className="h-4 w-4" /> Channel Details
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="analysis" className="space-y-6 mt-6">
+          <Card>
+            <CardHeader className="flex flex-row items-center">
+              <div className="flex flex-col space-y-1.5">
+                <CardTitle className="flex items-center gap-2">
+                  <BarChart className="h-5 w-5" /> Channel Overview
+                </CardTitle>
+                <CardDescription>
+                  Compare performance metrics across channels
+                </CardDescription>
+              </div>
+              <div className="ml-auto">
+                <FilterExportControls />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="mb-6 p-4 bg-muted/30 rounded-lg">
+                <div className="flex items-start gap-2">
+                  <Info className="h-5 w-5 text-primary mt-0.5" />
+                  <div>
+                    <h3 className="text-sm font-medium mb-1">About Channel Overview</h3>
+                    <p className="text-sm text-muted-foreground">
+                      This dashboard provides a comprehensive view of your marketing channel performance. 
+                      ROAS (Return on Ad Spend) is the primary metric used to evaluate efficiency across channels.
+                      Use the tabs below to explore different visualizations and insights about your marketing mix.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="mb-6">
+                <h3 className="text-lg font-medium mb-3">ROAS by Channel</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Compare the return on ad spend across your marketing channels. Higher values indicate more efficient spending.
+                </p>
+                <RoasComparisonChart channelData={channelData} loading={loading} />
+              </div>
+              
+              <Tabs value={activeTab} onValueChange={setActiveTab}>
+                <TabsList className="w-full md:w-auto">
+                  <TabsTrigger value="performance" className="flex items-center gap-1">
+                    <BarChart className="h-4 w-4" /> Performance
+                  </TabsTrigger>
+                  <TabsTrigger value="breakdown" className="flex items-center gap-1">
+                    <PieChart className="h-4 w-4" /> Breakdown
+                  </TabsTrigger>
+                  <TabsTrigger value="trends" className="flex items-center gap-1">
+                    <LineChartIcon className="h-4 w-4" /> Trends
+                  </TabsTrigger>
+                  <TabsTrigger value="comparison" className="flex items-center gap-1">
+                    <BarChart className="h-4 w-4" /> Comparison
+                  </TabsTrigger>
+                </TabsList>
+                
+                <div className="mt-2 mb-4">
+                  {activeTab === "performance" && (
+                    <p className="text-sm text-muted-foreground">
+                      View detailed performance metrics for each channel in a tabular format.
+                    </p>
+                  )}
+                  {activeTab === "breakdown" && (
+                    <p className="text-sm text-muted-foreground">
+                      Visualize the contribution of each channel to your overall marketing performance.
+                    </p>
+                  )}
+                  {activeTab === "trends" && (
+                    <p className="text-sm text-muted-foreground">
+                      Track how channel performance has evolved over time to identify patterns and opportunities.
+                    </p>
+                  )}
+                  {activeTab === "comparison" && (
+                    <p className="text-sm text-muted-foreground">
+                      Compare multiple metrics across channels to understand relative strengths and weaknesses.
+                    </p>
+                  )}
+                </div>
+                
+                <TabsContent value="performance" className="border-none p-0 pt-4">
+                  <ChannelPerformanceTable data={channelData} loading={loading} />
+                </TabsContent>
+                <TabsContent value="breakdown" className="border-none p-0 pt-4">
+                  <ChannelBreakdownChart data={channelData} loading={loading} />
+                </TabsContent>
+                <TabsContent value="trends" className="border-none p-0 pt-4">
+                  <ChannelTrendsChart data={trendsData} loading={loading} />
+                </TabsContent>
+                <TabsContent value="comparison" className="border-none p-0 pt-4">
+                  <ChannelComparisonChart data={channelData} loading={loading} />
+                </TabsContent>
+              </Tabs>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="details" className="space-y-6 mt-6">
+          <Card>
+            <CardHeader>
+              <div className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle className="flex items-center gap-2">
+                    <TableIcon className="h-5 w-5" /> 
+                    Channel Details
+                  </CardTitle>
+                  <CardDescription>
+                    Select a specific channel to view detailed performance insights
+                  </CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="mb-6 p-4 bg-muted/30 rounded-lg">
+                <div className="flex items-start gap-2">
+                  <Info className="h-5 w-5 text-primary mt-0.5" />
+                  <div>
+                    <h3 className="text-sm font
