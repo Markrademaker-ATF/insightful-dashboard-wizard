@@ -7,6 +7,7 @@ import { CampaignOverview } from "@/components/campaign-analytics/CampaignOvervi
 import { ChannelPerformance } from "@/components/campaign-analytics/ChannelPerformance";
 import { PromotionAnalytics } from "@/components/campaign-analytics/PromotionAnalytics";
 import { DateRangeSelector } from "@/components/campaign-analytics/DateRangeSelector";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export type CampaignTab = "overview" | "channel" | "promotion";
 export type CampaignSubPage = 
@@ -21,19 +22,6 @@ const CampaignAnalytics = () => {
     new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
     new Date() // today
   ]);
-
-  const renderContent = () => {
-    switch (activeTab) {
-      case "overview":
-        return <CampaignOverview activeSubPage={activeSubPage} dateRange={dateRange} />;
-      case "channel":
-        return <ChannelPerformance activeSubPage={activeSubPage} dateRange={dateRange} />;
-      case "promotion":
-        return <PromotionAnalytics activeSubPage={activeSubPage} dateRange={dateRange} />;
-      default:
-        return <CampaignOverview activeSubPage={activeSubPage} dateRange={dateRange} />;
-    }
-  };
 
   return (
     <div className="flex h-full">
@@ -58,7 +46,19 @@ const CampaignAnalytics = () => {
           <DateRangeSelector dateRange={dateRange} setDateRange={setDateRange} />
         </div>
         
-        {renderContent()}
+        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as CampaignTab)}>
+          <TabsContent value="overview">
+            <CampaignOverview activeSubPage={activeSubPage} dateRange={dateRange} />
+          </TabsContent>
+          
+          <TabsContent value="channel">
+            <ChannelPerformance activeSubPage={activeSubPage} dateRange={dateRange} />
+          </TabsContent>
+          
+          <TabsContent value="promotion">
+            <PromotionAnalytics activeSubPage={activeSubPage} dateRange={dateRange} />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
