@@ -20,7 +20,8 @@ import {
   Rocket,
   Bot,
   Zap,
-  Activity
+  Activity,
+  BarChart
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -52,6 +53,11 @@ const navItems: NavItem[] = [
     title: "Campaign Analysis",
     href: "/campaign",
     icon: BarChart3,
+  },
+  {
+    title: "Campaign Analytics Dashboard",
+    href: "/campaign-analytics",
+    icon: BarChart,
   },
   {
     title: "Budget Optimizer",
