@@ -31,61 +31,25 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   {
-    title: "Home",
-    href: "/",
-    icon: Home,
-  },
-  {
     title: "Getting Started",
     href: "/getting-started",
     icon: Rocket,
   },
   {
-    title: "Overview",
+    title: "Strategic Overview",
+    href: "/analytics",
     icon: LayoutDashboard,
-    children: [
-      {
-        title: "Analytics Overview",
-        href: "/analytics",
-        icon: LayoutDashboard,
-      },
-      {
-        title: "Analytics Methodologies",
-        href: "/methodologies",
-        icon: Lightbulb,
-      },
-      {
-        title: "Data Overview",
-        href: "/data",
-        icon: Layers,
-      },
-    ]
+  },
+
+  {
+    title: "Channel Analysis",
+    href: "/channels",
+    icon: Radio,
   },
   {
-    title: "Analysis",
+    title: "Campaign Analysis",
+    href: "/campaign",
     icon: BarChart3,
-    children: [
-      {
-        title: "Exploratory Data Analysis",
-        href: "/metrics",
-        icon: FileBarChart,
-      },
-      {
-        title: "Incremental Analysis",
-        href: "/incremental",
-        icon: TrendingUp,
-      },
-      {
-        title: "Channel Analysis",
-        href: "/channels",
-        icon: Radio,
-      },
-      {
-        title: "Campaign Analysis",
-        href: "/campaign",
-        icon: BarChart3,
-      },
-    ]
   },
   {
     title: "Budget Optimizer",
@@ -98,6 +62,11 @@ const navItems: NavItem[] = [
     icon: LineChart,
   },
   {
+    title: "Model Metrics",
+    href: "/",
+    icon: TrendingUp,
+  },
+  {
     title: "Quick Recommendations",
     href: "/recommendations",
     icon: Zap,
@@ -106,6 +75,16 @@ const navItems: NavItem[] = [
     title: "Chat AI Assistant",
     href: "/chat-ai",
     icon: Bot,
+  },
+  {
+    title: "Data",
+    href: "/data",
+    icon: Layers,
+  },
+  {
+    title: "Documentation",
+    href: "/methodologies",
+    icon: Lightbulb,
   },
   {
     title: "Help & Resources",
@@ -132,6 +111,23 @@ const navItems: NavItem[] = [
     title: "Settings",
     href: "/settings",
     icon: Settings,
+  },
+
+  {
+    title: "Draft Folder",
+    icon: BarChart3,
+    children: [
+      {
+        title: "Draft EDA",
+        href: "/metrics",
+        icon: FileBarChart,
+      },
+      {
+        title: "Incremental Analysis THIS PAGE IN CHANNEL ANALYSIS",
+        href: "/incremental",
+        icon: TrendingUp,
+      },
+    ]
   },
 ];
 
