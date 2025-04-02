@@ -1,3 +1,4 @@
+
 import { faker } from "@faker-js/faker";
 
 // Define the channel names
@@ -113,18 +114,18 @@ export function generateSankeyData() {
   
   // Define channels (targets)
   const channels = [
-    { name: "Search Ads", category: "Paid Media", fill: "#4361ee", value: 850000 },
-    { name: "Display Ads", category: "Paid Media", fill: "#4361ee", value: 620000 },
-    { name: "Social Ads", category: "Paid Media", fill: "#4361ee", value: 780000 },
-    { name: "Video Ads", category: "Paid Media", fill: "#4361ee", value: 520000 },
+    { name: "Search Ads", category: "Paid Media", fill: "#4361ee", value: 150000 },
+    { name: "Display Ads", category: "Paid Media", fill: "#4361ee", value: 50000 },
+    { name: "Social Ads", category: "Paid Media", fill: "#4361ee", value: 120000 },
+    { name: "Video Ads", category: "Paid Media", fill: "#4361ee", value: 30000 },
     
-    { name: "Organic Search", category: "Organic Media", fill: "#06d6a0", value: 910000 },
-    { name: "Organic Social", category: "Organic Media", fill: "#06d6a0", value: 430000 },
-    { name: "Email", category: "Organic Media", fill: "#06d6a0", value: 380000 },
+    { name: "Organic Search", category: "Organic Media", fill: "#06d6a0", value: 160000 },
+    { name: "Organic Social", category: "Organic Media", fill: "#06d6a0", value: 70000 },
+    { name: "Email", category: "Organic Media", fill: "#06d6a0", value: 50000 },
     
-    { name: "Direct", category: "Non-Paid Media", fill: "#ffd166", value: 680000 },
-    { name: "Referral", category: "Non-Paid Media", fill: "#ffd166", value: 320000 },
-    { name: "Affiliates", category: "Non-Paid Media", fill: "#ffd166", value: 240000 },
+    { name: "Direct", category: "Non-Paid Media", fill: "#ffd166", value: 120000 },
+    { name: "Referral", category: "Non-Paid Media", fill: "#ffd166", value: 60000 },
+    { name: "Affiliates", category: "Non-Paid Media", fill: "#ffd166", value: 40000 },
   ];
   
   // Create nodes array for Sankey diagram
@@ -271,4 +272,32 @@ export const generateBudgetRecommendations = () => {
       impact,
     };
   });
+};
+
+// Generate year-over-year comparison data for channels
+export const generateYoYChannelData = () => {
+  return {
+    factors: [
+      { name: "Paid Online Media", currentYear: 350000, previousYear: 310000, percentChange: 12.9 },
+      { name: "Offline Media", currentYear: 180000, previousYear: 210000, percentChange: -14.3 },
+      { name: "Branding", currentYear: 120000, previousYear: 90000, percentChange: 33.3 },
+      { name: "Promotions", currentYear: 210000, previousYear: 190000, percentChange: 10.5 },
+      { name: "Pricing", currentYear: 90000, previousYear: 100000, percentChange: -10.0 },
+      { name: "Distribution", currentYear: 70000, previousYear: 50000, percentChange: 40.0 },
+      { name: "External Factors", currentYear: 50000, previousYear: 70000, percentChange: -28.6 },
+      { name: "Baseline", currentYear: 1200000, previousYear: 1100000, percentChange: 9.1 }
+    ],
+    channels: [
+      { name: "Search", currentYear: 150000, previousYear: 130000, percentChange: 15.4, roasChange: 8.2 },
+      { name: "Social", currentYear: 120000, previousYear: 95000, percentChange: 26.3, roasChange: -3.5 },
+      { name: "Display", currentYear: 50000, previousYear: 60000, percentChange: -16.7, roasChange: -12.1 },
+      { name: "Video", currentYear: 30000, previousYear: 25000, percentChange: 20.0, roasChange: 15.8 }
+    ],
+    external: [
+      { name: "Economic Growth", currentYear: 15000, previousYear: 20000, percentChange: -25.0 },
+      { name: "Seasonality", currentYear: 20000, previousYear: 25000, percentChange: -20.0 },
+      { name: "Competition", currentYear: 10000, previousYear: 15000, percentChange: -33.3 },
+      { name: "Market Trends", currentYear: 5000, previousYear: 10000, percentChange: -50.0 }
+    ]
+  };
 };
