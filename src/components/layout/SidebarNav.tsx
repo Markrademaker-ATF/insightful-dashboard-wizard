@@ -35,7 +35,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { usePathname, useRouter } from 'next/navigation';
+import { useLocation, useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 interface NavItemProps {
@@ -50,8 +50,9 @@ interface NavGroupProps {
 }
 
 const NavItem = ({ href, title, icon }: NavItemProps) => {
-  const pathname = usePathname();
-  const isActive = pathname === href;
+  const location = useLocation();
+  const isActive = location.pathname === href;
+  const navigate = useNavigate();
 
   return (
     <li>
@@ -62,8 +63,7 @@ const NavItem = ({ href, title, icon }: NavItemProps) => {
           isActive ? "bg-secondary text-foreground" : "text-muted-foreground"
         )}
         onClick={() => {
-          // Use the router.push method to navigate to the specified href
-          window.location.href = href;
+          navigate(href);
         }}
       >
         {icon}
@@ -87,7 +87,7 @@ const NavGroup = ({ title, items }: NavGroupProps) => {
 };
 
 export function SidebarNav() {
-  const router = useRouter();
+  const navigate = useNavigate();
 
   const items = [
     {
@@ -193,7 +193,7 @@ export function SidebarNav() {
               Settings
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => router.push('/login')}>
+            <DropdownMenuItem onClick={() => navigate('/login')}>
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -204,7 +204,7 @@ export function SidebarNav() {
 }
 
 export function MobileSidebar() {
-  const router = useRouter();
+  const navigate = useNavigate();
 
   return (
     <Sheet>
